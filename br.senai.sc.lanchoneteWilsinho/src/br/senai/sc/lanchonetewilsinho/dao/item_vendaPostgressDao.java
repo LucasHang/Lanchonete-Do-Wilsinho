@@ -19,34 +19,81 @@ import java.util.List;
 public class item_vendaPostgressDao extends connectionFactory implements item_vendaDao{
 
     @Override
-    public void save(Item_Venda conta) {
-        BancoDeDados.itens_venda.add(conta);
-    }
-
-    @Override
-    public void update(Item_Venda conta) {
-          for(Item_Venda contaDb : BancoDeDados.itens_venda){
-            if(contaDb == conta){
-                contaDb = conta;
-                return;
-            }
+    public void save(Item_Venda item_venda) throws SQLException {
+        //String[] codigoGerado = {"codigo"};
+        super.preparedStatementInitialize(
+                "insert into ItemVenda (codigoVend, codigoProd, qtdComprada, valorTotal) values (?,?,?,?)"/*,
+                codigoGerado*/);
+        super.prepared.setInt(1, item_venda.getVenda());
+        super.prepared.setInt(2, item_venda.getProduto().getCodigo());
+        super.prepared.setInt(3, item_venda.getQtdComprada());
+        super.prepared.setDouble(4, item_venda.getValorTotal());
+        int linhasAfetadas = super.prepared.executeUpdate();
+        if (linhasAfetadas == 0){
+            throw new SQLException("Não foi possível cadastrar o novo item");
         }
+        
+       /* ResultSet resultSetRows = super.prepared.getGeneratedKeys();
+        if (resultSetRows.next()) {
+            item_venda.setCodigo(resultSetRows.getInt("codigo"));
+        }
+        resultSetRows.close();
+               */
+        super.closeAll();
     }
 
     @Override
-    public void delete(Item_Venda conta) {
-        BancoDeDados.itens_venda.remove(conta);
+    public void update(Item_Venda item_venda) throws SQLException{
+      /*    super.preparedStatementInitialize(
+                "update ItemVenda set codigoVend = ?, codigoPro= ?, qtdComprada= ?, valorTotal= ? where codigoVend = ? and codigoProd = ?");
+        super.prepared.setInt(1, item_venda.getVenda());
+        super.prepared.setInt(2,item_venda.getProduto().getCodigo());
+        super.prepared.setInt(3, item_venda.getQtdComprada());
+        super.prepared.setDouble(4, item_venda.getValorTotal());
+        int linhasAfetadas = super.prepared.executeUpdate();
+        if (linhasAfetadas == 0){
+            throw new SQLException("Não foi possível aletrar as informações do item");
+        }
+        super.closeAll();
+              */
+    }
+
+    @Override
+    public void delete(Item_Venda item_venda)throws SQLException {
+        super.preparedStatementInitialize(
+                "delete from ItemVenda where codigoVend = ? and codigoProd = ?");
+        super.prepared.setInt(1, item_venda.getVenda());
+        super.prepared.setInt(2, item_venda.getProduto().getCodigo());
+        int linhasAfetadas = super.prepared.executeUpdate();
+        if (linhasAfetadas == 0){
+            throw new SQLException("Não foi possível deletar o item");
+        }
+        
+        super.closeAll();
     }
 
     @Override
     public List<Item_Venda> getAll() throws SQLException {
-        
+        List<Item_Venda> rows = new ArrayList<>();
+        super.preparedStatementInitialize("select * from cliente");
+        super.prepared.execute();
+        ResultSet resultSetRows = super.prepared.getResultSet();
+        while (resultSetRows.next()) {
+            rows.add(new Item_Venda(resultSetRows.getInt("codigoVend"),
+                    DAOFactory.getProdutoDAO().getProdutoByCodigo(resultSetRows.getString("codigoProd")),
+                    resultSetRows.getInt("qtdComprada"),
+                    resultSetRows.getDouble("valorTotal")));
+        }
+        resultSetRows.close();
+        super.closeAll();
+
+        return rows;
     }
 
     @Override
     public List<Item_Venda> getItemVendaByCodigoVenda(Integer codigoVenda) throws SQLException {
         List<Item_Venda> rows = new ArrayList<>();
-        super.preparedStatementInitialize("select * from Item_Venda where codigoVend = ?");
+        super.preparedStatementInitialize("select * from ItemVenda where codigoVend = ?");
         super.prepared.setInt(1,codigoVenda);
         super.prepared.execute();
         ResultSet resultSetRows = super.prepared.getResultSet();

@@ -19,7 +19,7 @@ public class Item_Venda {
     private final IntegerProperty codigoVenda = new SimpleIntegerProperty();
     private Produto produto = null;
     private final IntegerProperty qtdComprada = new SimpleIntegerProperty();
-    private final DoubleProperty valorTotal = new SimpleDoubleProperty();
+    private Double valorTotal = (produto.getPrecoProd() * qtdComprada.get());
     
     public Item_Venda(){
         
@@ -29,7 +29,7 @@ public class Item_Venda {
         this.codigoVenda.set(codigoVenda);
         this.produto = objectProduto;
         this.qtdComprada.set(qtdComprada);
-        this.valorTotal.set(valorTotal);
+        this.valorTotal = valorTotal;
     }
 
     public Integer getVenda(){
@@ -54,14 +54,6 @@ public class Item_Venda {
     
     
     public double getValorTotal() {
-        return this.valorTotal.get();
-    }
-
-    public void setValorTotal(double value) {
-       this.valorTotal.set(value);
-    }
-
-    public DoubleProperty valorTotalProperty() {
         return this.valorTotal;
     }
 
@@ -70,7 +62,7 @@ public class Item_Venda {
         return this.qtdComprada.get();
     }
 
-    public void setQtdComprada(int value) {
+    public void setQtdComprada(Integer value) {
         this.qtdComprada.set(value);
     }
 

@@ -21,14 +21,26 @@ public class Produto {
     private final StringProperty descricaoProd = new SimpleStringProperty();
     private final DoubleProperty precoProd = new SimpleDoubleProperty();
     private final IntegerProperty quantidadeProd = new SimpleIntegerProperty();
-
     
-    public void adcProduto(){
+    
+    public Produto(){
         
     }
     
-    public void retirarProduto(){
-        
+    public Produto(Integer codigo, String descricao, Double preco, Integer quantidade){
+        this.codigo.set(codigo);
+        this.descricaoProd.set(descricao);
+        this.precoProd.set(preco);
+        this.quantidadeProd.set(quantidade);
+    }
+
+    
+    public void adcProduto(Integer qtd){
+        this.quantidadeProd.set(this.quantidadeProd.get() + qtd);
+    }
+    
+    public void retirarProduto(Integer qtd){
+         this.quantidadeProd.set(this.quantidadeProd.get() - qtd);
     }
     
     public int getQuantidadeProd() {

@@ -21,15 +21,24 @@ public class clientePostgressDao extends connectionFactory implements clienteDao
     @Override
     public void save(Cliente cliente) throws SQLException {
         
-        super.preparedStatementInitialize("insert into cliente values(?,?,?,?)");
-        super.prepared.setInt(1,cliente.getCpf());
-        super.prepared.setString(2,cliente.getNome());
-        super.prepared.setString(3,cliente.getTelefoneContato());
-        super.prepared.setBoolean(4,cliente.getColaborador());
-        super.prepared.execute();
-        ResultSet results = super.prepared.getResultSet();
+        String[] codigoGerado = {"codigo"};
+        super.preparedStatementInitialize(
+                "insert into cliente (nome, cpf, telefoneContato, colaborador) values (?,?,?,?)",
+                codigoGerado);
+        super.prepared.setString(1, cliente.getNome());
+        super.prepared.setInt(2, cliente.getCpf());
+        super.prepared.setInt(3, cliente.getTelefoneContato());
+        super.prepared.setBoolean(4, cliente.getColaborador());
+        int linhasAfetadas = super.prepared.executeUpdate();
+        if (linhasAfetadas == 0){
+            throw new SQLException("Não foi possível cadastrar o novo cliente");
+        }
         
-        results.close();
+        ResultSet resultSetRows = super.prepared.getGeneratedKeys();
+        if (resultSetRows.next()) {
+            cliente.setCodigo(resultSetRows.getInt("codigo"));
+        }
+        resultSetRows.close();
         super.closeAll();
         
     }
@@ -37,15 +46,17 @@ public class clientePostgressDao extends connectionFactory implements clienteDao
     @Override
     public void update(Cliente cliente) throws SQLException {
         
-        super.preparedStatementInitialize("update cliente set cpf = ?,"
-                + "nome = ?, telefoneContato = ?, colaborador = ? where cpf = ?");
-        super.prepared.setInt(1,cliente.getCpf());
-        super.prepared.setString(2,cliente.getNome());
-        super.prepared.setString(3,cliente.getTelefoneContato());
-        super.prepared.setBoolean(4,cliente.getColaborador());
-        super.prepared.setInt(5,cliente.getCpf());
-        super.prepared.execute();
-
+        super.preparedStatementInitialize(
+                "update cliente set nome = ?, cpf = ?, telefonContato= ?, colaborador = ? where codigo = ?");
+        super.prepared.setString(1, cliente.getNome());
+        super.prepared.setInt(2, cliente.getCpf());
+        super.prepared.setInt(3, cliente.getTelefoneContato());
+        super.prepared.setBoolean(4, cliente.getColaborador());
+        super.prepared.setInt(5, cliente.getCodigo());
+        int linhasAfetadas = super.prepared.executeUpdate();
+        if (linhasAfetadas == 0){
+            throw new SQLException("Não foi possível aletrar as informações do cliente");
+        }
         super.closeAll();
         
     }
@@ -53,10 +64,14 @@ public class clientePostgressDao extends connectionFactory implements clienteDao
     @Override
     public void delete(Cliente cliente) throws SQLException{
         
-        super.preparedStatementInitialize("delete from cliente where cpf = ?");
-        super.prepared.setInt(1,cliente.getCpf());
-        super.prepared.execute();
-
+        super.preparedStatementInitialize(
+                "delete from cliente where codigo = ?");
+        super.prepared.setInt(1, cliente.getCodigo());
+        int linhasAfetadas = super.prepared.executeUpdate();
+        if (linhasAfetadas == 0){
+            throw new SQLException("Não foi possível deletar o cliente");
+        }
+        
         super.closeAll();
         
     }
@@ -64,22 +79,21 @@ public class clientePostgressDao extends connectionFactory implements clienteDao
     @Override
     public List<Cliente> getAll() throws SQLException{
         
-        List<Cliente> clientes = new ArrayList();
-        
+         List<Cliente> rows = new ArrayList<>();
         super.preparedStatementInitialize("select * from cliente");
         super.prepared.execute();
-        ResultSet results = super.prepared.getResultSet();
-        
-        while(results.next()){
-            clientes.add(new Cliente(results.getString("nome"),
-            results.getInt("cpf"),
-            results.getString("telefoneContato"),
-            results.getBoolean("colaborador")));
+        ResultSet resultSetRows = super.prepared.getResultSet();
+        while (resultSetRows.next()) {
+            rows.add(new Cliente(resultSetRows.getInt("codigo"),
+                    resultSetRows.getString("nome"),
+                    resultSetRows.getInt("cpf"),
+                    resultSetRows.getInt("telefonContato"),
+                    resultSetRows.getBoolean("colaborador")));
         }
-        results.close();
+        resultSetRows.close();
         super.closeAll();
-        
-        return clientes;
+
+        return rows;
     }
     
 }

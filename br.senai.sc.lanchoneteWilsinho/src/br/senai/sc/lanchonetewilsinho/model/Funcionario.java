@@ -27,8 +27,8 @@ public class Funcionario extends Pessoa {
         
     }
     
-     public Funcionario(Integer codigo, String nome, Integer cpf,String telefoneContato,Boolean gerente,
-             String login, String senha){
+     public Funcionario(Integer codigo, String nome, Integer cpf,Integer telefoneContato,
+             String login, String senha, Boolean gerente){
         
         this.codigo.set(codigo);
         this.nome.set(nome);
@@ -53,7 +53,7 @@ public class Funcionario extends Pessoa {
     }
 
     
-    public boolean isGerente() {
+    public boolean getGerente() {
         return this.gerente.get();
     }
 

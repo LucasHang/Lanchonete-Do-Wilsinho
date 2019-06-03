@@ -6,6 +6,7 @@
 package br.senai.sc.lanchonetewilsinho.dao;
 
 import br.senai.sc.lanchonetewilsinho.model.Produto;
+import java.sql.SQLException;
 import java.util.List;
 
 /**
@@ -14,11 +15,11 @@ import java.util.List;
  */
 public interface produtoDao {
     
-    public void save(Produto conta);
+    public void save(Produto conta)throws SQLException;
     
-    public void update(Produto conta);
+    public void update(Produto conta)throws SQLException;
     
-    public void delete(Produto conta);
+    public void delete(Produto conta)throws SQLException;
     
-    public List<Produto> getAll();
+    public List<Produto> getAll()throws SQLException;
 }

@@ -7,6 +7,7 @@ package br.senai.sc.lanchonetewilsinho.dao;
 
 import br.senai.sc.lanchonetewilsinho.model.Item_Venda;
 import br.senai.sc.lanchonetewilsinho.model.Venda;
+import java.sql.SQLException;
 import java.util.List;
 
 /**
@@ -15,12 +16,12 @@ import java.util.List;
  */
 public interface vendaDao {
     
-    public void save(Venda conta);
+    public void save(Venda conta)throws SQLException;
     
-    public void update(Venda conta);
+    public void update(Venda conta)throws SQLException;
     
-    public void delete(Venda conta);
+    public void delete(Venda conta)throws SQLException;
     
-    public List<Venda> getAll();
+    public List<Venda> getAll()throws SQLException;
     
 }

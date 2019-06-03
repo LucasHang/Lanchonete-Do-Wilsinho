@@ -26,7 +26,7 @@ public class Cliente extends Pessoa {
         
     }
     
-    public Cliente(Integer codigo, String nome, Integer cpf,String telefoneContato,Boolean colaborador){
+    public Cliente(Integer codigo, String nome, Integer cpf,Integer telefoneContato,Boolean colaborador){
         this.codigo.set(codigo);
         this.nome.set(nome);
         this.cpf.set(cpf);

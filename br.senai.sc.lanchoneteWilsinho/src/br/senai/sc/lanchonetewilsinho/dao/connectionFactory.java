@@ -58,6 +58,18 @@ public class connectionFactory {
         
     }
     
+    protected void preparedStatementInitialize(String sql, String[] colunasRetorno) throws SQLException{
+        connection = getConnetionPostgres();
+        if(connection == null){
+            throw new SQLException("Não foi possível gerar a conexão");
+        }
+        
+        prepared = connection.prepareStatement(sql, colunasRetorno);
+        if(prepared == null){
+            throw new SQLException("Não foi possível gerar o prepared");
+        }
+    }
+    
     protected void closeAll() throws SQLException{
         connection.close();
         prepared.close();

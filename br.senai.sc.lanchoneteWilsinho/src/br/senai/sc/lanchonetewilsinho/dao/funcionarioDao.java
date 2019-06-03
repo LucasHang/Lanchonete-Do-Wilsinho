@@ -6,6 +6,7 @@
 package br.senai.sc.lanchonetewilsinho.dao;
 
 import br.senai.sc.lanchonetewilsinho.model.Funcionario;
+import java.sql.SQLException;
 import java.util.List;
 
 /**
@@ -14,11 +15,11 @@ import java.util.List;
  */
 public interface funcionarioDao {
     
-    public void save(Funcionario conta);
+    public void save(Funcionario funcionario)throws SQLException;
     
-    public void update(Funcionario conta);
+    public void update(Funcionario funcionario)throws SQLException;
     
-    public void delete(Funcionario conta);
+    public void delete(Funcionario funcionario)throws SQLException;
     
-    public List<Funcionario> getAll();
+    public List<Funcionario> getAll()throws SQLException;
 }

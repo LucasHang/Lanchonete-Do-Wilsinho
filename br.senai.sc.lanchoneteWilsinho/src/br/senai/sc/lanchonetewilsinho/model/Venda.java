@@ -19,18 +19,48 @@ public class Venda {
     private final IntegerProperty codigo = new SimpleIntegerProperty();
     private Cliente cliente = null;
     private Funcionario funcionario = null;
+    private final IntegerProperty dataVenda = new SimpleIntegerProperty();
+
     private List<Item_Venda> itens = null;
+    private Double valorTotalCompra = calculaTotal();
+    
+    private Double calculaTotal(){
+        Double total = null;
+        for(Item_Venda item : itens){
+            total += item.getValorTotal();
+        }
+        return total;
+    }
           
     public Venda(){
         
     }
     
-    public Venda(Integer codigo, Cliente objtCliente, Funcionario objtFuncionario, List<Item_Venda> itens ){
+    public Venda(Integer codigo, Cliente objtCliente, Funcionario objtFuncionario,Double valor, List<Item_Venda> itens,Integer data){
         this.codigo.set(codigo);
         this.cliente = objtCliente;
         this.funcionario = objtFuncionario;
+        this.valorTotalCompra = valor;
+        this.dataVenda.set(data);
         this.itens = itens;
     }
+    
+    public Integer getDataVenda() {
+        return this.dataVenda.get();
+    }
+
+    public void setDataVenda(Integer value) {
+        this.dataVenda.set(value);
+    }
+
+    public IntegerProperty dataVendaProperty() {
+        return this.dataVenda;
+    }
+    
+    public Double getValorCompra(){
+        return this.valorTotalCompra;
+    }
+    
     
     public List<Item_Venda> getItens(){
         return this.itens;
@@ -53,11 +83,11 @@ public class Venda {
         this.cliente = object;
     }
 
-    public int getCodigo() {
+    public Integer getCodigo() {
         return this.codigo.get();
     }
 
-    public void setCodigo(int value) {
+    public void setCodigo(Integer value) {
         this.codigo.set(value);
     }
 

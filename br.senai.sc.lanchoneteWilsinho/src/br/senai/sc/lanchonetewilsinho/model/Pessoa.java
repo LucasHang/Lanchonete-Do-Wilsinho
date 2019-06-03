@@ -20,7 +20,7 @@ public class Pessoa {
     
     public final StringProperty nome = new SimpleStringProperty();
     public final IntegerProperty cpf = new SimpleIntegerProperty();
-    public final StringProperty telefoneContato = new SimpleStringProperty();
+    public final IntegerProperty telefoneContato = new SimpleIntegerProperty();
 
     public String getNome() {
         return this.nome.get();
@@ -46,15 +46,15 @@ public class Pessoa {
         return this.cpf;
     }
     
-    public String getTelefoneContato() {
+    public Integer getTelefoneContato() {
         return this.telefoneContato.get();
     }
 
-    public void setTelefoneContato(String value) {
+    public void setTelefoneContato(Integer value) {
         this.telefoneContato.set(value);
     }
 
-    public StringProperty TelefoneContatoProperty() {
+    public IntegerProperty TelefoneContatoProperty() {
         return this.telefoneContato;
     }
 }

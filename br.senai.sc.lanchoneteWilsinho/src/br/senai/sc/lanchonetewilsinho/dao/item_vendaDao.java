@@ -15,11 +15,11 @@ import java.util.List;
  */
 public interface item_vendaDao {
     
-    public void save(Item_Venda conta);
+    public void save(Item_Venda conta)throws SQLException;
     
-    public void update(Item_Venda conta);
+    public void update(Item_Venda conta)throws SQLException;
     
-    public void delete(Item_Venda conta);
+    public void delete(Item_Venda conta)throws SQLException;
     
     public List<Item_Venda> getAll() throws SQLException;
     
