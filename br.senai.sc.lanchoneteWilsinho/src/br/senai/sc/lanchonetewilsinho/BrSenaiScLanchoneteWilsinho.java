@@ -20,6 +20,7 @@ public class BrSenaiScLanchoneteWilsinho extends Application {
     
     private static Stage stage;
     
+    private static Scene login;
     private static Scene menu;
     private static Scene cliente;
     private static Scene cadastroCliente;
@@ -33,11 +34,35 @@ public class BrSenaiScLanchoneteWilsinho extends Application {
     @Override
     public void start(Stage primaryStage) throws Exception {
         
-        Parent root = FXMLLoader.load(getClass().getResource("mainSceneWindow.fxml"));
+        stage = primaryStage;
         
-        Scene scene = new Scene(root);
+        Parent fxmlLogin = FXMLLoader.load(getClass().getResource("view/mainSceneWindow.fxml"));
+        login = new Scene(fxmlLogin, 500, 507);
         
-        stage.setScene(scene);
+        Parent fxmlMenu = FXMLLoader.load(getClass().getResource("view/menuSceneWindow.fxml"));
+        menu = new Scene(fxmlMenu, 700, 507);
+        
+        Parent fxmlCliente = FXMLLoader.load(getClass().getResource("view/clienteSceneWindow.fxml"));
+        cliente = new Scene(fxmlCliente, 660, 900);
+        
+        
+        
+        Parent fxmlFuncionario = FXMLLoader.load(getClass().getResource("view/funcionarioSceneWindow.fxml"));
+        funcionario = new Scene(fxmlFuncionario, 660, 900);
+        
+        Parent fxmlCadastroFuncionario = FXMLLoader.load(getClass().getResource("view/cadastroFuncionarioSceneWindow.fxml"));
+        cadastroFuncionario = new Scene(fxmlCadastroFuncionario, 700, 507);
+        
+        Parent fxmlProduto = FXMLLoader.load(getClass().getResource("view/produtoSceneWindow.fxml"));
+        produto = new Scene(fxmlProduto, 660, 900);
+        
+        Parent fxmlCadastroProduto = FXMLLoader.load(getClass().getResource("view/cadastroProdutoSceneWindow.fxml"));
+        cadastroProduto = new Scene(fxmlCadastroProduto, 700, 507);
+        
+        Parent fxmlVenda = FXMLLoader.load(getClass().getResource("view/vendaSceneWindow.fxml"));
+        venda = new Scene(fxmlVenda, 700, 607);
+        
+        stage.setScene(login);
         stage.show();
         
     }
