@@ -38,15 +38,15 @@
                             <PropertyValueFactory property="precoProd" />
                       </cellValueFactory>
                   </TableColumn>
-                  <TableColumn prefWidth="113.0" text="Quantidade &#10;Estoque">
+                  <TableColumn fx:id="tblColumnQtdEstoque" prefWidth="113.0" text="Quantidade &#10;Estoque">
                       <cellValueFactory>
                             <PropertyValueFactory property="quantidadeProd" />
                       </cellValueFactory>
                   </TableColumn>
                </columns>
             </TableView>
-            <TextField layoutX="138.0" layoutY="128.0" prefHeight="25.0" prefWidth="235.0" promptText="Pesquisar na tabela" styleClass="textfield" stylesheets="@stylesClass.css" />
-            <Button layoutX="32.0" layoutY="120.0" mnemonicParsing="false" prefHeight="41.0" prefWidth="98.0" stylesheets="@stylesClass.css" text="Pesquisar" textFill="WHITE">
+            <TextField fx:id="txtCarregar" layoutX="138.0" layoutY="128.0" prefHeight="25.0" prefWidth="235.0" promptText="Pesquisar na tabela" styleClass="textfield" stylesheets="@stylesClass.css" />
+            <Button layoutX="32.0" layoutY="120.0" mnemonicParsing="false" onAction="#btnCarregarOnAction" prefHeight="41.0" prefWidth="98.0" stylesheets="@stylesClass.css" text="Carregar" textFill="WHITE">
                <font>
                   <Font name="System Bold" size="15.0" />
                </font>

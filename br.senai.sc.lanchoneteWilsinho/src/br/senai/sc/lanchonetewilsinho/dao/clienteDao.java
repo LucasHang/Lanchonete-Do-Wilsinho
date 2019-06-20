@@ -23,4 +23,6 @@ public interface clienteDao {
     
     public List<Cliente> getAll()throws SQLException;
     
+    public Cliente getClienteByCodigo(Integer codigo)throws SQLException;
+    
 }

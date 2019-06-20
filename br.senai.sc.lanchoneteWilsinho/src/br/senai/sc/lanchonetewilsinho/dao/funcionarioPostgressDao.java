@@ -21,11 +21,11 @@ public class funcionarioPostgressDao extends connectionFactory implements funcio
     public void save(Funcionario funcionario) throws SQLException {
         String[] codigoGerado = {"codigo"};
         super.preparedStatementInitialize(
-                "insert into funcionario (nome, email, senha) values (?,?,?)",
+                "insert into funcionario (nome, cpf, telefoneContato, email, senha, gerente) values (?,?,?,?,?,?)",
                 codigoGerado);
         super.prepared.setString(1, funcionario.getNome());
         super.prepared.setInt(2, funcionario.getCpf());
-        super.prepared.setInt(3, funcionario.getTelefoneContato());
+        super.prepared.setString(3, funcionario.getTelefoneContato());
         super.prepared.setString(4, funcionario.getLogin());
         super.prepared.setString(5, funcionario.getSenha());
         super.prepared.setBoolean(6, funcionario.getGerente());
@@ -48,7 +48,7 @@ public class funcionarioPostgressDao extends connectionFactory implements funcio
                 "update funcionario set nome = ?, cpf= ?, telefoneContato = ?, login= ?, senha = ?, gerente = ? where codigo = ?");
         super.prepared.setString(1, funcionario.getNome());
         super.prepared.setInt(2, funcionario.getCpf());
-        super.prepared.setInt(3, funcionario.getTelefoneContato());
+        super.prepared.setString(3, funcionario.getTelefoneContato());
         super.prepared.setString(4, funcionario.getLogin());
         super.prepared.setString(5, funcionario.getSenha());
         super.prepared.setBoolean(6, funcionario.getGerente());
@@ -76,14 +76,14 @@ public class funcionarioPostgressDao extends connectionFactory implements funcio
     @Override
     public List<Funcionario> getAll()throws SQLException {
         List<Funcionario> rows = new ArrayList<>();
-        super.preparedStatementInitialize("select * from cliente");
+        super.preparedStatementInitialize("select * from funcionario");
         super.prepared.execute();
         ResultSet resultSetRows = super.prepared.getResultSet();
         while (resultSetRows.next()) {
             rows.add(new Funcionario(resultSetRows.getInt("codigo"),
                     resultSetRows.getString("nome"),
                     resultSetRows.getInt("cpf"),
-                    resultSetRows.getInt("telefonContato"),
+                    resultSetRows.getString("telefonContato"),
                     resultSetRows.getString("login"),
                     resultSetRows.getString("senha"),
                     resultSetRows.getBoolean("gerente")));
@@ -92,6 +92,27 @@ public class funcionarioPostgressDao extends connectionFactory implements funcio
         super.closeAll();
 
         return rows;
+    }
+
+    @Override
+    public Funcionario getFuncionarioByCodigo(Integer codigo) throws SQLException {
+        Funcionario novoFuncionario = null;
+        super.preparedStatementInitialize("select * from funcionario");
+        super.prepared.execute();
+        ResultSet resultSetRows = super.prepared.getResultSet();
+        while (resultSetRows.next()) {
+            novoFuncionario = new Funcionario(resultSetRows.getInt("codigo"),
+                    resultSetRows.getString("nome"),
+                    resultSetRows.getInt("cpf"),
+                    resultSetRows.getString("telefonContato"),
+                    resultSetRows.getString("login"),
+                    resultSetRows.getString("senha"),
+                    resultSetRows.getBoolean("gerente"));
+        }
+        resultSetRows.close();
+        super.closeAll();
+
+        return novoFuncionario;
     }
     
 }

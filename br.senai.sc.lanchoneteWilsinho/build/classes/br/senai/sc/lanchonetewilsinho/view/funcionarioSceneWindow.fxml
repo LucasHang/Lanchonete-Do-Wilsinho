@@ -12,41 +12,41 @@
 <?import javafx.scene.layout.Pane?>
 <?import javafx.scene.text.Font?>
 
-<AnchorPane id="AnchorPane" prefHeight="736.0" prefWidth="626.0" stylesheets="@stylesClass.css" xmlns="http://javafx.com/javafx/8.0.171" xmlns:fx="http://javafx.com/fxml/1" fx:controller="br.senai.sc.lanchonetewilsinho.controller.FuncionarioSceneWindowController">
+<AnchorPane id="AnchorPane" prefHeight="720.0" prefWidth="680.0" stylesheets="@stylesClass.css" xmlns="http://javafx.com/javafx/8.0.171" xmlns:fx="http://javafx.com/fxml/1" fx:controller="br.senai.sc.lanchonetewilsinho.controller.FuncionarioSceneWindowController">
    <children>
-      <Pane layoutX="10.0" layoutY="13.0" prefHeight="711.0" prefWidth="606.0" styleClass="pane" stylesheets="@stylesClass.css">
+      <Pane layoutX="15.0" prefHeight="711.0" prefWidth="651.0" styleClass="pane" stylesheets="@stylesClass.css">
          <children>
-            <ImageView fitHeight="120.0" fitWidth="254.0" layoutX="345.0" layoutY="7.0" pickOnBounds="true" preserveRatio="true">
+            <ImageView fitHeight="135.0" fitWidth="302.0" layoutX="354.0" layoutY="6.0" pickOnBounds="true" preserveRatio="true">
                <image>
                   <Image url="@imagens/slogan%20lanchonete%20pronto.jpg" />
                </image>
             </ImageView>
-            <TableView fx:id="tableFuncionarios" layoutX="14.0" layoutY="178.0" prefHeight="416.0" prefWidth="577.0" styleClass="tableview" stylesheets="@stylesClass.css">
+            <TableView fx:id="tableFuncionarios" layoutX="14.0" layoutY="178.0" prefHeight="416.0" prefWidth="623.0" styleClass="tableview" stylesheets="@stylesClass.css">
                <columns>
                   <TableColumn prefWidth="75.0" text="Código">
                       <cellValueFactory>
                             <PropertyValueFactory property="codigoFunc" />
                       </cellValueFactory>
                   </TableColumn>
-                  <TableColumn prefWidth="225.0" text="Nome">
+                  <TableColumn prefWidth="259.0" text="Nome">
                       <cellValueFactory>
                             <PropertyValueFactory property="nome" />
                       </cellValueFactory>
                   </TableColumn>
-                  <TableColumn minWidth="7.0" prefWidth="156.0" text="Telefone">
+                  <TableColumn minWidth="7.0" prefWidth="155.0" text="Telefone">
                       <cellValueFactory>
                             <PropertyValueFactory property="telefoneContato" />
                       </cellValueFactory>
                   </TableColumn>
-                  <TableColumn prefWidth="115.0" text="Gerente">
+                  <TableColumn fx:id="tblColumnGerente" prefWidth="129.0" text="Gerente">
                       <cellValueFactory>
                             <PropertyValueFactory property="gerente" />
                       </cellValueFactory>
                   </TableColumn>
                </columns>
             </TableView>
-            <TextField layoutX="138.0" layoutY="128.0" prefHeight="25.0" prefWidth="235.0" promptText="Pesquisar na tabela" styleClass="textfield" stylesheets="@stylesClass.css" />
-            <Button layoutX="32.0" layoutY="120.0" mnemonicParsing="false" prefHeight="41.0" prefWidth="98.0" stylesheets="@stylesClass.css" text="Pesquisar" textFill="WHITE">
+            <TextField fx:id="txtCarregar" layoutX="138.0" layoutY="124.0" prefHeight="34.0" prefWidth="207.0" promptText="Pesquisar na tabela" styleClass="textfield" stylesheets="@stylesClass.css" />
+            <Button layoutX="32.0" layoutY="120.0" mnemonicParsing="false" onAction="#btnCarregarOnAction" prefHeight="41.0" prefWidth="98.0" stylesheets="@stylesClass.css" text="Carregar" textFill="WHITE">
                <font>
                   <Font name="System Bold" size="15.0" />
                </font>
@@ -54,7 +54,7 @@
                   <Cursor fx:constant="HAND" />
                </cursor>
             </Button>
-            <Button fx:id="btnCadastrarFuncionario" layoutX="236.0" layoutY="616.0" mnemonicParsing="false" onAction="#btnCadastrarFuncionarioOnAction" prefHeight="65.0" prefWidth="134.0" text="Cadastrar &#10;Funcionário" textAlignment="CENTER" textFill="WHITE">
+            <Button fx:id="btnCadastrarFuncionario" layoutX="278.0" layoutY="616.0" mnemonicParsing="false" onAction="#btnCadastrarFuncionarioOnAction" prefHeight="65.0" prefWidth="134.0" text="Cadastrar &#10;Funcionário" textAlignment="CENTER" textFill="WHITE">
                <font>
                   <Font name="System Bold" size="17.0" />
                </font>

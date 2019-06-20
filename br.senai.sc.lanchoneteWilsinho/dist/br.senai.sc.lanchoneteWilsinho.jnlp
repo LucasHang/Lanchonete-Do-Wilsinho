@@ -8,7 +8,8 @@
   </information>
   <resources>
     <j2se version="1.6+" href="http://java.sun.com/products/autodl/j2se"/>
-    <jar href="br.senai.sc.lanchoneteWilsinho.jar" size="413922" download="eager" />
+    <jar href="br.senai.sc.lanchoneteWilsinho.jar" size="438417" download="eager" />
+    <jar href="lib\postgresql-42.2.5.jar" size="825943" download="eager" />
   </resources>
   <applet-desc  width="800" height="600" main-class="com.javafx.main.NoJavaFXFallback"  name="br.senai.sc.lanchoneteWilsinho" >
     <param name="requiredFXVersion" value="8.0+"/>

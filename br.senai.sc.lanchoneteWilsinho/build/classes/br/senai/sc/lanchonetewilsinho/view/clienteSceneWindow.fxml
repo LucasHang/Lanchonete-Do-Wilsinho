@@ -23,9 +23,9 @@
             </ImageView>
             <TableView fx:id="tableClientes" layoutX="14.0" layoutY="178.0" prefHeight="416.0" prefWidth="577.0" styleClass="tableview" stylesheets="@stylesClass.css">
               <columns>
-                <TableColumn prefWidth="75.0" text="Código">
+                <TableColumn prefWidth="75.0" text="Cpf">
                     <cellValueFactory>
-                        <PropertyValueFactory property="codigoCli" />
+                        <PropertyValueFactory property="cpf" />
                     </cellValueFactory>
                 </TableColumn>
                 <TableColumn prefWidth="225.0" text="Nome">
@@ -38,15 +38,15 @@
                             <PropertyValueFactory property="telefoneContato" />
                         </cellValueFactory>
                   </TableColumn>
-                  <TableColumn prefWidth="115.0" text="Colaborador">
+                  <TableColumn fx:id="tblColumColaborador" prefWidth="115.0" text="Colaborador">
                        <cellValueFactory>
                             <PropertyValueFactory property="colaborador" />
                         </cellValueFactory>
                   </TableColumn>
               </columns>
             </TableView>
-            <TextField layoutX="138.0" layoutY="128.0" prefHeight="25.0" prefWidth="235.0" promptText="Pesquisar na tabela" styleClass="textfield" stylesheets="@stylesClass.css" />
-            <Button layoutX="32.0" layoutY="120.0" mnemonicParsing="false" prefHeight="41.0" prefWidth="98.0" stylesheets="@stylesClass.css" text="Pesquisar" textFill="WHITE">
+            <TextField fx:id="txtCarregar" layoutX="138.0" layoutY="128.0" prefHeight="25.0" prefWidth="235.0" promptText="Pesquisar na tabela" styleClass="textfield" stylesheets="@stylesClass.css" />
+            <Button layoutX="32.0" layoutY="120.0" mnemonicParsing="false" onAction="#btnCarregarOnAction" prefHeight="41.0" prefWidth="98.0" stylesheets="@stylesClass.css" text="Carregar" textFill="WHITE">
                <font>
                   <Font name="System Bold" size="15.0" />
                </font>

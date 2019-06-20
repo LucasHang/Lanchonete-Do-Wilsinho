@@ -5,7 +5,6 @@
  */
 package br.senai.sc.lanchonetewilsinho.dao;
 
-import br.senai.sc.lanchonetewilsinho.BancoDeDados;
 import br.senai.sc.lanchonetewilsinho.model.Item_Venda;
 import java.sql.ResultSet;
 import java.sql.SQLException;
@@ -25,9 +24,9 @@ public class item_vendaPostgressDao extends connectionFactory implements item_ve
                 "insert into ItemVenda (codigoVend, codigoProd, qtdComprada, valorTotal) values (?,?,?,?)"/*,
                 codigoGerado*/);
         super.prepared.setInt(1, item_venda.getVenda());
-        super.prepared.setInt(2, item_venda.getProduto().getCodigo());
+        super.prepared.setInt(2, item_venda.getProduto());
         super.prepared.setInt(3, item_venda.getQtdComprada());
-        super.prepared.setDouble(4, item_venda.getValorTotal());
+        super.prepared.setDouble(4, item_venda.getValorItem());
         int linhasAfetadas = super.prepared.executeUpdate();
         if (linhasAfetadas == 0){
             throw new SQLException("Não foi possível cadastrar o novo item");
@@ -63,7 +62,7 @@ public class item_vendaPostgressDao extends connectionFactory implements item_ve
         super.preparedStatementInitialize(
                 "delete from ItemVenda where codigoVend = ? and codigoProd = ?");
         super.prepared.setInt(1, item_venda.getVenda());
-        super.prepared.setInt(2, item_venda.getProduto().getCodigo());
+        super.prepared.setInt(2, item_venda.getProduto());
         int linhasAfetadas = super.prepared.executeUpdate();
         if (linhasAfetadas == 0){
             throw new SQLException("Não foi possível deletar o item");
@@ -80,7 +79,7 @@ public class item_vendaPostgressDao extends connectionFactory implements item_ve
         ResultSet resultSetRows = super.prepared.getResultSet();
         while (resultSetRows.next()) {
             rows.add(new Item_Venda(resultSetRows.getInt("codigoVend"),
-                    DAOFactory.getProdutoDAO().getProdutoByCodigo(resultSetRows.getString("codigoProd")),
+                    resultSetRows.getInt("codigoProd"),
                     resultSetRows.getInt("qtdComprada"),
                     resultSetRows.getDouble("valorTotal")));
         }
@@ -99,7 +98,7 @@ public class item_vendaPostgressDao extends connectionFactory implements item_ve
         ResultSet resultSetRows = super.prepared.getResultSet();
         while (resultSetRows.next()) {
             rows.add(new Item_Venda(resultSetRows.getInt("codigoVend"),
-                    DAOFactory.getProdutoDAO().getProdutoByCodigo(resultSetRows.getString("codigoProd")),
+                    resultSetRows.getInt("codigoProd"),
                     resultSetRows.getInt("qtdComprada"),
                     resultSetRows.getDouble("valorTotal")));
         }

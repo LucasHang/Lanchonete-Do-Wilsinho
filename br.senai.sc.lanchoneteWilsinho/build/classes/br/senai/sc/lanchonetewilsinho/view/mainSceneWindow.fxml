@@ -10,28 +10,28 @@
 <?import javafx.scene.layout.Pane?>
 <?import javafx.scene.text.Font?>
 
-<AnchorPane id="AnchorPane" prefHeight="480.0" prefWidth="417.0" xmlns="http://javafx.com/javafx/8.0.171" xmlns:fx="http://javafx.com/fxml/1" fx:controller="br.senai.sc.lanchonetewilsinho.controller.mainSceneWindowController">
+<AnchorPane id="AnchorPane" prefHeight="550.0" prefWidth="500.0" xmlns="http://javafx.com/javafx/8.0.171" xmlns:fx="http://javafx.com/fxml/1" fx:controller="br.senai.sc.lanchonetewilsinho.controller.mainSceneWindowController">
     <children>
-      <Pane layoutX="10.0" layoutY="13.0" prefHeight="456.0" prefWidth="396.0" styleClass="pane" stylesheets="@stylesClass.css">
+      <Pane layoutX="10.0" layoutY="11.0" prefHeight="529.0" prefWidth="480.0" styleClass="pane" stylesheets="@stylesClass.css">
          <children>
-            <Button fx:id="btnEntrar" layoutX="160.0" layoutY="369.0" mnemonicParsing="false" onAction="#bntEntrarOnAction" prefHeight="42.0" prefWidth="77.0" text="Entrar" textFill="WHITE">
+            <Button fx:id="btnEntrar" layoutX="184.0" layoutY="427.0" mnemonicParsing="false" onAction="#bntEntrarOnAction" prefHeight="51.0" prefWidth="112.0" text="Entrar" textFill="WHITE">
                <font>
                   <Font name="System Bold" size="17.0" />
                </font>
             </Button>
-            <PasswordField fx:id="passFieldLogin" layoutX="144.0" layoutY="285.0" prefHeight="29.0" prefWidth="178.0" styleClass="textfield" />
-            <TextField fx:id="txtFieldLogin" layoutX="144.0" layoutY="214.0" prefHeight="29.0" prefWidth="178.0" styleClass="textfield" />
-            <Label layoutX="74.0" layoutY="286.0" prefHeight="27.0" prefWidth="58.0" text="Senha:" textFill="SIENNA">
+            <PasswordField fx:id="passFieldLogin" layoutX="158.0" layoutY="336.0" prefHeight="29.0" prefWidth="234.0" styleClass="textfield" />
+            <TextField fx:id="txtFieldLogin" layoutX="158.0" layoutY="265.0" prefHeight="29.0" prefWidth="234.0" styleClass="textfield" />
+            <Label layoutX="88.0" layoutY="337.0" prefHeight="27.0" prefWidth="58.0" text="Senha:" textFill="SIENNA">
                <font>
                   <Font name="System Bold" size="16.0" />
                </font>
             </Label>
-            <Label layoutX="74.0" layoutY="215.0" prefHeight="27.0" prefWidth="58.0" text="Login:" textFill="SIENNA">
+            <Label layoutX="88.0" layoutY="266.0" prefHeight="27.0" prefWidth="58.0" text="Login:" textFill="SIENNA">
                <font>
                   <Font name="System Bold" size="16.0" />
                </font>
             </Label>
-            <ImageView fitHeight="157.0" fitWidth="322.0" layoutX="38.0" layoutY="39.0" pickOnBounds="true" preserveRatio="true">
+            <ImageView fitHeight="182.0" fitWidth="392.0" layoutX="50.0" layoutY="50.0" pickOnBounds="true" preserveRatio="true">
                <image>
                   <Image url="@imagens/slogan%20lanchonete%20pronto.jpg" />
                </image>

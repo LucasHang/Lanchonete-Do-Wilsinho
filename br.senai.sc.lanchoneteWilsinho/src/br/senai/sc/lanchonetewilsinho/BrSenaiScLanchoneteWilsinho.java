@@ -11,6 +11,7 @@ import javafx.fxml.FXMLLoader;
 import javafx.scene.Parent;
 import javafx.scene.Scene;
 import javafx.stage.Stage;
+import javafx.stage.StageStyle;
 
 /**
  *
@@ -19,6 +20,8 @@ import javafx.stage.Stage;
 public class BrSenaiScLanchoneteWilsinho extends Application {
     
     private static Stage stage;
+    private static Stage stageDos;
+    private static Stage stageTres;
     
     private static Scene login;
     private static Scene menu;
@@ -36,17 +39,17 @@ public class BrSenaiScLanchoneteWilsinho extends Application {
         
         stage = primaryStage;
         
+        stageDos = new Stage();
+        stageTres = new Stage();
+        
         Parent fxmlLogin = FXMLLoader.load(getClass().getResource("view/mainSceneWindow.fxml"));
-        login = new Scene(fxmlLogin, 500, 507);
-        
-        Parent fxmlMenu = FXMLLoader.load(getClass().getResource("view/menuSceneWindow.fxml"));
-        menu = new Scene(fxmlMenu, 700, 507);
-        
-        Parent fxmlCliente = FXMLLoader.load(getClass().getResource("view/clienteSceneWindow.fxml"));
-        cliente = new Scene(fxmlCliente, 660, 900);
+        login = new Scene(fxmlLogin, 500, 550);
         
         
         
+      //  Parent fxmlCliente = FXMLLoader.load(getClass().getResource("view/clienteSceneWindow.fxml"));
+      //  cliente = new Scene(fxmlCliente, 660, 900);
+
         Parent fxmlFuncionario = FXMLLoader.load(getClass().getResource("view/funcionarioSceneWindow.fxml"));
         funcionario = new Scene(fxmlFuncionario, 660, 900);
         
@@ -60,8 +63,18 @@ public class BrSenaiScLanchoneteWilsinho extends Application {
         cadastroProduto = new Scene(fxmlCadastroProduto, 700, 507);
         
         Parent fxmlVenda = FXMLLoader.load(getClass().getResource("view/vendaSceneWindow.fxml"));
-        venda = new Scene(fxmlVenda, 700, 607);
+        venda = new Scene(fxmlVenda, 1280, 720);
         
+        Parent fxmlCadastroCliente = FXMLLoader.load(BrSenaiScLanchoneteWilsinho.class.getResource("view/cadastroClienteSceneWindow.fxml"));
+        cadastroCliente = new Scene(fxmlCadastroCliente, 1280, 720);
+        
+        stageTres.initStyle(StageStyle.UNDECORATED);
+        stageTres.setResizable(false);
+        
+        stage.initStyle(StageStyle.UNDECORATED);
+        stage.setResizable(false);
+        stage.setX(710);
+        stage.setY(265);
         stage.setScene(login);
         stage.show();
         
@@ -69,8 +82,14 @@ public class BrSenaiScLanchoneteWilsinho extends Application {
     public static void mudarTela(String tela) throws IOException{
         switch(tela){
             case "menu" :
+                Parent fxmlMenu = FXMLLoader.load(BrSenaiScLanchoneteWilsinho.class.getResource("view/menuSceneWindow.fxml"));
+                menu = new Scene(fxmlMenu, 1280, 350);
+                stage.setX(320);
+                stage.setY(0.0);
+                stage.setAlwaysOnTop(true);
                 stage.setScene(menu);
                 break;
+                
             case "cliente":
                 Parent fxmlCliente = FXMLLoader.load(BrSenaiScLanchoneteWilsinho.class.getResource("view/clienteSceneWindow.fxml"));
                 cliente = new Scene(fxmlCliente, 700, 807);
@@ -80,23 +99,36 @@ public class BrSenaiScLanchoneteWilsinho extends Application {
             case "cadastroCliente" :
                 Parent fxmlCadastroCliente = FXMLLoader.load(BrSenaiScLanchoneteWilsinho.class.getResource("view/cadastroClienteSceneWindow.fxml"));
                 cadastroCliente = new Scene(fxmlCadastroCliente, 700, 507);
-                stage.setScene(cadastroCliente);
-                stage.show();
+                stageDos.setScene(cadastroCliente);
+                stageDos.show();
                 break;
             case "produto":
-                stage.setScene(produto);
+                Parent fxmlProduto = FXMLLoader.load(BrSenaiScLanchoneteWilsinho.class.getResource("view/produtoSceneWindow.fxml"));
+                produto = new Scene(fxmlProduto, 700, 807);
+                stageTres.setScene(produto);
                 break;
             case "cadastroProduto" :
-                stage.setScene(cadastroProduto);
+                Parent fxmlCadastroProduto = FXMLLoader.load(BrSenaiScLanchoneteWilsinho.class.getResource("view/cadastroProdutoSceneWindow.fxml"));
+                cadastroProduto = new Scene(fxmlCadastroProduto, 700, 507);
+                stageDos.setScene(cadastroProduto);
                 break;
             case "funcionario":
-                stage.setScene(funcionario);
-                break;
+                Parent fxmlFuncionario = FXMLLoader.load(BrSenaiScLanchoneteWilsinho.class.getResource("view/funcionarioSceneWindow.fxml"));
+                funcionario = new Scene(fxmlFuncionario, 680, 720);
+                stageTres.setX(620);
+                stageTres.setY(350);
+                stageTres.setScene(funcionario);
+                stageTres.show();
+            break;
             case "cadastroFuncionario":
-                stage.setScene(cadastroFuncionario);
+                Parent fxmlCadastroFuncionario = FXMLLoader.load(BrSenaiScLanchoneteWilsinho.class.getResource("view/cadastroFuncionarioSceneWindow.fxml"));
+                cadastroFuncionario = new Scene(fxmlCadastroFuncionario, 700, 507);
+                stageDos.setScene(cadastroFuncionario);
                 break;
             case "venda":
-                stage.setScene(venda);
+                Parent fxmlVenda = FXMLLoader.load(BrSenaiScLanchoneteWilsinho.class.getResource("view/vendaSceneWindow.fxml"));
+                venda = new Scene(fxmlVenda, 700, 807);
+                stageTres.setScene(venda);
                 break;
         }
     }

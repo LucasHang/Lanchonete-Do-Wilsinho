@@ -54,3 +54,7 @@
 	-fx-border-color:  #EEE8AA;
 	-fx-border-width: 2px;
 }
+
+.sem-estoque{
+    	-fx-background-color: #FF6F6F;
+}

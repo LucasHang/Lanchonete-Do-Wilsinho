@@ -22,4 +22,6 @@ public interface produtoDao {
     public void delete(Produto conta)throws SQLException;
     
     public List<Produto> getAll()throws SQLException;
+    
+    public Produto getProdutoByCodigo(Integer codigo)throws SQLException;
 }

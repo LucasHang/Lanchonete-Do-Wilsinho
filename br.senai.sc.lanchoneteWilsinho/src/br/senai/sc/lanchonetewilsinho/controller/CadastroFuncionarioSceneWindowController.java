@@ -5,10 +5,16 @@
  */
 package br.senai.sc.lanchonetewilsinho.controller;
 
+import br.senai.sc.lanchonetewilsinho.BrSenaiScLanchoneteWilsinho;
+import br.senai.sc.lanchonetewilsinho.MeuAlerta;
 import br.senai.sc.lanchonetewilsinho.dao.DAOFactory;
 import br.senai.sc.lanchonetewilsinho.model.Funcionario;
+import java.io.IOException;
 import java.net.URL;
+import java.sql.SQLException;
 import java.util.ResourceBundle;
+import java.util.logging.Level;
+import java.util.logging.Logger;
 import javafx.event.ActionEvent;
 import javafx.fxml.FXML;
 import javafx.fxml.Initializable;
@@ -47,23 +53,48 @@ public class CadastroFuncionarioSceneWindowController implements Initializable {
     public void initialize(URL url, ResourceBundle rb) {
           
 	novoFuncionario = new Funcionario();
-	txtFieldNome.textProperty().bindBidirectional(novoFuncionario.nomeProperty());
-	txtFieldTelefoneContato.textProperty().bindBidirectional(novoFuncionario.TelefoneContatoProperty());
-	txtFieldCpf.textProperty().bindBidirectional(novoFuncionario.CpfProperty(), new NumberStringConverter());
-	txtFieldUsuario.textProperty().bindBidirectional(novoFuncionario.loginProperty());
-	passFieldSenha.textProperty().bindBidirectional(novoFuncionario.senhaProperty());
-	novoFuncionario.setGerente(checkBoxGerente.isSelected());
+	bindFields(novoFuncionario);
         
     }    
 
     @FXML
     private void btnCadastrarOnAction(ActionEvent event) {
-        DAOFactory.getFuncionarioDAO().save(novoFuncionario);
-        txtFieldNome.textProperty().unbindBidirectional(novoFuncionario.nomeProperty());
-	txtFieldTelefoneContato.textProperty().unbindBidirectional(novoFuncionario.TelefoneContatoProperty());
-	txtFieldCpf.textProperty().unbindBidirectional(novoFuncionario.CpfProperty());
-	txtFieldUsuario.textProperty().unbindBidirectional(novoFuncionario.loginProperty());
-	passFieldSenha.textProperty().unbindBidirectional(novoFuncionario.senhaProperty());
+        unbindFields(novoFuncionario);
+        
+        try {
+            DAOFactory.getFuncionarioDAO().save(novoFuncionario);
+        } catch (SQLException ex) {
+            Logger.getLogger(CadastroFuncionarioSceneWindowController.class.getName()).log(Level.SEVERE, null, ex);
+            MeuAlerta.alertaErro(ex.getMessage()).showAndWait();
+        }
+        
+        try {
+            BrSenaiScLanchoneteWilsinho.mudarTela("funcionario");
+        } catch (IOException ex) {
+            Logger.getLogger(CadastroFuncionarioSceneWindowController.class.getName()).log(Level.SEVERE, null, ex);
+            MeuAlerta.alertaErro(ex.getMessage()).showAndWait();
+        }
+        
+    }
+    
+    
+    private void bindFields(Funcionario funcionario){
+        if(funcionario != null){
+            txtFieldNome.textProperty().bindBidirectional(funcionario.nomeProperty());
+            txtFieldTelefoneContato.textProperty().bindBidirectional(funcionario.telefoneContatoProperty());
+            txtFieldCpf.textProperty().bindBidirectional(funcionario.CpfProperty(), new NumberStringConverter());
+            checkBoxGerente.selectedProperty().bindBidirectional(funcionario.gerenteProperty());
+        }
+        
+    }
+    
+    private void unbindFields(Funcionario funcionario){
+        if(funcionario != null){
+            txtFieldNome.textProperty().unbindBidirectional(funcionario.nomeProperty());
+            txtFieldTelefoneContato.textProperty().unbindBidirectional(funcionario.telefoneContatoProperty());
+            txtFieldCpf.textProperty().unbindBidirectional(funcionario.CpfProperty());
+            checkBoxGerente.selectedProperty().unbindBidirectional(funcionario.gerenteProperty());
+        }
     }
     
 }

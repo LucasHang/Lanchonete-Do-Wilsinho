@@ -5,6 +5,8 @@
  */
 package br.senai.sc.lanchonetewilsinho.model;
 
+import br.senai.sc.lanchonetewilsinho.dao.DAOFactory;
+import java.sql.SQLException;
 import javafx.beans.property.DoubleProperty;
 import javafx.beans.property.IntegerProperty;
 import javafx.beans.property.SimpleDoubleProperty;
@@ -17,21 +19,48 @@ import javafx.beans.property.SimpleIntegerProperty;
 public class Item_Venda {
     
     private final IntegerProperty codigoVenda = new SimpleIntegerProperty();
-    private Produto produto = null;
+        
     private final IntegerProperty qtdComprada = new SimpleIntegerProperty();
-    private Double valorTotal = (produto.getPrecoProd() * qtdComprada.get());
-    
+
+    private final IntegerProperty produto = new SimpleIntegerProperty();
+    private final DoubleProperty valorItem = new SimpleDoubleProperty();
+
+  
     public Item_Venda(){
         
     }
     
-    public Item_Venda(Integer codigoVenda, Produto objectProduto, Integer qtdComprada, Double valorTotal){
+    public Item_Venda(Integer codigoVenda, Integer codProduto, Integer qtdComprada, Double valorTotal){
         this.codigoVenda.set(codigoVenda);
-        this.produto = objectProduto;
+        this.produto.set(codProduto);
         this.qtdComprada.set(qtdComprada);
-        this.valorTotal = valorTotal;
+        this.valorItem.set(valorTotal);
     }
 
+    public double getValorItem() {
+        return this.valorItem.get();
+    }
+
+    public void setValorItem() throws SQLException {
+        this.valorItem.set(DAOFactory.getProdutoDAO().getProdutoByCodigo(produto.get()).getPrecoProd() * qtdComprada.get());
+    }
+
+    public DoubleProperty valorItemProperty() {
+        return this.valorItem;
+    }
+    
+    public int getProduto() {
+        return this.produto.get();
+    }
+
+    public void setProduto(int value) {
+        this.produto.set(value);
+    }
+
+    public IntegerProperty produtoProperty() {
+        return this.produto;
+    }
+    
     public Integer getVenda(){
         return this.codigoVenda.get();
     }
@@ -43,21 +72,7 @@ public class Item_Venda {
     public IntegerProperty vendaProperty(){
         return this.codigoVenda;
     }
-    
-     public Produto getProduto(){
-        return this.produto;
-    }
-    
-    public void setProduto(Produto object){
-        this.produto = object;
-    }
-    
-    
-    public double getValorTotal() {
-        return this.valorTotal;
-    }
 
-    
     public int getQtdComprada() {
         return this.qtdComprada.get();
     }

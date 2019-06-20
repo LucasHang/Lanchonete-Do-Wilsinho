@@ -12,7 +12,7 @@
 <?import javafx.scene.layout.Pane?>
 <?import javafx.scene.text.Font?>
 
-<AnchorPane id="AnchorPane" prefHeight="736.0" prefWidth="632.0" xmlns="http://javafx.com/javafx/10.0.1" xmlns:fx="http://javafx.com/fxml/1" fx:controller="br.senai.sc.lanchonetewilsinho.controller.ClienteSceneWindowController">
+<AnchorPane id="AnchorPane" prefHeight="736.0" prefWidth="632.0" xmlns="http://javafx.com/javafx/8.0.171" xmlns:fx="http://javafx.com/fxml/1" fx:controller="br.senai.sc.lanchonetewilsinho.controller.ClienteSceneWindowController">
    <children>
       <Pane layoutX="14.0" layoutY="14.0" prefHeight="711.0" prefWidth="606.0" styleClass="pane" stylesheets="@stylesClass.css">
          <children>
@@ -38,15 +38,15 @@
                             <PropertyValueFactory property="telefoneContato" />
                         </cellValueFactory>
                   </TableColumn>
-                  <TableColumn prefWidth="115.0" text="Colaborador">
+                  <TableColumn fx:id="tblColumColaborador" prefWidth="115.0" text="Colaborador">
                        <cellValueFactory>
                             <PropertyValueFactory property="colaborador" />
                         </cellValueFactory>
                   </TableColumn>
               </columns>
             </TableView>
-            <TextField layoutX="138.0" layoutY="128.0" prefHeight="25.0" prefWidth="235.0" promptText="Pesquisar na tabela" styleClass="textfield" stylesheets="@stylesClass.css" />
-            <Button layoutX="32.0" layoutY="120.0" mnemonicParsing="false" prefHeight="41.0" prefWidth="98.0" stylesheets="@stylesClass.css" text="Pesquisar" textFill="WHITE">
+            <TextField fx:id="txtCarregar" layoutX="138.0" layoutY="128.0" prefHeight="25.0" prefWidth="235.0" promptText="Pesquisar na tabela" styleClass="textfield" stylesheets="@stylesClass.css" />
+            <Button layoutX="32.0" layoutY="120.0" mnemonicParsing="false" onAction="#btnCarregarOnAction" prefHeight="41.0" prefWidth="98.0" stylesheets="@stylesClass.css" text="Carregar" textFill="WHITE">
                <font>
                   <Font name="System Bold" size="15.0" />
                </font>

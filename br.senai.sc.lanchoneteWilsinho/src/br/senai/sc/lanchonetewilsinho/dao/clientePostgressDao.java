@@ -27,7 +27,7 @@ public class clientePostgressDao extends connectionFactory implements clienteDao
                 codigoGerado);
         super.prepared.setString(1, cliente.getNome());
         super.prepared.setInt(2, cliente.getCpf());
-        super.prepared.setInt(3, cliente.getTelefoneContato());
+        super.prepared.setString(3, cliente.getTelefoneContato());
         super.prepared.setBoolean(4, cliente.getColaborador());
         int linhasAfetadas = super.prepared.executeUpdate();
         if (linhasAfetadas == 0){
@@ -50,7 +50,7 @@ public class clientePostgressDao extends connectionFactory implements clienteDao
                 "update cliente set nome = ?, cpf = ?, telefonContato= ?, colaborador = ? where codigo = ?");
         super.prepared.setString(1, cliente.getNome());
         super.prepared.setInt(2, cliente.getCpf());
-        super.prepared.setInt(3, cliente.getTelefoneContato());
+        super.prepared.setString(3, cliente.getTelefoneContato());
         super.prepared.setBoolean(4, cliente.getColaborador());
         super.prepared.setInt(5, cliente.getCodigo());
         int linhasAfetadas = super.prepared.executeUpdate();
@@ -87,7 +87,7 @@ public class clientePostgressDao extends connectionFactory implements clienteDao
             rows.add(new Cliente(resultSetRows.getInt("codigo"),
                     resultSetRows.getString("nome"),
                     resultSetRows.getInt("cpf"),
-                    resultSetRows.getInt("telefonContato"),
+                    resultSetRows.getString("telefonContato"),
                     resultSetRows.getBoolean("colaborador")));
         }
         resultSetRows.close();
@@ -95,5 +95,25 @@ public class clientePostgressDao extends connectionFactory implements clienteDao
 
         return rows;
     }
+
+    @Override
+    public Cliente getClienteByCodigo(Integer codigo) throws SQLException {
+        Cliente novoCliente = null;
+        super.preparedStatementInitialize("select * from produto");
+        super.prepared.execute();
+        ResultSet resultSetRows = super.prepared.getResultSet();
+        if (resultSetRows.next()) {
+            novoCliente = new Cliente(resultSetRows.getInt("codigo"),
+                    resultSetRows.getString("nome"),
+                    resultSetRows.getInt("cpf"),
+                    resultSetRows.getString("telefonContato"),
+                    resultSetRows.getBoolean("colaborador"));
+        }
+        resultSetRows.close();
+        super.closeAll();
+
+        return novoCliente;
+    }
+    
     
 }

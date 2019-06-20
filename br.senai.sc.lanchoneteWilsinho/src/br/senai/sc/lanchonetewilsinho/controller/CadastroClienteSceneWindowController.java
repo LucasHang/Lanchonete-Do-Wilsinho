@@ -6,6 +6,7 @@
 package br.senai.sc.lanchonetewilsinho.controller;
 
 import br.senai.sc.lanchonetewilsinho.BrSenaiScLanchoneteWilsinho;
+import br.senai.sc.lanchonetewilsinho.MeuAlerta;
 import br.senai.sc.lanchonetewilsinho.dao.DAOFactory;
 import br.senai.sc.lanchonetewilsinho.model.Cliente;
 import java.io.IOException;
@@ -48,31 +49,47 @@ public class CadastroClienteSceneWindowController implements Initializable {
     @Override
     public void initialize(URL url, ResourceBundle rb) {
         novoCliente = new Cliente();
-        txtFieldNome.textProperty().bindBidirectional(novoCliente.nomeProperty());
-	txtFieldTelefoneContato.textProperty().bindBidirectional(novoCliente.TelefoneContatoProperty());
-	txtFieldCpf.textProperty().bindBidirectional(novoCliente.CpfProperty(), new NumberStringConverter());
-	novoCliente.setColaborador(checkBoxColaborador.isSelected());
+        bindFields(novoCliente);
     }    
 
     @FXML
     private void btnCadastrarOnAction(ActionEvent event) {
+        unbindFields(novoCliente);
+        
         try {
             DAOFactory.getClienteDAO().save(novoCliente);
         } catch (SQLException ex) {
             Logger.getLogger(CadastroClienteSceneWindowController.class.getName()).log(Level.SEVERE, null, ex);
-            Alert alerta = new Alert(Alert.AlertType.ERROR, ex.getMessage(), ButtonType.OK);
+            MeuAlerta.alertaErro(ex.getMessage()).showAndWait();
         }
-        txtFieldNome.textProperty().unbindBidirectional(novoCliente.nomeProperty());
-	txtFieldTelefoneContato.textProperty().unbindBidirectional(novoCliente.TelefoneContatoProperty());
-	txtFieldCpf.textProperty().unbindBidirectional(novoCliente.CpfProperty());
+        
      
         try {
             BrSenaiScLanchoneteWilsinho.mudarTela("cliente");
         } catch (IOException ex) {
             Logger.getLogger(CadastroClienteSceneWindowController.class.getName()).log(Level.SEVERE, null, ex);
-            Alert alerta = new Alert(Alert.AlertType.ERROR, ex.getMessage(), ButtonType.OK);
+            MeuAlerta.alertaErro(ex.getMessage()).showAndWait();
         }
 
+    }
+    
+    private void bindFields(Cliente cliente){
+        if(cliente != null){
+            txtFieldNome.textProperty().bindBidirectional(cliente.nomeProperty());
+            txtFieldTelefoneContato.textProperty().bindBidirectional(cliente.telefoneContatoProperty());
+            txtFieldCpf.textProperty().bindBidirectional(cliente.CpfProperty(), new NumberStringConverter());
+            checkBoxColaborador.selectedProperty().bindBidirectional(cliente.colaboradorProperty());
+        }
+        
+    }
+    
+    private void unbindFields(Cliente cliente){
+        if(cliente != null){
+            txtFieldNome.textProperty().unbindBidirectional(cliente.nomeProperty());
+            txtFieldTelefoneContato.textProperty().unbindBidirectional(cliente.telefoneContatoProperty());
+            txtFieldCpf.textProperty().unbindBidirectional(cliente.CpfProperty());
+            checkBoxColaborador.selectedProperty().unbindBidirectional(cliente.colaboradorProperty());
+        }
     }
     
 }

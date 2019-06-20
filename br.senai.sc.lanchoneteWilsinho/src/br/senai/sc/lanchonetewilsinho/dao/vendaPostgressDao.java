@@ -24,8 +24,8 @@ public class vendaPostgressDao extends connectionFactory implements vendaDao{
         super.preparedStatementInitialize(
                 "insert into venda (codigoCli, codigoFunc, valorCompra, dataVenda) values (?,?,?,?)",
                 codigoGerado);
-        super.prepared.setInt(1, venda.getCliente().getCodigo());
-        super.prepared.setInt(2, venda.getFuncionario().getCodigo());
+        super.prepared.setInt(1, venda.getCliente());
+        super.prepared.setInt(2, venda.getFuncionario());
         super.prepared.setDouble(3, venda.getValorCompra());
         super.prepared.setInt(4, venda.getDataVenda());
         int linhasAfetadas = super.prepared.executeUpdate();
@@ -45,8 +45,8 @@ public class vendaPostgressDao extends connectionFactory implements vendaDao{
     public void update(Venda venda) throws SQLException{
          super.preparedStatementInitialize(
                 "update venda set codigoCli = ?, codigoFunc = ?, valorCompra = ?, dataVenda = ? where codigo = ?");
-        super.prepared.setInt(1, venda.getCliente().getCodigo());
-        super.prepared.setInt(2, venda.getFuncionario().getCodigo());
+        super.prepared.setInt(1, venda.getCliente());
+        super.prepared.setInt(2, venda.getFuncionario());
         super.prepared.setDouble(3, venda.getValorCompra());
         super.prepared.setInt(4, venda.getDataVenda());
         super.prepared.setInt(5, venda.getCodigo());
@@ -78,11 +78,11 @@ public class vendaPostgressDao extends connectionFactory implements vendaDao{
         ResultSet resultSetRows = super.prepared.getResultSet();
         while (resultSetRows.next()) {
             rows.add(new Venda(resultSetRows.getInt("codigo"),
-                    DAOFactory.getClienteDAO().getClienteByCodigo(resultSetRows.getInt("codigoCli")),
-                    DAOFactory.getFuncionarioDAO().getFuncionarioByCodigo(resultSetRows.getInt("codigoFunc")),
-                    resultSetRows.getDouble("valorCompra")),
+                    resultSetRows.getInt("codigoCli"),
+                    resultSetRows.getInt("codigoFunc"),
+                    resultSetRows.getDouble("valorCompra"),
                     DAOFactory.getItem_vendaDAO().getItemVendaByCodigoVenda(resultSetRows.getInt("codigo")),
-                    resultSetRows.getInt("dataVenda"));
+                    resultSetRows.getInt("dataVenda")));
         }
         resultSetRows.close();
         super.closeAll();

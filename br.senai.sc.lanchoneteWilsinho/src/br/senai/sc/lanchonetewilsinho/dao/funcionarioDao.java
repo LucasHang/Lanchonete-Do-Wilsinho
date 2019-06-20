@@ -22,4 +22,6 @@ public interface funcionarioDao {
     public void delete(Funcionario funcionario)throws SQLException;
     
     public List<Funcionario> getAll()throws SQLException;
+    
+    public Funcionario getFuncionarioByCodigo (Integer codigo)throws SQLException;
 }

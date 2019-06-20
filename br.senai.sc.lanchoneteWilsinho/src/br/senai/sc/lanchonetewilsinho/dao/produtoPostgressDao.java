@@ -5,7 +5,6 @@
  */
 package br.senai.sc.lanchonetewilsinho.dao;
 
-import br.senai.sc.lanchonetewilsinho.BancoDeDados;
 import br.senai.sc.lanchonetewilsinho.model.Produto;
 import java.sql.ResultSet;
 import java.sql.SQLException;
@@ -84,6 +83,24 @@ public class produtoPostgressDao extends connectionFactory implements produtoDao
         super.closeAll();
 
         return rows;
+    }
+
+    @Override
+    public Produto getProdutoByCodigo(Integer codigo) throws SQLException {
+        Produto novoProduto = null;
+        super.preparedStatementInitialize("select * from produto");
+        super.prepared.execute();
+        ResultSet resultSetRows = super.prepared.getResultSet();
+        if (resultSetRows.next()) {
+            novoProduto = new Produto(resultSetRows.getInt("codigo"),
+                    resultSetRows.getString("descricao"),
+                    resultSetRows.getDouble("preco"),
+                    resultSetRows.getInt("quantidade"));
+        }
+        resultSetRows.close();
+        super.closeAll();
+
+        return novoProduto;
     }
     
 }

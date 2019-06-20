@@ -6,7 +6,9 @@
 package br.senai.sc.lanchonetewilsinho.model;
 
 import java.util.List;
+import javafx.beans.property.DoubleProperty;
 import javafx.beans.property.IntegerProperty;
+import javafx.beans.property.SimpleDoubleProperty;
 import javafx.beans.property.SimpleIntegerProperty;
 import javafx.beans.property.SimpleStringProperty;
 import javafx.beans.property.StringProperty;
@@ -17,33 +19,60 @@ import javafx.beans.property.StringProperty;
  */
 public class Venda {
     private final IntegerProperty codigo = new SimpleIntegerProperty();
-    private Cliente cliente = null;
-    private Funcionario funcionario = null;
+    
     private final IntegerProperty dataVenda = new SimpleIntegerProperty();
 
     private List<Item_Venda> itens = null;
-    private Double valorTotalCompra = calculaTotal();
     
-    private Double calculaTotal(){
-        Double total = null;
-        for(Item_Venda item : itens){
-            total += item.getValorTotal();
-        }
-        return total;
-    }
+    private final DoubleProperty valorTotalCompra = new SimpleDoubleProperty();
+    
+    private final IntegerProperty cliente = new SimpleIntegerProperty();
+    private final IntegerProperty funcionario = new SimpleIntegerProperty();
+
+    
+
+    
+    
+    
           
     public Venda(){
         
     }
     
-    public Venda(Integer codigo, Cliente objtCliente, Funcionario objtFuncionario,Double valor, List<Item_Venda> itens,Integer data){
+    public Venda(Integer codigo, Integer codCliente, Integer codFuncionario,Double valor, List<Item_Venda> itens,Integer data){
         this.codigo.set(codigo);
-        this.cliente = objtCliente;
-        this.funcionario = objtFuncionario;
-        this.valorTotalCompra = valor;
+        this.cliente.set(codCliente);
+        this.funcionario.set(codFuncionario);
+        this.valorTotalCompra.set(valor);
         this.dataVenda.set(data);
         this.itens = itens;
     }
+    
+    
+    public Integer getFuncionario() {
+        return this.funcionario.get();
+    }
+
+    public void setFuncionario(Integer value) {
+        this.funcionario.set(value);
+    }
+
+    public IntegerProperty funcionarioProperty() {
+        return this.funcionario;
+    }
+    
+    public Integer getCliente() {
+        return this.cliente.get();
+    }
+
+    public void setCliente(Integer value) {
+        this.cliente.set(value);
+    }
+
+    public IntegerProperty clienteProperty() {
+        return this.cliente;
+    }
+    
     
     public Integer getDataVenda() {
         return this.dataVenda.get();
@@ -58,30 +87,21 @@ public class Venda {
     }
     
     public Double getValorCompra(){
-        return this.valorTotalCompra;
+        return this.valorTotalCompra.get();
+    }
+    
+    private void setValorCompra(){
+        Double total = null;
+        for(Item_Venda item : itens){
+            total += item.getValorItem();
+        }
     }
     
     
     public List<Item_Venda> getItens(){
         return this.itens;
     }
-    
-    
-    public Funcionario getFuncionario() {
-        return this.funcionario;
-    }
-
-    public void setFuncionario(Funcionario object) {
-        this.funcionario = object;
-    }  
-
-    public Cliente getCliente() {
-        return this.cliente;
-    }
-
-    public void setCliente(Cliente object) {
-        this.cliente = object;
-    }
+      
 
     public Integer getCodigo() {
         return this.codigo.get();
