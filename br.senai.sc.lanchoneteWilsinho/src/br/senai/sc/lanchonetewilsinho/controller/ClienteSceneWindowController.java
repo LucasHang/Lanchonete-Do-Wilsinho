@@ -23,6 +23,7 @@ import javafx.event.ActionEvent;
 import javafx.fxml.FXML;
 import javafx.fxml.Initializable;
 import javafx.scene.control.Button;
+import javafx.scene.control.CheckBox;
 import javafx.scene.control.TableCell;
 import javafx.scene.control.TableColumn;
 import javafx.scene.control.TableView;
@@ -42,8 +43,21 @@ public class ClienteSceneWindowController implements Initializable {
     private TableView<Cliente> tableClientes;
     @FXML
     private TextField txtCarregar;
-    @FXML
     private TableColumn<Cliente, Boolean> tblColumnColaborador;
+    @FXML
+    private TableColumn<?, ?> tblColumColaborador;
+    @FXML
+    private Button btnCadastrar;
+    @FXML
+    private TextField txtFieldNome;
+    @FXML
+    private TextField txtFieldCpf;
+    @FXML
+    private TextField txtFieldTelefoneContato;
+    @FXML
+    private TextField txtFieldDataNascimento;
+    @FXML
+    private CheckBox checkBoxColaborador;
 
     /**
      * Initializes the controller class.
@@ -59,7 +73,7 @@ public class ClienteSceneWindowController implements Initializable {
     @FXML
     private void btnCadastrarClienteOnAction(ActionEvent event) throws IOException {
        
-        BrSenaiScLanchoneteWilsinho.mudarTela("cadastroCliente");
+        
         
     }
 
@@ -109,5 +123,9 @@ public class ClienteSceneWindowController implements Initializable {
             };
             return cell;
         });
+    }
+
+    @FXML
+    private void btnCadastrarOnAction(ActionEvent event) {
     }
 }

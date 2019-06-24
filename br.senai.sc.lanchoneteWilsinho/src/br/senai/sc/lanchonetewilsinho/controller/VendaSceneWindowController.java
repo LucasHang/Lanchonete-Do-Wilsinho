@@ -9,6 +9,7 @@ import br.senai.sc.lanchonetewilsinho.dao.DAOFactory;
 import br.senai.sc.lanchonetewilsinho.model.Cliente;
 import br.senai.sc.lanchonetewilsinho.model.Funcionario;
 import br.senai.sc.lanchonetewilsinho.model.Produto;
+import br.senai.sc.lanchonetewilsinho.model.Venda;
 import java.net.URL;
 import java.sql.SQLException;
 import java.util.Arrays;
@@ -17,11 +18,16 @@ import java.util.ResourceBundle;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 import javafx.collections.FXCollections;
+import javafx.event.ActionEvent;
 import javafx.fxml.FXML;
 import javafx.fxml.Initializable;
+import javafx.scene.control.Button;
 import javafx.scene.control.ComboBox;
+import javafx.scene.control.Label;
 import javafx.scene.control.ListCell;
 import javafx.scene.control.ListView;
+import javafx.scene.control.TableView;
+import javafx.scene.control.TextField;
 import javafx.util.Callback;
 
 /**
@@ -37,6 +43,20 @@ public class VendaSceneWindowController implements Initializable {
     private ComboBox<Cliente> comboCliente;
     @FXML
     private ComboBox<Produto> comboProduto;
+    @FXML
+    private Button btnSalvarItem;
+    @FXML
+    private TextField txtQtdProduto;
+    @FXML
+    private Label labelValorTotal;
+    @FXML
+    private Button btnFinalizarCompra;
+    @FXML
+    private TableView<Venda> tableFuncionarios;
+    @FXML
+    private TextField txtCarregar;
+    @FXML
+    private Button btnCadastrarVenda;
 
     /**
      * Initializes the controller class.
@@ -44,9 +64,7 @@ public class VendaSceneWindowController implements Initializable {
     @Override
     public void initialize(URL url, ResourceBundle rb) {
         try {
-            comboProduto.setItems(FXCollections.observableArrayList(DAOFactory.getProdutoDAO().getAll()));
-            comboCliente.setItems(FXCollections.observableArrayList(DAOFactory.getClienteDAO().getAll()));
-            comboFuncionario.setItems(FXCollections.observableArrayList(DAOFactory.getFuncionarioDAO().getAll()));
+            fillComboBoxes();
         } catch (SQLException ex) {
             Logger.getLogger(VendaSceneWindowController.class.getName()).log(Level.SEVERE, null, ex);
         }
@@ -55,7 +73,13 @@ public class VendaSceneWindowController implements Initializable {
         mascaraComboBox("Cliente");
     }
 
-    public void mascaraComboBox(String tipo) {
+    private void fillComboBoxes() throws SQLException{
+        comboProduto.setItems(FXCollections.observableArrayList(DAOFactory.getProdutoDAO().getAll()));
+        comboCliente.setItems(FXCollections.observableArrayList(DAOFactory.getClienteDAO().getAll()));
+        comboFuncionario.setItems(FXCollections.observableArrayList(DAOFactory.getFuncionarioDAO().getAll()));
+    }
+    
+    private void mascaraComboBox(String tipo) {
 
         switch (tipo) {
             case "Produto":
@@ -114,6 +138,22 @@ public class VendaSceneWindowController implements Initializable {
                 break;
         }
 
+    }
+
+    @FXML
+    private void btnSalvarItemOnAction(ActionEvent event) {
+    }
+
+    @FXML
+    private void btnFinalizarCompraOnAction(ActionEvent event) {
+    }
+
+    @FXML
+    private void btnCarregarOnAction(ActionEvent event) {
+    }
+
+    @FXML
+    private void btnCadastrarVendaOnAction(ActionEvent event) {
     }
 
 }

@@ -20,6 +20,8 @@ import javafx.event.ActionEvent;
 import javafx.fxml.FXML;
 import javafx.fxml.Initializable;
 import javafx.scene.control.Button;
+import javafx.scene.control.CheckBox;
+import javafx.scene.control.PasswordField;
 import javafx.scene.control.TableCell;
 import javafx.scene.control.TableColumn;
 import javafx.scene.control.TableView;
@@ -39,6 +41,22 @@ public class FuncionarioSceneWindowController implements Initializable {
     private TextField txtCarregar;
     @FXML
     private TableColumn<Funcionario, Boolean> tblColumnGerente;
+    @FXML
+    private Button btnCadastrar;
+    @FXML
+    private TextField txtFieldNome;
+    @FXML
+    private TextField txtFieldCpf;
+    @FXML
+    private TextField txtFieldTelefoneContato;
+    @FXML
+    private TextField txtFieldDataNascimento;
+    @FXML
+    private CheckBox checkBoxGerente;
+    @FXML
+    private TextField txtFieldUsuario;
+    @FXML
+    private PasswordField passFieldSenha;
 
     /**
      * Initializes the controller class.
@@ -52,7 +70,7 @@ public class FuncionarioSceneWindowController implements Initializable {
     @FXML
     private void btnCadastrarFuncionarioOnAction(ActionEvent event) throws IOException {
         
-        BrSenaiScLanchoneteWilsinho.mudarTela("cadastroFuncionario");
+        //BrSenaiScLanchoneteWilsinho.mudarTela("cadastroFuncionario");
     }
 
     @FXML
@@ -100,6 +118,10 @@ public class FuncionarioSceneWindowController implements Initializable {
             };
             return cell;
         });
+    }
+
+    @FXML
+    private void btnCadastrarOnAction(ActionEvent event) {
     }
     
 }

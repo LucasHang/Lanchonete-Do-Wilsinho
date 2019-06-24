@@ -40,19 +40,27 @@ public class ProdutoSceneWindowController implements Initializable {
     private TextField txtCarregar;
     @FXML
     private TableColumn<Produto, Integer> tblColumnQtdEstoque;
+    @FXML
+    private Button btnCadastrar;
+    @FXML
+    private TextField txtFieldDescricao;
+    @FXML
+    private TextField txtFieldQuantidade;
+    @FXML
+    private TextField txtFieldPrecoUnitario;
 
     /**
      * Initializes the controller class.
      */
     @Override
     public void initialize(URL url, ResourceBundle rb) {
-        btnCarregarOnAction(null);
+        //btnCarregarOnAction(null);
     }    
 
     @FXML
     private void btnCadastrarProdutoOnAction(ActionEvent event) throws IOException {
         
-        BrSenaiScLanchoneteWilsinho.mudarTela("cadastroProduto");
+        
     }
 
     @FXML
@@ -98,6 +106,10 @@ public class ProdutoSceneWindowController implements Initializable {
             };
             return cell;
         });
+    }
+
+    @FXML
+    private void btnCadastrarOnAction(ActionEvent event) {
     }
     
 }

@@ -4,54 +4,62 @@
 <?import javafx.scene.control.ComboBox?>
 <?import javafx.scene.control.Label?>
 <?import javafx.scene.control.Separator?>
+<?import javafx.scene.control.TableColumn?>
+<?import javafx.scene.control.TableView?>
 <?import javafx.scene.control.TextField?>
-<?import javafx.scene.effect.DropShadow?>
-<?import javafx.scene.effect.Glow?>
 <?import javafx.scene.image.Image?>
 <?import javafx.scene.image.ImageView?>
 <?import javafx.scene.layout.AnchorPane?>
-<?import javafx.scene.layout.Pane?>
 <?import javafx.scene.text.Font?>
 
-<AnchorPane id="AnchorPane" prefHeight="640.0" prefWidth="600.0" xmlns="http://javafx.com/javafx/10.0.1" xmlns:fx="http://javafx.com/fxml/1" fx:controller="br.senai.sc.lanchonetewilsinho.controller.VendaSceneWindowController">
+<AnchorPane id="AnchorPane" prefHeight="721.0" prefWidth="1253.0" styleClass="pane" stylesheets="@stylesClass.css" xmlns="http://javafx.com/javafx/8.0.171" xmlns:fx="http://javafx.com/fxml/1" fx:controller="br.senai.sc.lanchonetewilsinho.controller.VendaSceneWindowController">
    <children>
-      <Pane layoutX="14.0" layoutY="14.0" prefHeight="614.0" prefWidth="572.0" styleClass="pane" stylesheets="@stylesClass.css">
-         <children>
-            <ImageView fitHeight="158.0" fitWidth="336.0" layoutX="118.0" layoutY="14.0" pickOnBounds="true" preserveRatio="true">
-               <image>
-                  <Image url="@imagens/slogan%20lanchonete%20pronto.jpg" />
-               </image>
-            </ImageView>
-            <ComboBox fx:id="comboFuncionario" editable="true" layoutX="38.0" layoutY="216.0" prefHeight="37.0" prefWidth="179.0" promptText="Funcionário" styleClass="comboBox" />
-            <ComboBox fx:id="comboCliente" editable="true" layoutX="286.0" layoutY="217.0" prefHeight="35.0" prefWidth="179.0" promptText="Cliente" styleClass="comboBox" />
-            <Button alignment="CENTER" layoutX="464.0" layoutY="204.0" mnemonicParsing="false" prefHeight="48.0" prefWidth="102.0" style="-fx-background-color: none; -fx-border-color: none;" text="Cadastrar&#10;Cliente&#10;&#10;" textAlignment="CENTER" textFill="SIENNA">
-               <font>
-                  <Font name="System Bold" size="15.0" />
-               </font>
-               <effect>
-                  <Glow level="0.74">
-                     <input>
-                        <DropShadow color="#fcee72" />
-                     </input>
-                  </Glow>
-               </effect>
-            </Button>
-            <Separator layoutX="112.0" layoutY="278.0" prefHeight="3.0" prefWidth="348.0" styleClass="tablecolumnbase" />
-            <ComboBox fx:id="comboProduto" editable="true" layoutX="57.0" layoutY="359.0" prefHeight="35.0" prefWidth="282.0" promptText="Produto" styleClass="comboBox" />
-            <Button layoutX="461.0" layoutY="353.0" mnemonicParsing="false" prefHeight="37.0" prefWidth="54.0" text="+" textFill="WHITE">
-               <font>
-                  <Font name="System Bold" size="20.0" />
-               </font>
-            </Button>
-            <TextField layoutX="356.0" layoutY="358.0" prefHeight="37.0" prefWidth="86.0" promptText="Quantidade" />
-            <Label layoutX="225.0" layoutY="307.0" styleClass="label2" text="Itens da compra" textFill="SIENNA" />
-            <Label layoutX="440.0" layoutY="565.0" styleClass="label2" text="Total: " />
-            <Label layoutX="501.0" layoutY="565.0" text="Valor" />
-            <Button layoutX="232.0" layoutY="532.0" mnemonicParsing="false" prefHeight="66.0" prefWidth="108.0" text="Finalizar &#10;Compra" textAlignment="CENTER" textFill="WHITE">
-               <font>
-                  <Font name="System Bold" size="16.0" />
-               </font>
-            </Button>
-         </children></Pane>
+      <ImageView fitHeight="230.0" fitWidth="510.0" layoutX="726.0" layoutY="246.0" opacity="0.13" pickOnBounds="true" preserveRatio="true">
+         <image>
+            <Image url="@imagens/slogan%20lanchonete%20pronto.jpg" />
+         </image>
+      </ImageView>
+      <ImageView fitHeight="135.0" fitWidth="302.0" layoutX="407.0" layoutY="24.0" pickOnBounds="true" preserveRatio="true">
+         <image>
+            <Image url="@imagens/slogan%20lanchonete%20pronto.jpg" />
+         </image>
+      </ImageView>
+      <ComboBox fx:id="comboFuncionario" editable="true" layoutX="830.0" layoutY="126.0" prefHeight="37.0" prefWidth="299.0" promptText="Funcionário" styleClass="comboBox" />
+      <ComboBox fx:id="comboCliente" editable="true" layoutX="831.0" layoutY="237.0" prefHeight="35.0" prefWidth="299.0" promptText="Cliente" styleClass="comboBox" />
+      <ComboBox fx:id="comboProduto" editable="true" layoutX="751.0" layoutY="412.0" prefHeight="35.0" prefWidth="282.0" promptText="Produto" styleClass="comboBox" />
+      <Button fx:id="btnSalvarItem" layoutX="1155.0" layoutY="406.0" mnemonicParsing="false" onAction="#btnSalvarItemOnAction" prefHeight="37.0" prefWidth="54.0" text="+" textFill="WHITE">
+         <font>
+            <Font name="System Bold" size="20.0" />
+         </font>
+      </Button>
+      <TextField fx:id="txtQtdProduto" layoutX="1050.0" layoutY="411.0" prefHeight="37.0" prefWidth="86.0" promptText="Quantidade" />
+      <Label layoutX="904.0" layoutY="364.0" styleClass="label2" text="Itens da compra" textFill="SIENNA" />
+      <Label layoutX="890.0" layoutY="529.0" styleClass="label2" text="Total: " />
+      <Label fx:id="labelValorTotal" alignment="CENTER" layoutX="950.0" layoutY="527.0" prefHeight="35.0" prefWidth="120.0" text="Valor" />
+      <Button fx:id="btnFinalizarCompra" layoutX="914.0" layoutY="591.0" mnemonicParsing="false" onAction="#btnFinalizarCompraOnAction" prefHeight="66.0" prefWidth="132.0" text="Finalizar &#10;Compra" textAlignment="CENTER" textFill="WHITE">
+         <font>
+            <Font name="System Bold" size="17.0" />
+         </font>
+      </Button>
+      <Label layoutX="830.0" layoutY="87.0" text="Funcionário:" />
+      <Label layoutX="830.0" layoutY="199.0" text="Cliente:" />
+      <Separator layoutX="823.0" layoutY="322.0" prefHeight="2.0" prefWidth="315.0" styleClass="tablecolumnbase" />
+      <TableView fx:id="tableFuncionarios" layoutX="47.0" layoutY="195.0" prefHeight="416.0" prefWidth="662.0" styleClass="tableview">
+        <columns>
+          <TableColumn prefWidth="75.0" text="C1" />
+          <TableColumn prefWidth="75.0" text="C2" />
+        </columns>
+      </TableView>
+      <Button layoutX="65.0" layoutY="137.0" mnemonicParsing="false" onAction="#btnCarregarOnAction" prefHeight="41.0" prefWidth="98.0" text="Carregar" textFill="WHITE">
+         <font>
+            <Font name="System Bold" size="15.0" />
+         </font>
+      </Button>
+      <TextField fx:id="txtCarregar" layoutX="172.0" layoutY="145.0" prefHeight="29.0" prefWidth="241.0" promptText="Pesquisar na tabela" styleClass="textfield" />
+      <Button fx:id="btnCadastrarVenda" alignment="CENTER" layoutX="320.0" layoutY="629.0" mnemonicParsing="false" onAction="#btnCadastrarVendaOnAction" prefHeight="65.0" prefWidth="134.0" text="Cadastrar&#10;Venda" textAlignment="CENTER" textFill="WHITE">
+         <font>
+            <Font name="System Bold" size="17.0" />
+         </font>
+      </Button>
    </children>
 </AnchorPane>
