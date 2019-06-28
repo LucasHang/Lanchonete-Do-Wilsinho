@@ -40,7 +40,7 @@ public class Cliente extends Pessoa {
         return this.codigo.get();
     }
 
-    public void setCodigo(int value) {
+    public void setCodigo(Integer value) {
         this.codigo.set(value);
     }
 

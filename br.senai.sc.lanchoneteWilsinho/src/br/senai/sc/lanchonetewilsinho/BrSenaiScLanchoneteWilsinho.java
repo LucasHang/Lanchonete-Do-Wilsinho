@@ -52,9 +52,9 @@ public class BrSenaiScLanchoneteWilsinho extends Application {
         switch(tela){
             case "menu" :
                 Parent fxmlMenu = FXMLLoader.load(BrSenaiScLanchoneteWilsinho.class.getResource("view/menuSceneWindow.fxml"));
-                menu = new Scene(fxmlMenu, 1280, 1080);
+                menu = new Scene(fxmlMenu, 1280, 720);
                 stage.setX(320);
-                stage.setY(0.0);
+                stage.setY(180);
                 stage.setScene(menu);
                 break;
 

@@ -5,12 +5,15 @@
  */
 package br.senai.sc.lanchonetewilsinho.dao;
 
+import br.senai.sc.lanchonetewilsinho.MeuAlerta;
 import br.senai.sc.lanchonetewilsinho.model.Item_Venda;
 import br.senai.sc.lanchonetewilsinho.model.Venda;
 import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.logging.Level;
+import java.util.logging.Logger;
 
 /**
  *
@@ -26,7 +29,7 @@ public class vendaPostgressDao extends connectionFactory implements vendaDao{
                 codigoGerado);
         super.prepared.setInt(1, venda.getCliente());
         super.prepared.setInt(2, venda.getFuncionario());
-        super.prepared.setDouble(3, venda.getValorCompra());
+        super.prepared.setDouble(3, venda.getValorTotalCompra());
         super.prepared.setInt(4, venda.getDataVenda());
         int linhasAfetadas = super.prepared.executeUpdate();
         if (linhasAfetadas == 0){
@@ -39,6 +42,16 @@ public class vendaPostgressDao extends connectionFactory implements vendaDao{
         }
         resultSetRows.close();
         super.closeAll();
+        
+        venda.getItens().forEach(item -> {
+            item.setVenda(venda.getCodigo());
+            try {
+                DAOFactory.getItem_vendaDAO().save(item);
+            } catch (SQLException ex) {
+                Logger.getLogger(vendaPostgressDao.class.getName()).log(Level.SEVERE, null, ex);
+                MeuAlerta.alertaErro(ex.getMessage()).showAndWait();
+            }
+        });
     }
 
     @Override
@@ -47,7 +60,7 @@ public class vendaPostgressDao extends connectionFactory implements vendaDao{
                 "update venda set codigoCli = ?, codigoFunc = ?, valorCompra = ?, dataVenda = ? where codigo = ?");
         super.prepared.setInt(1, venda.getCliente());
         super.prepared.setInt(2, venda.getFuncionario());
-        super.prepared.setDouble(3, venda.getValorCompra());
+        super.prepared.setDouble(3, venda.getValorTotalCompra());
         super.prepared.setInt(4, venda.getDataVenda());
         super.prepared.setInt(5, venda.getCodigo());
         int linhasAfetadas = super.prepared.executeUpdate();
@@ -90,4 +103,49 @@ public class vendaPostgressDao extends connectionFactory implements vendaDao{
         return rows;
     }
 
+    @Override
+    public List<Venda> getVendaByNomeClienteOuFuncionario(String nome) throws SQLException {
+        List<Venda> rows = new ArrayList<>();
+        super.preparedStatementInitialize("select b.nome from venda a,cliente b where a.codigoCli = b.codigo"
+                + "and b.nome like ? ");
+        super.prepared.setString(1,"%"+ nome.toUpperCase()+"%");
+        super.prepared.execute();
+        ResultSet resultSetRows = super.prepared.getResultSet();
+        if(resultSetRows.next()){
+        while (resultSetRows.next()) {
+            rows.add(new Venda(resultSetRows.getInt("codigo"),
+                    resultSetRows.getInt("codigoCli"),
+                    resultSetRows.getInt("codigoFunc"),
+                    resultSetRows.getDouble("valorCompra"),
+                    DAOFactory.getItem_vendaDAO().getItemVendaByCodigoVenda(resultSetRows.getInt("codigo")),
+                    resultSetRows.getInt("dataVenda")));
+            }
+        }else{
+            resultSetRows.close();
+            super.closeAll();
+            
+            super.preparedStatementInitialize("select b.nome from venda a,funcionario b where a.codigoFunc = b.codigo"
+                + "and b.nome like ? ");
+        super.prepared.setString(1,"%"+ nome.toUpperCase()+"%");
+        super.prepared.execute();
+        resultSetRows = super.prepared.getResultSet();
+        
+        while (resultSetRows.next()) {
+            rows.add(new Venda(resultSetRows.getInt("codigo"),
+                    resultSetRows.getInt("codigoCli"),
+                    resultSetRows.getInt("codigoFunc"),
+                    resultSetRows.getDouble("valorCompra"),
+                    DAOFactory.getItem_vendaDAO().getItemVendaByCodigoVenda(resultSetRows.getInt("codigo")),
+                    resultSetRows.getInt("dataVenda")));
+            }
+            
+        }
+        
+        resultSetRows.close();
+        super.closeAll();
+
+        return rows;
+        
+    }
+        
 }

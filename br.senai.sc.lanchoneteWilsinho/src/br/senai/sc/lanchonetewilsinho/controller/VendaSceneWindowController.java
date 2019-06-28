@@ -5,14 +5,19 @@
  */
 package br.senai.sc.lanchonetewilsinho.controller;
 
+import br.senai.sc.lanchonetewilsinho.MeuAlerta;
 import br.senai.sc.lanchonetewilsinho.dao.DAOFactory;
 import br.senai.sc.lanchonetewilsinho.model.Cliente;
 import br.senai.sc.lanchonetewilsinho.model.Funcionario;
+import br.senai.sc.lanchonetewilsinho.model.Item_Venda;
 import br.senai.sc.lanchonetewilsinho.model.Produto;
 import br.senai.sc.lanchonetewilsinho.model.Venda;
+import static java.lang.Integer.parseInt;
 import java.net.URL;
 import java.sql.SQLException;
+import java.text.SimpleDateFormat;
 import java.util.Arrays;
+import java.util.Date;
 import java.util.List;
 import java.util.ResourceBundle;
 import java.util.logging.Level;
@@ -26,9 +31,12 @@ import javafx.scene.control.ComboBox;
 import javafx.scene.control.Label;
 import javafx.scene.control.ListCell;
 import javafx.scene.control.ListView;
+import javafx.scene.control.TableCell;
+import javafx.scene.control.TableColumn;
 import javafx.scene.control.TableView;
 import javafx.scene.control.TextField;
 import javafx.util.Callback;
+import javafx.util.converter.NumberStringConverter;
 
 /**
  * FXML Controller class
@@ -38,11 +46,11 @@ import javafx.util.Callback;
 public class VendaSceneWindowController implements Initializable {
 
     @FXML
-    private ComboBox<Funcionario> comboFuncionario;
+    private ComboBox<Integer> comboFuncionario;
     @FXML
-    private ComboBox<Cliente> comboCliente;
+    private ComboBox<Integer> comboCliente;
     @FXML
-    private ComboBox<Produto> comboProduto;
+    private ComboBox<Integer> comboProduto;
     @FXML
     private Button btnSalvarItem;
     @FXML
@@ -52,15 +60,30 @@ public class VendaSceneWindowController implements Initializable {
     @FXML
     private Button btnFinalizarCompra;
     @FXML
-    private TableView<Venda> tableFuncionarios;
+    private TableView<Venda> tableVendas;
     @FXML
     private TextField txtCarregar;
     @FXML
     private Button btnCadastrarVenda;
+    @FXML
+    private TableColumn<Funcionario, Integer> tblColumnFuncionario;
+    @FXML
+    private TableColumn<Cliente, Integer> tblColumnCliente;
+    @FXML
+    private TableColumn<Cliente, Integer> tblColumnCpf;
+    @FXML
+    private TableColumn<Venda, Double> tblColumnValor;
+    @FXML
+    private TableColumn<Venda, Integer> tblColumnData;
 
     /**
      * Initializes the controller class.
      */
+    Venda novaVenda = null;
+    Venda vendaSelecionada = null;
+    Item_Venda novoItem = null;
+    Item_Venda itemSelecionado = null;
+    
     @Override
     public void initialize(URL url, ResourceBundle rb) {
         try {
@@ -68,92 +91,435 @@ public class VendaSceneWindowController implements Initializable {
         } catch (SQLException ex) {
             Logger.getLogger(VendaSceneWindowController.class.getName()).log(Level.SEVERE, null, ex);
         }
-        mascaraComboBox("Produto");
-        mascaraComboBox("Funcionário");
-        mascaraComboBox("Cliente");
-    }
-
-    private void fillComboBoxes() throws SQLException{
-        comboProduto.setItems(FXCollections.observableArrayList(DAOFactory.getProdutoDAO().getAll()));
-        comboCliente.setItems(FXCollections.observableArrayList(DAOFactory.getClienteDAO().getAll()));
-        comboFuncionario.setItems(FXCollections.observableArrayList(DAOFactory.getFuncionarioDAO().getAll()));
+        mascararComboBox();
+        
+       /* btnCarregarOnAction(null);
+        mascararTableView();
+        
+        tableVendas.getSelectionModel().selectedItemProperty().addListener((observable,newValue,oldValue)->{
+            disableFields(false);
+            unbindFields(oldValue);
+            bindFields(newValue,null);
+            vendaSelecionada = newValue;
+        });
+        */
     }
     
-    private void mascaraComboBox(String tipo) {
-
-        switch (tipo) {
-            case "Produto":
-                comboProduto.setCellFactory(new Callback<ListView<Produto>, ListCell<Produto>>() {
-                    @Override
-                    public ListCell<Produto> call(ListView<Produto> l) {
-                        return new ListCell<Produto>() {
-                            @Override
-                            protected void updateItem(Produto item, boolean empty) {
-                                super.updateItem(item, empty);
-                                if (item == null || empty) {
-                                    setGraphic(null);
-                                } else {
-                                    setText(item.getDescricaoProd());
-                                }
-                            }
-                        };
-                    }
-                });
-                break;
-            case "Funcionário":
-                comboFuncionario.setCellFactory(new Callback<ListView<Funcionario>, ListCell<Funcionario>>() {
-                    @Override
-                    public ListCell<Funcionario> call(ListView<Funcionario> l) {
-                        return new ListCell<Funcionario>() {
-                            @Override
-                            protected void updateItem(Funcionario item, boolean empty) {
-                                super.updateItem(item, empty);
-                                if (item == null || empty) {
-                                    setGraphic(null);
-                                } else {
-                                    setText(item.getNome());
-                                }
-                            }
-                        };
-                    }
-                });
-                break;
-            case "Cliente":
-                comboCliente.setCellFactory(new Callback<ListView<Cliente>, ListCell<Cliente>>() {
-                    @Override
-                    public ListCell<Cliente> call(ListView<Cliente> l) {
-                        return new ListCell<Cliente>() {
-                            @Override
-                            protected void updateItem(Cliente item, boolean empty) {
-                                super.updateItem(item, empty);
-                                if (item == null || empty) {
-                                    setGraphic(null);
-                                } else {
-                                    setText(item.getNome());
-                                }
-                            }
-                        };
-                    }
-                });
-                break;
-        }
-
-    }
-
+    
     @FXML
     private void btnSalvarItemOnAction(ActionEvent event) {
+        unbindFieldsItem_Venda(novoItem);
+        novaVenda.getItens().add(novoItem);
+        clearFields("itemvenda");
+        novoItem = new Item_Venda();
+        bindFieldsItem_Venda(novoItem);
     }
 
     @FXML
     private void btnFinalizarCompraOnAction(ActionEvent event) {
+        unbindFieldsVenda(novaVenda);
+        unbindFieldsVenda(vendaSelecionada);
+        
+        unbindFieldsItem_Venda(novoItem);
+        unbindFieldsItem_Venda(itemSelecionado);
+        
+        try {
+            if(novaVenda != null){
+                DAOFactory.getVendaDAO().save(novaVenda);
+            }else{
+                if(vendaSelecionada != null){
+                    DAOFactory.getVendaDAO().update(vendaSelecionada);
+                }
+            }
+            clearFields("venda");
+            disableFields(true);
+        } catch (SQLException ex) {
+            Logger.getLogger(CadastroProdutoSceneWindowController.class.getName()).log(Level.SEVERE, null, ex);
+            MeuAlerta.alertaErro(ex.getMessage()).showAndWait();
+        }
     }
 
     @FXML
     private void btnCarregarOnAction(ActionEvent event) {
+        try {
+            tableVendas.setItems(FXCollections.observableArrayList(DAOFactory.getVendaDAO().getAll()));
+        } catch (SQLException ex) {
+            Logger.getLogger(VendaSceneWindowController.class.getName()).log(Level.SEVERE, null, ex);
+            MeuAlerta.alertaErro(ex.getMessage()).showAndWait();
+        }
     }
 
     @FXML
     private void btnCadastrarVendaOnAction(ActionEvent event) {
+        disableFields(false);
+        novaVenda = new Venda();
+        novoItem = new Item_Venda();
+	bindFieldsVenda(novaVenda);
+        bindFieldsItem_Venda(novoItem);
+    }
+    
+    private Integer takeActualDate() {
+
+        Date date = new Date();
+        SimpleDateFormat dataFormat = new SimpleDateFormat("yyyy/MM/dd");
+        List<String> anoMesDia = Arrays.asList(dataFormat.format(date).split("/"));
+        String dataNumeric = new String();
+        for (String value : anoMesDia) {
+            dataNumeric = dataNumeric + value;
+        }
+
+        return parseInt(dataNumeric);
     }
 
+    private void fillComboBoxes() throws SQLException {
+        FXCollections.observableArrayList(DAOFactory.getProdutoDAO().getAll()).forEach(produto ->{
+            comboProduto.getItems().add(produto.getCodigo());
+        });
+        FXCollections.observableArrayList(DAOFactory.getClienteDAO().getAll()).forEach(cliente ->{
+           comboCliente.getItems().add(cliente.getCodigo());
+        });
+        
+        FXCollections.observableArrayList(DAOFactory.getFuncionarioDAO().getAll()).forEach(funcionario ->{
+            comboFuncionario.getItems().add(funcionario.getCodigo());
+        });
+              
+    }
+
+    private void mascararTableView() {
+        tblColumnFuncionario.setCellFactory((TableColumn<Funcionario, Integer> param) -> {
+            TableCell cell = new TableCell<Funcionario, Integer>() {
+                @Override
+                public void updateItem(Integer item, boolean empty) {
+                    super.updateItem(item, empty);
+                    setText(null);
+                    setGraphic(null);
+                    if (!empty) {
+                        if (item == null || item == 0) {
+                            setText("Esperando");
+                        } else {
+                            try {
+                                setText(DAOFactory.getFuncionarioDAO().getFuncionarioByCodigo(item).getNome());
+                            } catch (SQLException ex) {
+                                Logger.getLogger(VendaSceneWindowController.class.getName()).log(Level.SEVERE, null, ex);
+                                MeuAlerta.alertaErro(ex.getMessage()).showAndWait();
+                            }
+
+                        }
+                    }
+                }
+
+                @Override
+                public void updateSelected(boolean upd) {
+                    super.updateSelected(upd);
+                }
+
+                private String getString() {
+                    return getItem() == null ? "" : getItem().toString();
+                }
+            };
+            return cell;
+        });
+
+        tblColumnCliente.setCellFactory((TableColumn<Cliente, Integer> param) -> {
+            TableCell cell = new TableCell<Cliente, Integer>() {
+                @Override
+                public void updateItem(Integer item, boolean empty) {
+                    super.updateItem(item, empty);
+                    setText(null);
+                    setGraphic(null);
+                    if (!empty) {
+                        if (item == null || item == 0) {
+                            setText("Esperando");
+                        } else {
+                            try {
+                                setText(DAOFactory.getClienteDAO().getClienteByCodigo(item).getNome());
+                            } catch (SQLException ex) {
+                                Logger.getLogger(VendaSceneWindowController.class.getName()).log(Level.SEVERE, null, ex);
+                                MeuAlerta.alertaErro(ex.getMessage()).showAndWait();
+                            }
+
+                        }
+                    }
+                }
+
+                @Override
+                public void updateSelected(boolean upd) {
+                    super.updateSelected(upd);
+                }
+
+                private String getString() {
+                    return getItem() == null ? "" : getItem().toString();
+                }
+            };
+            return cell;
+        });
+
+        tblColumnCpf.setCellFactory((TableColumn<Cliente, Integer> param) -> {
+            TableCell cell = new TableCell<Cliente, Integer>() {
+                @Override
+                public void updateItem(Integer item, boolean empty) {
+                    super.updateItem(item, empty);
+                    setText(null);
+                    setGraphic(null);
+                    if (!empty) {
+                        if (item == null || item == 0) {
+                            setText("Esperando");
+                        } else {
+                            try {
+                                setText(DAOFactory.getClienteDAO().getClienteByCodigo(item).getCpf().toString());
+                            } catch (SQLException ex) {
+                                Logger.getLogger(VendaSceneWindowController.class.getName()).log(Level.SEVERE, null, ex);
+                                MeuAlerta.alertaErro(ex.getMessage()).showAndWait();
+                            }
+
+                        }
+                    }
+                }
+
+                @Override
+                public void updateSelected(boolean upd) {
+                    super.updateSelected(upd);
+                }
+
+                private String getString() {
+                    return getItem() == null ? "" : getItem().toString();
+                }
+            };
+            return cell;
+        });
+
+        tblColumnValor.setCellFactory((TableColumn<Venda, Double> param) -> {
+            TableCell cell = new TableCell<Venda, Double>() {
+                @Override
+                public void updateItem(Double item, boolean empty) {
+                    super.updateItem(item, empty);
+                    setText(null);
+                    setGraphic(null);
+                    if (!empty) {
+                        if (item == null || item == 0) {
+                            setText("Esperando");
+                        } else {
+
+                            String valor = "R$ " + item;
+                            setText(valor);
+
+                        }
+                    }
+                }
+
+                @Override
+                public void updateSelected(boolean upd) {
+                    super.updateSelected(upd);
+                }
+
+                private String getString() {
+                    return getItem() == null ? "" : getItem().toString();
+                }
+            };
+            return cell;
+        });
+
+        tblColumnData.setCellFactory((TableColumn<Venda, Integer> param) -> {
+            TableCell cell = new TableCell<Venda, Integer>() {
+                @Override
+                public void updateItem(Integer item, boolean empty) {
+                    super.updateItem(item, empty);
+                    setText(null);
+                    setGraphic(null);
+                    if (!empty) {
+                        if (item == null || item == 0) {
+                            setText("Esperando");
+                        } else {
+                            String dataString = "";
+                            List<String> aux = Arrays.asList(item.toString().split(""));
+                            for (String num: aux.subList(6, 8)){
+                            dataString +=  num;
+                            }
+                            dataString += "/";
+                            for (String num: aux.subList(4, 6)){
+                            dataString +=  num;
+                            }
+                            dataString += "/";
+                            for (String num: aux.subList(0, 4)){
+                            dataString +=  num;
+                            }
+                            setText(dataString);
+
+                        }
+                    }
+                }
+
+                @Override
+                public void updateSelected(boolean upd) {
+                    super.updateSelected(upd);
+                }
+
+                private String getString() {
+                    return getItem() == null ? "" : getItem().toString();
+                }
+            };
+            return cell;
+        });
+        
+    }
+
+    private void mascararComboBox() {
+
+        comboProduto.setCellFactory(new Callback<ListView<Integer>, ListCell<Integer>>() {
+            @Override
+            public ListCell<Integer> call(ListView<Integer> l) {
+                return new ListCell<Integer>() {
+                    @Override
+                    protected void updateItem(Integer item, boolean empty) {
+                        super.updateItem(item, empty);
+                        if (item == null || empty) {
+                            setGraphic(null);
+                        } else {
+                            try {
+                                setText(DAOFactory.getProdutoDAO().getProdutoByCodigo(item).getDescricaoProd());
+                            } catch (SQLException ex) {
+                                Logger.getLogger(VendaSceneWindowController.class.getName()).log(Level.SEVERE, null, ex);
+                                MeuAlerta.alertaErro(ex.getMessage()).showAndWait();
+                            }
+                        }
+                    }
+                };
+            }
+        });
+
+        comboFuncionario.setCellFactory(new Callback<ListView<Integer>, ListCell<Integer>>() {
+            @Override
+            public ListCell<Integer> call(ListView<Integer> l) {
+                return new ListCell<Integer>() {
+                    @Override
+                    protected void updateItem(Integer item, boolean empty) {
+                        super.updateItem(item, empty);
+                        if (item == null || empty) {
+                            setGraphic(null);
+                        } else {
+                            try {
+                                setText(DAOFactory.getFuncionarioDAO().getFuncionarioByCodigo(item).getLogin());
+                            } catch (SQLException ex) {
+                                Logger.getLogger(VendaSceneWindowController.class.getName()).log(Level.SEVERE, null, ex);
+                                MeuAlerta.alertaErro(ex.getMessage()).showAndWait();
+                            }
+                        }
+                    }
+                };
+            }
+        });
+
+        comboCliente.setCellFactory(new Callback<ListView<Integer>, ListCell<Integer>>() {
+            @Override
+            public ListCell<Integer> call(ListView<Integer> l) {
+                return new ListCell<Integer>() {
+                    @Override
+                    protected void updateItem(Integer item, boolean empty) {
+                        super.updateItem(item, empty);
+                        if (item == null || empty) {
+                            setGraphic(null);
+                        } else {
+                            try {
+                                setText(DAOFactory.getClienteDAO().getClienteByCodigo(item).getCpf().toString());
+                            } catch (SQLException ex) {
+                                Logger.getLogger(VendaSceneWindowController.class.getName()).log(Level.SEVERE, null, ex);
+                                MeuAlerta.alertaErro(ex.getMessage()).showAndWait();
+                            }
+                        }
+                    }
+                };
+            }
+        });
+
+    }
+    
+    private void bindFieldsVenda(Venda venda){
+        if(venda != null){
+            comboCliente.valueProperty().bindBidirectional(venda.clienteProperty().asObject());
+            comboFuncionario.valueProperty().bindBidirectional(venda.funcionarioProperty().asObject());
+            labelValorTotal.textProperty().bindBidirectional(venda.valorTotalCompraProperty(), new NumberStringConverter());   
+        }
+        
+    }
+    
+    private void unbindFieldsVenda(Venda venda){
+        if(venda != null){
+            comboCliente.valueProperty().unbindBidirectional(venda.clienteProperty().asObject());
+            comboFuncionario.valueProperty().unbindBidirectional(venda.funcionarioProperty().asObject());
+            labelValorTotal.textProperty().bindBidirectional(venda.valorTotalCompraProperty(), new NumberStringConverter());
+            }
+        }
+    
+    private void bindFieldsItem_Venda(Item_Venda itemvenda){
+        if(itemvenda != null){
+            comboProduto.valueProperty().bindBidirectional(itemvenda.produtoProperty().asObject());
+        }
+        
+    }
+    
+    private void unbindFieldsItem_Venda(Item_Venda itemvenda){
+        if(itemvenda != null){
+            comboProduto.valueProperty().unbindBidirectional(itemvenda.produtoProperty().asObject());
+        }
+        }
+        
+        private void disableFields(Boolean value){
+            comboCliente.setDisable(value);
+            comboFuncionario.setDisable(value);
+            comboProduto.setDisable(value);
+            txtQtdProduto.setDisable(value);
+
+        }
+
+        public Boolean validationForm(){
+        Boolean invalido = false;
+
+        if(comboCliente.valueProperty().isNull().get()){
+            comboCliente.getStyleClass().add("invalido");
+            invalido = true;     
+        }else{
+            comboCliente.getStyleClass().remove("invalido");
+        }
+        
+        if(comboFuncionario.valueProperty().isNull().get()){
+            comboFuncionario.getStyleClass().add("invalido");
+            invalido = true;
+        }else{
+            comboFuncionario.getStyleClass().remove("invalido");
+        }
+        
+        if(comboProduto.valueProperty().isNull().get()){
+            comboProduto.getStyleClass().add("invalido");
+            invalido = true;
+        }else{
+            comboProduto.getStyleClass().remove("invalido");
+        }
+        
+        if(txtQtdProduto.textProperty().isNull().get()){
+            txtQtdProduto.getStyleClass().add("invalido");
+            invalido = true;
+        }else{
+            txtQtdProduto.getStyleClass().remove("invalido");
+        }
+        
+        
+        return invalido;
+    }
+        
+        private void clearFields(String tipo){
+        switch(tipo){
+            case "venda":
+                comboCliente.setValue(null);
+                comboFuncionario.setValue(null);
+                comboProduto.setValue(null);
+                txtQtdProduto.clear();
+            break;
+                
+            case "itemvenda":
+                comboProduto.setValue(null);
+                txtQtdProduto.clear();
+            break;
+        }
+        
+    }
 }

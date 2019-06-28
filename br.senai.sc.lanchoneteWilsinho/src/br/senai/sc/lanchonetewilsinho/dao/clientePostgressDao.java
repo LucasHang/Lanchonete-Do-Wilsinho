@@ -47,7 +47,7 @@ public class clientePostgressDao extends connectionFactory implements clienteDao
     public void update(Cliente cliente) throws SQLException {
         
         super.preparedStatementInitialize(
-                "update cliente set nome = ?, cpf = ?, telefonContato= ?, colaborador = ? where codigo = ?");
+                "update cliente set nome = ?, cpf = ?, telefoneContato= ?, colaborador = ? where codigo = ?");
         super.prepared.setString(1, cliente.getNome());
         super.prepared.setInt(2, cliente.getCpf());
         super.prepared.setString(3, cliente.getTelefoneContato());
@@ -79,7 +79,7 @@ public class clientePostgressDao extends connectionFactory implements clienteDao
     @Override
     public List<Cliente> getAll() throws SQLException{
         
-         List<Cliente> rows = new ArrayList<>();
+        List<Cliente> rows = new ArrayList<>();
         super.preparedStatementInitialize("select * from cliente");
         super.prepared.execute();
         ResultSet resultSetRows = super.prepared.getResultSet();
@@ -87,7 +87,7 @@ public class clientePostgressDao extends connectionFactory implements clienteDao
             rows.add(new Cliente(resultSetRows.getInt("codigo"),
                     resultSetRows.getString("nome"),
                     resultSetRows.getInt("cpf"),
-                    resultSetRows.getString("telefonContato"),
+                    resultSetRows.getString("telefoneContato"),
                     resultSetRows.getBoolean("colaborador")));
         }
         resultSetRows.close();
@@ -106,13 +106,33 @@ public class clientePostgressDao extends connectionFactory implements clienteDao
             novoCliente = new Cliente(resultSetRows.getInt("codigo"),
                     resultSetRows.getString("nome"),
                     resultSetRows.getInt("cpf"),
-                    resultSetRows.getString("telefonContato"),
+                    resultSetRows.getString("telefoneContato"),
                     resultSetRows.getBoolean("colaborador"));
         }
         resultSetRows.close();
         super.closeAll();
 
         return novoCliente;
+    }
+
+    @Override
+    public List<Cliente> getClienteByNome(String nome) throws SQLException {
+        List<Cliente> rows = new ArrayList<>();
+        super.preparedStatementInitialize("select * from cliente where upper(nome) like ?");
+        super.prepared.setString(1, "%"+nome.toUpperCase()+"%");
+        super.prepared.execute();
+        ResultSet resultSetRows = super.prepared.getResultSet();
+        while (resultSetRows.next()) {
+            rows.add(new Cliente(resultSetRows.getInt("codigo"),
+                    resultSetRows.getString("nome"),
+                    resultSetRows.getInt("cpf"),
+                    resultSetRows.getString("telefoneContato"),
+                    resultSetRows.getBoolean("colaborador")));
+        }
+        resultSetRows.close();
+        super.closeAll();
+
+        return rows;
     }
     
     

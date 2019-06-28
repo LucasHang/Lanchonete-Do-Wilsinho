@@ -26,6 +26,7 @@ import javafx.scene.control.TableCell;
 import javafx.scene.control.TableColumn;
 import javafx.scene.control.TableView;
 import javafx.scene.control.TextField;
+import javafx.util.converter.NumberStringConverter;
 
 /**
  * FXML Controller class
@@ -50,8 +51,6 @@ public class FuncionarioSceneWindowController implements Initializable {
     @FXML
     private TextField txtFieldTelefoneContato;
     @FXML
-    private TextField txtFieldDataNascimento;
-    @FXML
     private CheckBox checkBoxGerente;
     @FXML
     private TextField txtFieldUsuario;
@@ -61,16 +60,28 @@ public class FuncionarioSceneWindowController implements Initializable {
     /**
      * Initializes the controller class.
      */
+    
+    Funcionario novoFuncionario= null;
+    Funcionario funcionarioSelecionado = null;
+    
     @Override
     public void initialize(URL url, ResourceBundle rb) {
-      //  btnCarregarOnAction(null);
-      //  mascaraTabela();
+        btnCarregarOnAction(null);
+        mascaraTabela();
+      
+      tableFuncionarios.getSelectionModel().selectedItemProperty().addListener((observable,newValue,oldValue)->{
+            unbindFields(oldValue);
+            bindFields(newValue);
+            funcionarioSelecionado = newValue;
+        });
     }    
 
     @FXML
     private void btnCadastrarFuncionarioOnAction(ActionEvent event) throws IOException {
+        disableFields(false);
+        novoFuncionario = new Funcionario();
+	bindFields(novoFuncionario);
         
-        //BrSenaiScLanchoneteWilsinho.mudarTela("cadastroFuncionario");
     }
 
     @FXML
@@ -81,6 +92,30 @@ public class FuncionarioSceneWindowController implements Initializable {
             Logger.getLogger(ClienteSceneWindowController.class.getName()).log(Level.SEVERE, null, ex);
             MeuAlerta.alertaErro(ex.getMessage());
         }
+    }
+    
+    @FXML
+    private void btnCadastrarOnAction(ActionEvent event) {
+        
+        unbindFields(novoFuncionario);
+        unbindFields(funcionarioSelecionado);
+        
+        try {
+            if(novoFuncionario != null){
+                DAOFactory.getFuncionarioDAO().save(novoFuncionario);
+            }else{
+                if(funcionarioSelecionado != null){
+                    DAOFactory.getFuncionarioDAO().update(funcionarioSelecionado);
+                }
+            }
+            clearFields();
+            disableFields(true);
+        } catch (SQLException ex) {
+            Logger.getLogger(CadastroFuncionarioSceneWindowController.class.getName()).log(Level.SEVERE, null, ex);
+            MeuAlerta.alertaErro(ex.getMessage()).showAndWait();
+        }
+        
+        
     }
     
     private void mascaraTabela(){
@@ -120,8 +155,81 @@ public class FuncionarioSceneWindowController implements Initializable {
         });
     }
 
-    @FXML
-    private void btnCadastrarOnAction(ActionEvent event) {
+    private void disableFields(Boolean value){
+        txtFieldCpf.setDisable(value);
+        txtFieldNome.setDisable(value);
+        txtFieldTelefoneContato.setDisable(value);
+        txtFieldUsuario.setDisable(value);
+        passFieldSenha.setDisable(value);
+        checkBoxGerente.setDisable(value);
     }
     
+    private void bindFields(Funcionario funcionario){
+        if(funcionario != null){
+            txtFieldNome.textProperty().bindBidirectional(funcionario.nomeProperty());
+            txtFieldTelefoneContato.textProperty().bindBidirectional(funcionario.telefoneContatoProperty());
+            txtFieldCpf.textProperty().bindBidirectional(funcionario.CpfProperty(), new NumberStringConverter());
+            checkBoxGerente.selectedProperty().bindBidirectional(funcionario.gerenteProperty());
+        }
+        
+    }
+    
+    private void unbindFields(Funcionario funcionario){
+        if(funcionario != null){
+            txtFieldNome.textProperty().unbindBidirectional(funcionario.nomeProperty());
+            txtFieldTelefoneContato.textProperty().unbindBidirectional(funcionario.telefoneContatoProperty());
+            txtFieldCpf.textProperty().unbindBidirectional(funcionario.CpfProperty());
+            checkBoxGerente.selectedProperty().unbindBidirectional(funcionario.gerenteProperty());
+        }
+    }
+    
+    public Boolean validationForm(){
+        Boolean invalido = false;
+
+        if(txtFieldCpf.textProperty().isNull().get()){
+            txtFieldCpf.getStyleClass().add("invalido");
+            invalido = true;     
+        }else{
+            txtFieldCpf.getStyleClass().remove("invalido");
+        }
+        
+        if(txtFieldNome.textProperty().isNull().get()){
+            txtFieldNome.getStyleClass().add("invalido");
+            invalido = true;
+        }else{
+            txtFieldNome.getStyleClass().remove("invalido");
+        }
+        
+        if(txtFieldTelefoneContato.textProperty().isNull().get()){
+            txtFieldTelefoneContato.getStyleClass().add("invalido");
+            invalido = true;
+        }else{
+            txtFieldTelefoneContato.getStyleClass().remove("invalido");
+        }
+        
+        if(txtFieldUsuario.textProperty().isNull().get()){
+            txtFieldUsuario.getStyleClass().add("invalido");
+            invalido = true;
+        }else{
+            txtFieldUsuario.getStyleClass().remove("invalido");
+        }
+        
+        if(passFieldSenha.textProperty().isNull().get()){
+            passFieldSenha.getStyleClass().add("invalido");
+            invalido = true;
+        }else{
+            passFieldSenha.getStyleClass().remove("invalido");
+        }
+       
+        return invalido;
+    }
+    
+    private void clearFields(){
+        txtFieldCpf.clear();
+        txtFieldNome.clear();
+        txtFieldTelefoneContato.clear();
+        txtFieldUsuario.clear();
+        passFieldSenha.clear();
+        checkBoxGerente.setSelected(false);
+    }
 }

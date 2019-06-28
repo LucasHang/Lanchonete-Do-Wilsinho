@@ -86,16 +86,20 @@ public class Venda {
         return this.dataVenda;
     }
     
-    public Double getValorCompra(){
+    public Double getValorTotalCompra(){
         return this.valorTotalCompra.get();
     }
     
-    private void setValorCompra(){
+    public void setValorTotalCompra(){
         Double total = null;
         for(Item_Venda item : itens){
             total += item.getValorItem();
         }
     }
+    
+    public DoubleProperty valorTotalCompraProperty(){
+        return this.valorTotalCompra;
+    } 
     
     
     public List<Item_Venda> getItens(){

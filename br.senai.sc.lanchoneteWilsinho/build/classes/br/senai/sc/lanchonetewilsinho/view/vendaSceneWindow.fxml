@@ -7,59 +7,97 @@
 <?import javafx.scene.control.TableColumn?>
 <?import javafx.scene.control.TableView?>
 <?import javafx.scene.control.TextField?>
+<?import javafx.scene.control.cell.PropertyValueFactory?>
 <?import javafx.scene.image.Image?>
 <?import javafx.scene.image.ImageView?>
 <?import javafx.scene.layout.AnchorPane?>
 <?import javafx.scene.text.Font?>
 
-<AnchorPane id="AnchorPane" prefHeight="721.0" prefWidth="1253.0" styleClass="pane" stylesheets="@stylesClass.css" xmlns="http://javafx.com/javafx/8.0.171" xmlns:fx="http://javafx.com/fxml/1" fx:controller="br.senai.sc.lanchonetewilsinho.controller.VendaSceneWindowController">
+<AnchorPane id="AnchorPane" prefHeight="520.0" prefWidth="1253.0" styleClass="pane" stylesheets="@stylesClass.css" xmlns="http://javafx.com/javafx/10.0.1" xmlns:fx="http://javafx.com/fxml/1" fx:controller="br.senai.sc.lanchonetewilsinho.controller.VendaSceneWindowController">
    <children>
-      <ImageView fitHeight="230.0" fitWidth="510.0" layoutX="726.0" layoutY="246.0" opacity="0.13" pickOnBounds="true" preserveRatio="true">
+      <ImageView fitHeight="230.0" fitWidth="510.0" layoutX="731.0" layoutY="93.0" opacity="0.13" pickOnBounds="true" preserveRatio="true">
          <image>
             <Image url="@imagens/slogan%20lanchonete%20pronto.jpg" />
          </image>
       </ImageView>
-      <ImageView fitHeight="135.0" fitWidth="302.0" layoutX="407.0" layoutY="24.0" pickOnBounds="true" preserveRatio="true">
-         <image>
-            <Image url="@imagens/slogan%20lanchonete%20pronto.jpg" />
-         </image>
-      </ImageView>
-      <ComboBox fx:id="comboFuncionario" editable="true" layoutX="830.0" layoutY="126.0" prefHeight="37.0" prefWidth="299.0" promptText="Funcionário" styleClass="comboBox" />
-      <ComboBox fx:id="comboCliente" editable="true" layoutX="831.0" layoutY="237.0" prefHeight="35.0" prefWidth="299.0" promptText="Cliente" styleClass="comboBox" />
-      <ComboBox fx:id="comboProduto" editable="true" layoutX="751.0" layoutY="412.0" prefHeight="35.0" prefWidth="282.0" promptText="Produto" styleClass="comboBox" />
-      <Button fx:id="btnSalvarItem" layoutX="1155.0" layoutY="406.0" mnemonicParsing="false" onAction="#btnSalvarItemOnAction" prefHeight="37.0" prefWidth="54.0" text="+" textFill="WHITE">
+      <ComboBox fx:id="comboFuncionario" disable="true" editable="true" layoutX="741.0" layoutY="82.0" prefHeight="37.0" prefWidth="212.0" promptText="Funcionário" styleClass="comboBox" />
+      <ComboBox fx:id="comboCliente" disable="true" editable="true" layoutX="1003.0" layoutY="84.0" prefHeight="35.0" prefWidth="212.0" promptText="Cliente" styleClass="comboBox" />
+      <ComboBox fx:id="comboProduto" disable="true" editable="true" layoutX="756.0" layoutY="190.0" prefHeight="35.0" prefWidth="282.0" promptText="Produto" styleClass="comboBox" />
+      <Button fx:id="btnSalvarItem" layoutX="1160.0" layoutY="184.0" mnemonicParsing="false" onAction="#btnSalvarItemOnAction" prefHeight="37.0" prefWidth="54.0" text="+" textFill="WHITE">
          <font>
             <Font name="System Bold" size="20.0" />
          </font>
       </Button>
-      <TextField fx:id="txtQtdProduto" layoutX="1050.0" layoutY="411.0" prefHeight="37.0" prefWidth="86.0" promptText="Quantidade" />
-      <Label layoutX="904.0" layoutY="364.0" styleClass="label2" text="Itens da compra" textFill="SIENNA" />
-      <Label layoutX="890.0" layoutY="529.0" styleClass="label2" text="Total: " />
-      <Label fx:id="labelValorTotal" alignment="CENTER" layoutX="950.0" layoutY="527.0" prefHeight="35.0" prefWidth="120.0" text="Valor" />
-      <Button fx:id="btnFinalizarCompra" layoutX="914.0" layoutY="591.0" mnemonicParsing="false" onAction="#btnFinalizarCompraOnAction" prefHeight="66.0" prefWidth="132.0" text="Finalizar &#10;Compra" textAlignment="CENTER" textFill="WHITE">
+      <TextField fx:id="txtQtdProduto" disable="true" layoutX="1055.0" layoutY="189.0" prefHeight="37.0" prefWidth="86.0" promptText="Quantidade" />
+      <Label layoutX="909.0" layoutY="148.0" styleClass="label2" text="Itens da compra" textFill="SIENNA" />
+      <Label layoutX="895.0" layoutY="389.0" styleClass="label2" text="Total: " />
+      <Label fx:id="labelValorTotal" alignment="CENTER" layoutX="955.0" layoutY="387.0" prefHeight="35.0" prefWidth="120.0" text="Valor" />
+      <Button fx:id="btnFinalizarCompra" layoutX="919.0" layoutY="432.0" mnemonicParsing="false" onAction="#btnFinalizarCompraOnAction" prefHeight="66.0" prefWidth="132.0" text="Finalizar &#10;Compra" textAlignment="CENTER" textFill="WHITE">
          <font>
             <Font name="System Bold" size="17.0" />
          </font>
       </Button>
-      <Label layoutX="830.0" layoutY="87.0" text="Funcionário:" />
-      <Label layoutX="830.0" layoutY="199.0" text="Cliente:" />
-      <Separator layoutX="823.0" layoutY="322.0" prefHeight="2.0" prefWidth="315.0" styleClass="tablecolumnbase" />
-      <TableView fx:id="tableFuncionarios" layoutX="47.0" layoutY="195.0" prefHeight="416.0" prefWidth="662.0" styleClass="tableview">
+      <Label layoutX="741.0" layoutY="43.0" text="Funcionário:" />
+      <Label layoutX="1007.0" layoutY="47.0" text="Cliente:" />
+      <Separator layoutX="827.0" layoutY="141.0" prefHeight="2.0" prefWidth="315.0" styleClass="tablecolumnbase" />
+      <TableView fx:id="tableFuncionarios" layoutX="43.0" layoutY="71.0" prefHeight="362.0" prefWidth="662.0" styleClass="tableview">
         <columns>
-          <TableColumn prefWidth="75.0" text="C1" />
-          <TableColumn prefWidth="75.0" text="C2" />
+          <TableColumn fx:id="tblColumnFuncionario" prefWidth="140.0" text="Funcionário">
+              <cellValueFactory>
+                  <PropertyValueFactory property="funcionario" />
+               </cellValueFactory>
+          </TableColumn>
+          <TableColumn fx:id="tblColumnCliente" prefWidth="185.0" text="Cliente">
+              <cellValueFactory>
+                  <PropertyValueFactory property="cliente" />
+               </cellValueFactory>
+          </TableColumn>
+            <TableColumn fx:id="tblColumnCpf" prefWidth="147.0" text="Cpf">
+                <cellValueFactory>
+                  <PropertyValueFactory property="cliente" />
+               </cellValueFactory>
+            </TableColumn>
+            <TableColumn fx:id="tblColumnValor" prefWidth="87.0" text="  Valor&#10;Compra">
+            <cellValueFactory>
+                  <PropertyValueFactory property="valorTotalCompra" />
+               </cellValueFactory>
+            </TableColumn>
+            <TableColumn fx:id="tblColumnData" prefWidth="100.0" text="  Data&#10;Compra">
+            <cellValueFactory>
+                  <PropertyValueFactory property="dataVenda" />
+               </cellValueFactory>
+            </TableColumn>
         </columns>
       </TableView>
-      <Button layoutX="65.0" layoutY="137.0" mnemonicParsing="false" onAction="#btnCarregarOnAction" prefHeight="41.0" prefWidth="98.0" text="Carregar" textFill="WHITE">
+      <Button layoutX="63.0" layoutY="20.0" mnemonicParsing="false" onAction="#btnCarregarOnAction" prefHeight="41.0" prefWidth="98.0" text="Carregar" textFill="WHITE">
          <font>
             <Font name="System Bold" size="15.0" />
          </font>
       </Button>
-      <TextField fx:id="txtCarregar" layoutX="172.0" layoutY="145.0" prefHeight="29.0" prefWidth="241.0" promptText="Pesquisar na tabela" styleClass="textfield" />
-      <Button fx:id="btnCadastrarVenda" alignment="CENTER" layoutX="320.0" layoutY="629.0" mnemonicParsing="false" onAction="#btnCadastrarVendaOnAction" prefHeight="65.0" prefWidth="134.0" text="Cadastrar&#10;Venda" textAlignment="CENTER" textFill="WHITE">
+      <TextField fx:id="txtCarregar" layoutX="170.0" layoutY="28.0" prefHeight="29.0" prefWidth="241.0" promptText="Pesquisar na tabela" styleClass="textfield" />
+      <Button fx:id="btnCadastrarVenda" alignment="CENTER" layoutX="307.0" layoutY="443.0" minHeight="65.0" minWidth="134.0" mnemonicParsing="false" onAction="#btnCadastrarVendaOnAction" prefHeight="65.0" prefWidth="134.0" text="Cadastrar&#10;Venda" textAlignment="CENTER" textFill="WHITE">
          <font>
             <Font name="System Bold" size="17.0" />
          </font>
       </Button>
+      <TableView fx:id="tableItems" layoutX="785.0" layoutY="240.0" prefHeight="134.0" prefWidth="399.0">
+        <columns>
+          <TableColumn prefWidth="270.0" text="Produto">
+              <cellValueFactory>
+                  <PropertyValueFactory property="produto" />
+               </cellValueFactory>
+          </TableColumn>
+          <TableColumn prefWidth="51.0" text="Qtd">
+              <cellValueFactory>
+                  <PropertyValueFactory property="qtdComprada" />
+               </cellValueFactory>
+          </TableColumn>
+            <TableColumn prefWidth="77.0" text="Valor">
+                <cellValueFactory>
+                  <PropertyValueFactory property="valorItem" />
+               </cellValueFactory>
+            </TableColumn>
+        </columns>
+      </TableView>
    </children>
 </AnchorPane>

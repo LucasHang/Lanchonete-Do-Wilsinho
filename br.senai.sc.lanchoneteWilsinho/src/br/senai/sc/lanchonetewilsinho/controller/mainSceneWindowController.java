@@ -6,10 +6,16 @@
 package br.senai.sc.lanchonetewilsinho.controller;
 
 import br.senai.sc.lanchonetewilsinho.BrSenaiScLanchoneteWilsinho;
+import br.senai.sc.lanchonetewilsinho.MeuAlerta;
+import br.senai.sc.lanchonetewilsinho.dao.DAOFactory;
+import br.senai.sc.lanchonetewilsinho.model.Funcionario;
 import static java.awt.SystemColor.menu;
 import java.io.IOException;
 import java.net.URL;
+import java.sql.SQLException;
 import java.util.ResourceBundle;
+import java.util.logging.Level;
+import java.util.logging.Logger;
 import javafx.event.ActionEvent;
 import javafx.fxml.FXML;
 import javafx.fxml.Initializable;
@@ -35,6 +41,10 @@ public class mainSceneWindowController implements Initializable {
     /**
      * Initializes the controller class.
      */
+    
+    Funcionario funcionario;
+    static Boolean gerente;
+    
     @Override
     public void initialize(URL url, ResourceBundle rb) {
         // TODO
@@ -42,7 +52,27 @@ public class mainSceneWindowController implements Initializable {
 
     @FXML
     private void bntEntrarOnAction(ActionEvent event) throws IOException {
-        BrSenaiScLanchoneteWilsinho.mudarTela("menu");
+      BrSenaiScLanchoneteWilsinho.mudarTela("menu");
+        /*  try {
+            if(loginVrified()){
+                gerente = funcionario.getGerente();
+                BrSenaiScLanchoneteWilsinho.mudarTela("menu");
+            }
+        } catch (SQLException ex) {
+            Logger.getLogger(mainSceneWindowController.class.getName()).log(Level.SEVERE, null, ex);
+            MeuAlerta.alertaErro(ex.getMessage()).showAndWait();
+        }
+        */
     }
     
+    private Boolean loginVrified() throws SQLException{
+            
+            funcionario = DAOFactory.getFuncionarioDAO().getFuncionarioByLogin(txtFieldLogin.getText());
+            
+            if(funcionario != null){
+                return funcionario.getSenha().equals(passFieldLogin.getText());
+            }else{
+                throw new SQLException("Técnico não encontrado");
+            }
+        }
 }

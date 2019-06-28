@@ -23,6 +23,7 @@ public class Item_Venda {
     private final IntegerProperty qtdComprada = new SimpleIntegerProperty();
 
     private final IntegerProperty produto = new SimpleIntegerProperty();
+    
     private final DoubleProperty valorItem = new SimpleDoubleProperty();
 
   
@@ -65,8 +66,8 @@ public class Item_Venda {
         return this.codigoVenda.get();
     }
     
-    public void setVenda(Venda object){
-        this.codigoVenda.set(object.getCodigo());
+    public void setVenda(Integer venda){
+        this.codigoVenda.set(venda);
     }
     
     public IntegerProperty vendaProperty(){

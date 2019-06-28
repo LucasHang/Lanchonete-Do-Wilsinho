@@ -102,5 +102,24 @@ public class produtoPostgressDao extends connectionFactory implements produtoDao
 
         return novoProduto;
     }
+
+    @Override
+    public List<Produto> getProdutoByDescricao(String descricao) throws SQLException {
+        List<Produto> rows = new ArrayList<>();
+        super.preparedStatementInitialize("select * from produto where upper(descricao) like ?");
+        super.prepared.setString(1, "%"+descricao.toUpperCase()+"%");
+        super.prepared.execute();
+        ResultSet resultSetRows = super.prepared.getResultSet();
+        while (resultSetRows.next()) {
+            rows.add(new Produto(resultSetRows.getInt("codigo"),
+                    resultSetRows.getString("descricao"),
+                    resultSetRows.getDouble("preco"),
+                    resultSetRows.getInt("quantidade")));
+        }
+        resultSetRows.close();
+        super.closeAll();
+
+        return rows;
+    }
     
 }

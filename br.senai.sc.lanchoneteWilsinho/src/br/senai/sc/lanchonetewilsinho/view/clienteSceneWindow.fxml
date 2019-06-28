@@ -13,14 +13,9 @@
 <?import javafx.scene.layout.AnchorPane?>
 <?import javafx.scene.text.Font?>
 
-<AnchorPane id="AnchorPane" prefHeight="721.0" prefWidth="1253.0" styleClass="pane" stylesheets="@stylesClass.css" xmlns="http://javafx.com/javafx/8.0.171" xmlns:fx="http://javafx.com/fxml/1" fx:controller="br.senai.sc.lanchonetewilsinho.controller.ClienteSceneWindowController">
+<AnchorPane id="AnchorPane" prefHeight="520.0" prefWidth="1253.0" styleClass="pane" stylesheets="@stylesClass.css" xmlns="http://javafx.com/javafx/8.0.171" xmlns:fx="http://javafx.com/fxml/1" fx:controller="br.senai.sc.lanchonetewilsinho.controller.ClienteSceneWindowController">
    <children>
-      <ImageView fitHeight="135.0" fitWidth="302.0" layoutX="407.0" layoutY="24.0" pickOnBounds="true" preserveRatio="true">
-         <image>
-            <Image url="@imagens/slogan%20lanchonete%20pronto.jpg" />
-         </image>
-      </ImageView>
-      <TableView fx:id="tableClientes" layoutX="47.0" layoutY="195.0" prefHeight="416.0" prefWidth="662.0" styleClass="tableview" stylesheets="@stylesClass.css">
+      <TableView fx:id="tableClientes" layoutX="43.0" layoutY="71.0" prefHeight="362.0" prefWidth="662.0" styleClass="tableview" stylesheets="@stylesClass.css">
          <columns>
             <TableColumn prefWidth="133.0" text="Cpf">
                <cellValueFactory>
@@ -37,15 +32,15 @@
                   <PropertyValueFactory property="telefoneContato" />
                </cellValueFactory>
             </TableColumn>
-            <TableColumn fx:id="tblColumColaborador" prefWidth="117.0" text="Colaborador">
+            <TableColumn fx:id="tblColumnColaborador" prefWidth="117.0" text="Colaborador">
                <cellValueFactory>
                   <PropertyValueFactory property="colaborador" />
                </cellValueFactory>
             </TableColumn>
          </columns>
       </TableView>
-      <TextField fx:id="txtCarregar" layoutX="172.0" layoutY="145.0" prefHeight="29.0" prefWidth="241.0" promptText="Pesquisar na tabela" styleClass="textfield" stylesheets="@stylesClass.css" />
-      <Button layoutX="65.0" layoutY="137.0" mnemonicParsing="false" onAction="#btnCarregarOnAction" prefHeight="41.0" prefWidth="98.0" stylesheets="@stylesClass.css" text="Carregar" textFill="WHITE">
+      <TextField fx:id="txtCarregar" layoutX="170.0" layoutY="28.0" prefHeight="29.0" prefWidth="241.0" promptText="Pesquisar na tabela" styleClass="textfield" stylesheets="@stylesClass.css" />
+      <Button layoutX="63.0" layoutY="20.0" mnemonicParsing="false" onAction="#btnCarregarOnAction" prefHeight="41.0" prefWidth="98.0" stylesheets="@stylesClass.css" text="Carregar" textFill="WHITE">
          <font>
             <Font name="System Bold" size="15.0" />
          </font>
@@ -53,46 +48,40 @@
             <Cursor fx:constant="HAND" />
          </cursor>
       </Button>
-      <Button fx:id="btnCadastrarCliente" layoutX="320.0" layoutY="629.0" mnemonicParsing="false" onAction="#btnCadastrarClienteOnAction" prefHeight="65.0" prefWidth="134.0" text="Cadastrar &#10;Cliente" textAlignment="CENTER" textFill="WHITE">
+      <Button fx:id="btnCadastrarCliente" layoutX="307.0" layoutY="443.0" mnemonicParsing="false" onAction="#btnCadastrarClienteOnAction" prefHeight="65.0" prefWidth="134.0" text="Cadastrar &#10;Cliente" textAlignment="CENTER" textFill="WHITE">
          <font>
             <Font name="System Bold" size="17.0" />
          </font>
       </Button>
-      <ImageView fitHeight="269.0" fitWidth="527.0" layoutX="705.0" layoutY="275.0" opacity="0.13" pickOnBounds="true" preserveRatio="true">
+      <ImageView fitHeight="269.0" fitWidth="527.0" layoutX="712.0" layoutY="112.0" opacity="0.13" pickOnBounds="true" preserveRatio="true">
          <image>
             <Image url="@imagens/slogan%20lanchonete%20pronto.jpg" />
          </image>
       </ImageView>
-      <Button fx:id="btnCadastrar" layoutX="923.0" layoutY="518.0" mnemonicParsing="false" onAction="#btnCadastrarOnAction" prefHeight="53.0" prefWidth="113.0" text="Cadastrar" textFill="WHITE">
+      <Button fx:id="btnCadastrar" layoutX="930.0" layoutY="355.0" mnemonicParsing="false" onAction="#btnCadastrarOnAction" prefHeight="53.0" prefWidth="113.0" text="Cadastrar" textFill="WHITE">
          <font>
             <Font name="System Bold" size="17.0" />
          </font>
       </Button>
-      <TextField fx:id="txtFieldNome" layoutX="979.0" layoutY="222.0" prefHeight="25.0" prefWidth="169.0" styleClass="textfield" />
-      <TextField fx:id="txtFieldCpf" layoutX="979.0" layoutY="326.0" prefHeight="25.0" prefWidth="169.0" styleClass="textfield" />
-      <TextField fx:id="txtFieldTelefoneContato" layoutX="980.0" layoutY="380.0" prefHeight="25.0" prefWidth="169.0" styleClass="textfield" />
-      <Label layoutX="822.0" layoutY="222.0" text="Nome completo:" textFill="SIENNA">
+      <TextField fx:id="txtFieldNome" disable="true" layoutX="987.0" layoutY="112.0" prefHeight="25.0" prefWidth="169.0" styleClass="textfield" />
+      <TextField fx:id="txtFieldCpf" disable="true" layoutX="986.0" layoutY="163.0" prefHeight="25.0" prefWidth="169.0" styleClass="textfield" />
+      <TextField fx:id="txtFieldTelefoneContato" disable="true" layoutX="987.0" layoutY="217.0" prefHeight="25.0" prefWidth="169.0" styleClass="textfield" />
+      <Label layoutX="830.0" layoutY="112.0" text="Nome completo:" textFill="SIENNA">
          <font>
             <Font name="Arial Bold" size="16.0" />
          </font>
       </Label>
-      <Label layoutX="927.0" layoutY="329.0" text="CPF:" textFill="SIENNA">
+      <Label layoutX="934.0" layoutY="166.0" text="CPF:" textFill="SIENNA">
          <font>
             <Font name="Arial Bold" size="16.0" />
          </font>
       </Label>
-      <Label layoutX="789.0" layoutY="381.0" text="Telefone de contato:" textFill="SIENNA">
+      <Label layoutX="796.0" layoutY="218.0" text="Telefone de contato:" textFill="SIENNA">
          <font>
             <Font name="Arial Bold" size="16.0" />
          </font>
       </Label>
-      <Label layoutX="791.0" layoutY="271.0" text="Data de nascimento:" textFill="SIENNA">
-         <font>
-            <Font name="Arial Bold" size="16.0" />
-         </font>
-      </Label>
-      <TextField fx:id="txtFieldDataNascimento" layoutX="980.0" layoutY="271.0" prefHeight="25.0" prefWidth="169.0" styleClass="textfield" />
-      <CheckBox fx:id="checkBoxColaborador" layoutX="881.0" layoutY="450.0" mnemonicParsing="false" styleClass="label" text="Colaborador SENAI" textFill="SIENNA">
+      <CheckBox fx:id="checkBoxColaborador" disable="true" layoutX="888.0" layoutY="287.0" mnemonicParsing="false" styleClass="label" text="Colaborador SENAI" textFill="SIENNA">
          <font>
             <Font name="System Bold" size="16.0" />
          </font>

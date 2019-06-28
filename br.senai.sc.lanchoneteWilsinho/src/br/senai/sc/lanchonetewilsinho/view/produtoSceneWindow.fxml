@@ -12,39 +12,29 @@
 <?import javafx.scene.layout.AnchorPane?>
 <?import javafx.scene.text.Font?>
 
-<AnchorPane id="AnchorPane" prefHeight="721.0" prefWidth="1253.0" styleClass="pane" stylesheets="@stylesClass.css" xmlns="http://javafx.com/javafx/8.0.171" xmlns:fx="http://javafx.com/fxml/1" fx:controller="br.senai.sc.lanchonetewilsinho.controller.ProdutoSceneWindowController">
+<AnchorPane id="AnchorPane" prefHeight="520.0" prefWidth="1253.0" styleClass="pane" stylesheets="@stylesClass.css" xmlns="http://javafx.com/javafx/8.0.171" xmlns:fx="http://javafx.com/fxml/1" fx:controller="br.senai.sc.lanchonetewilsinho.controller.ProdutoSceneWindowController">
    <children>
-      <ImageView fitHeight="135.0" fitWidth="302.0" layoutX="404.0" layoutY="24.0" pickOnBounds="true" preserveRatio="true">
-         <image>
-            <Image url="@imagens/slogan%20lanchonete%20pronto.jpg" />
-         </image>
-      </ImageView>
-      <TableView fx:id="tableProdutos" layoutX="47.0" layoutY="195.0" prefHeight="416.0" prefWidth="662.0" styleClass="tableview" stylesheets="@stylesClass.css">
+      <TableView fx:id="tableProdutos" layoutX="43.0" layoutY="71.0" prefHeight="362.0" prefWidth="662.0" styleClass="tableview" stylesheets="@stylesClass.css">
          <columns>
-            <TableColumn prefWidth="67.0" text="Código">
-               <cellValueFactory>
-                  <PropertyValueFactory property="codigoProd" />
-               </cellValueFactory>
-            </TableColumn>
-            <TableColumn prefWidth="353.0" text="Descrição">
+            <TableColumn prefWidth="401.0" text="Descrição">
                <cellValueFactory>
                   <PropertyValueFactory property="descricaoProd" />
                </cellValueFactory>
             </TableColumn>
-            <TableColumn minWidth="7.0" prefWidth="124.0" text="Preço&#10;Unitário&#10;">
+            <TableColumn minWidth="7.0" prefWidth="139.0" text="  Preço&#10;Unitário&#10;">
                <cellValueFactory>
                   <PropertyValueFactory property="precoProd" />
                </cellValueFactory>
             </TableColumn>
-            <TableColumn fx:id="tblColumnQtdEstoque" prefWidth="115.0" text="Quantidade &#10;Estoque">
+            <TableColumn fx:id="tblColumnQtdEstoque" prefWidth="119.0" text="Quantidade &#10;   Estoque">
                <cellValueFactory>
                   <PropertyValueFactory property="quantidadeProd" />
                </cellValueFactory>
             </TableColumn>
          </columns>
       </TableView>
-      <TextField fx:id="txtCarregar" layoutX="172.0" layoutY="145.0" prefHeight="29.0" prefWidth="241.0" promptText="Pesquisar na tabela" styleClass="textfield" stylesheets="@stylesClass.css" />
-      <Button layoutX="65.0" layoutY="137.0" mnemonicParsing="false" onAction="#btnCarregarOnAction" prefHeight="41.0" prefWidth="98.0" stylesheets="@stylesClass.css" text="Carregar" textFill="WHITE">
+      <TextField fx:id="txtCarregar" layoutX="170.0" layoutY="28.0" prefHeight="29.0" prefWidth="241.0" promptText="Pesquisar na tabela" styleClass="textfield" stylesheets="@stylesClass.css" />
+      <Button layoutX="63.0" layoutY="20.0" mnemonicParsing="false" onAction="#btnCarregarOnAction" prefHeight="41.0" prefWidth="98.0" stylesheets="@stylesClass.css" text="Carregar" textFill="WHITE">
          <font>
             <Font name="System Bold" size="15.0" />
          </font>
@@ -52,38 +42,38 @@
             <Cursor fx:constant="HAND" />
          </cursor>
       </Button>
-      <Button fx:id="btnCadastrarProduto" layoutX="326.0" layoutY="627.0" mnemonicParsing="false" onAction="#btnCadastrarProdutoOnAction" prefHeight="65.0" prefWidth="134.0" text="Cadastrar &#10;Produto" textAlignment="CENTER" textFill="WHITE">
+      <Button fx:id="btnCadastrarProduto" layoutX="307.0" layoutY="443.0" mnemonicParsing="false" onAction="#btnCadastrarProdutoOnAction" prefHeight="65.0" prefWidth="134.0" text="Cadastrar &#10;Produto" textAlignment="CENTER" textFill="WHITE">
          <font>
             <Font name="System Bold" size="17.0" />
          </font>
       </Button>
-      <ImageView fitHeight="269.0" fitWidth="527.0" layoutX="690.0" layoutY="266.0" opacity="0.13" pickOnBounds="true" preserveRatio="true">
+      <ImageView fitHeight="269.0" fitWidth="527.0" layoutX="712.0" layoutY="144.0" opacity="0.13" pickOnBounds="true" preserveRatio="true">
          <image>
             <Image url="@imagens/slogan%20lanchonete%20pronto.jpg" />
          </image>
       </ImageView>
-      <Button fx:id="btnCadastrar" layoutX="908.0" layoutY="476.0" mnemonicParsing="false" onAction="#btnCadastrarOnAction" prefHeight="53.0" prefWidth="113.0" text="Cadastrar" textFill="WHITE">
+      <Button fx:id="btnCadastrar" layoutX="930.0" layoutY="354.0" mnemonicParsing="false" onAction="#btnCadastrarOnAction" prefHeight="53.0" prefWidth="113.0" text="Cadastrar" textFill="WHITE">
          <font>
             <Font name="System Bold" size="17.0" />
          </font>
       </Button>
-      <TextField fx:id="txtFieldDescricao" layoutX="904.0" layoutY="266.0" prefHeight="29.0" prefWidth="214.0" styleClass="textfield" />
-      <TextField fx:id="txtFieldQuantidade" layoutX="971.0" layoutY="371.0" prefHeight="29.0" prefWidth="147.0" styleClass="textfield" />
-      <Label layoutX="811.0" layoutY="266.0" text="Descrição:" textFill="SIENNA">
+      <TextField fx:id="txtFieldDescricao" disable="true" layoutX="926.0" layoutY="144.0" prefHeight="29.0" prefWidth="214.0" styleClass="textfield" />
+      <TextField fx:id="txtFieldQuantidade" disable="true" layoutX="993.0" layoutY="249.0" prefHeight="29.0" prefWidth="147.0" styleClass="textfield" />
+      <Label layoutX="833.0" layoutY="144.0" text="Descrição:" textFill="SIENNA">
          <font>
             <Font name="Arial Bold" size="16.0" />
          </font>
       </Label>
-      <Label layoutX="859.0" layoutY="371.0" text="Quantidade:" textFill="SIENNA">
+      <Label layoutX="881.0" layoutY="249.0" text="Quantidade:" textFill="SIENNA">
          <font>
             <Font name="Arial Bold" size="16.0" />
          </font>
       </Label>
-      <Label layoutX="830.0" layoutY="316.0" text="Preço Unitário:" textFill="SIENNA">
+      <Label layoutX="852.0" layoutY="194.0" text="Preço Unitário:" textFill="SIENNA">
          <font>
             <Font name="Arial Bold" size="16.0" />
          </font>
       </Label>
-      <TextField fx:id="txtFieldPrecoUnitario" layoutX="971.0" layoutY="316.0" prefHeight="29.0" prefWidth="147.0" styleClass="textfield" />
+      <TextField fx:id="txtFieldPrecoUnitario" disable="true" layoutX="993.0" layoutY="194.0" prefHeight="29.0" prefWidth="147.0" styleClass="textfield" />
    </children>
 </AnchorPane>

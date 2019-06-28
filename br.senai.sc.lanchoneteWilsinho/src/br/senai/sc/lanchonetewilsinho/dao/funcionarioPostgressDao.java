@@ -83,7 +83,7 @@ public class funcionarioPostgressDao extends connectionFactory implements funcio
             rows.add(new Funcionario(resultSetRows.getInt("codigo"),
                     resultSetRows.getString("nome"),
                     resultSetRows.getInt("cpf"),
-                    resultSetRows.getString("telefonContato"),
+                    resultSetRows.getString("telefoneContato"),
                     resultSetRows.getString("login"),
                     resultSetRows.getString("senha"),
                     resultSetRows.getBoolean("gerente")));
@@ -97,14 +97,15 @@ public class funcionarioPostgressDao extends connectionFactory implements funcio
     @Override
     public Funcionario getFuncionarioByCodigo(Integer codigo) throws SQLException {
         Funcionario novoFuncionario = null;
-        super.preparedStatementInitialize("select * from funcionario");
+        super.preparedStatementInitialize("select * from funcionario where codigo = ?");
+        super.prepared.setInt(1,codigo);
         super.prepared.execute();
         ResultSet resultSetRows = super.prepared.getResultSet();
-        while (resultSetRows.next()) {
+        if (resultSetRows.next()) {
             novoFuncionario = new Funcionario(resultSetRows.getInt("codigo"),
                     resultSetRows.getString("nome"),
                     resultSetRows.getInt("cpf"),
-                    resultSetRows.getString("telefonContato"),
+                    resultSetRows.getString("telefoneContato"),
                     resultSetRows.getString("login"),
                     resultSetRows.getString("senha"),
                     resultSetRows.getBoolean("gerente"));
@@ -113,6 +114,50 @@ public class funcionarioPostgressDao extends connectionFactory implements funcio
         super.closeAll();
 
         return novoFuncionario;
+    }
+
+    @Override
+    public Funcionario getFuncionarioByLogin(String login) throws SQLException {
+        Funcionario novoFuncionario = null;
+        super.preparedStatementInitialize("select * from funcionario where upper(login) = ?");
+        super.prepared.setString(1,login.toUpperCase());
+        super.prepared.execute();
+        ResultSet resultSetRows = super.prepared.getResultSet();
+        if (resultSetRows.next()) {
+            novoFuncionario = new Funcionario(resultSetRows.getInt("codigo"),
+                    resultSetRows.getString("nome"),
+                    resultSetRows.getInt("cpf"),
+                    resultSetRows.getString("telefoneContato"),
+                    resultSetRows.getString("login"),
+                    resultSetRows.getString("senha"),
+                    resultSetRows.getBoolean("gerente"));
+        }
+        resultSetRows.close();
+        super.closeAll();
+
+        return novoFuncionario;
+    }
+
+    @Override
+    public List<Funcionario> getFuncionarioByNome(String nome) throws SQLException {
+        List<Funcionario> rows = new ArrayList<>();
+        super.preparedStatementInitialize("select * from funcionario where upper(nome) like ?");
+        super.prepared.setString(1, "%"+nome.toUpperCase()+"%");
+        super.prepared.execute();
+        ResultSet resultSetRows = super.prepared.getResultSet();
+        while (resultSetRows.next()) {
+            rows.add(new Funcionario(resultSetRows.getInt("codigo"),
+                    resultSetRows.getString("nome"),
+                    resultSetRows.getInt("cpf"),
+                    resultSetRows.getString("telefoneContato"),
+                    resultSetRows.getString("login"),
+                    resultSetRows.getString("senha"),
+                    resultSetRows.getBoolean("gerente")));
+        }
+        resultSetRows.close();
+        super.closeAll();
+
+        return rows;
     }
     
 }
