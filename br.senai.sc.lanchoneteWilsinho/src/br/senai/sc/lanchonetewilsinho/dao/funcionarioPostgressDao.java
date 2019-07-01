@@ -24,7 +24,7 @@ public class funcionarioPostgressDao extends connectionFactory implements funcio
                 "insert into funcionario (nome, cpf, telefoneContato, email, senha, gerente) values (?,?,?,?,?,?)",
                 codigoGerado);
         super.prepared.setString(1, funcionario.getNome());
-        super.prepared.setInt(2, funcionario.getCpf());
+        super.prepared.setString(2, funcionario.getCpf());
         super.prepared.setString(3, funcionario.getTelefoneContato());
         super.prepared.setString(4, funcionario.getLogin());
         super.prepared.setString(5, funcionario.getSenha());
@@ -47,7 +47,7 @@ public class funcionarioPostgressDao extends connectionFactory implements funcio
           super.preparedStatementInitialize(
                 "update funcionario set nome = ?, cpf= ?, telefoneContato = ?, login= ?, senha = ?, gerente = ? where codigo = ?");
         super.prepared.setString(1, funcionario.getNome());
-        super.prepared.setInt(2, funcionario.getCpf());
+        super.prepared.setString(2, funcionario.getCpf());
         super.prepared.setString(3, funcionario.getTelefoneContato());
         super.prepared.setString(4, funcionario.getLogin());
         super.prepared.setString(5, funcionario.getSenha());
@@ -82,7 +82,7 @@ public class funcionarioPostgressDao extends connectionFactory implements funcio
         while (resultSetRows.next()) {
             rows.add(new Funcionario(resultSetRows.getInt("codigo"),
                     resultSetRows.getString("nome"),
-                    resultSetRows.getInt("cpf"),
+                    resultSetRows.getString("cpf"),
                     resultSetRows.getString("telefoneContato"),
                     resultSetRows.getString("login"),
                     resultSetRows.getString("senha"),
@@ -104,7 +104,7 @@ public class funcionarioPostgressDao extends connectionFactory implements funcio
         if (resultSetRows.next()) {
             novoFuncionario = new Funcionario(resultSetRows.getInt("codigo"),
                     resultSetRows.getString("nome"),
-                    resultSetRows.getInt("cpf"),
+                    resultSetRows.getString("cpf"),
                     resultSetRows.getString("telefoneContato"),
                     resultSetRows.getString("login"),
                     resultSetRows.getString("senha"),
@@ -126,7 +126,7 @@ public class funcionarioPostgressDao extends connectionFactory implements funcio
         if (resultSetRows.next()) {
             novoFuncionario = new Funcionario(resultSetRows.getInt("codigo"),
                     resultSetRows.getString("nome"),
-                    resultSetRows.getInt("cpf"),
+                    resultSetRows.getString("cpf"),
                     resultSetRows.getString("telefoneContato"),
                     resultSetRows.getString("login"),
                     resultSetRows.getString("senha"),
@@ -148,7 +148,7 @@ public class funcionarioPostgressDao extends connectionFactory implements funcio
         while (resultSetRows.next()) {
             rows.add(new Funcionario(resultSetRows.getInt("codigo"),
                     resultSetRows.getString("nome"),
-                    resultSetRows.getInt("cpf"),
+                    resultSetRows.getString("cpf"),
                     resultSetRows.getString("telefoneContato"),
                     resultSetRows.getString("login"),
                     resultSetRows.getString("senha"),

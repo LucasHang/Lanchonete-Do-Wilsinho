@@ -95,6 +95,7 @@ public class Venda {
         for(Item_Venda item : itens){
             total += item.getValorItem();
         }
+        valorTotalCompra.set(total);
     }
     
     public DoubleProperty valorTotalCompraProperty(){

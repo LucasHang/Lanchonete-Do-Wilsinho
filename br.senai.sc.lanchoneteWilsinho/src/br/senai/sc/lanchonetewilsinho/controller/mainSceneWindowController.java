@@ -51,18 +51,22 @@ public class mainSceneWindowController implements Initializable {
     }    
 
     @FXML
-    private void bntEntrarOnAction(ActionEvent event) throws IOException {
-      BrSenaiScLanchoneteWilsinho.mudarTela("menu");
-        /*  try {
+    private void bntEntrarOnAction(ActionEvent event) {
+          try {
             if(loginVrified()){
                 gerente = funcionario.getGerente();
-                BrSenaiScLanchoneteWilsinho.mudarTela("menu");
+                try {
+                    BrSenaiScLanchoneteWilsinho.mudarTela("menu");
+                } catch (IOException ex) {
+                    Logger.getLogger(mainSceneWindowController.class.getName()).log(Level.SEVERE, null, ex);
+                    MeuAlerta.alertaErro(ex.getMessage()).showAndWait();
+                }
             }
         } catch (SQLException ex) {
             Logger.getLogger(mainSceneWindowController.class.getName()).log(Level.SEVERE, null, ex);
             MeuAlerta.alertaErro(ex.getMessage()).showAndWait();
         }
-        */
+        
     }
     
     private Boolean loginVrified() throws SQLException{
@@ -72,7 +76,8 @@ public class mainSceneWindowController implements Initializable {
             if(funcionario != null){
                 return funcionario.getSenha().equals(passFieldLogin.getText());
             }else{
-                throw new SQLException("Técnico não encontrado");
+                throw new SQLException("Funcionário não encontrado");
             }
+            
         }
 }

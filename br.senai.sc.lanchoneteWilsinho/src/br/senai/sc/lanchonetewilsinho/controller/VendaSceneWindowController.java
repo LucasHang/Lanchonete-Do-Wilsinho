@@ -66,6 +66,8 @@ public class VendaSceneWindowController implements Initializable {
     @FXML
     private Button btnCadastrarVenda;
     @FXML
+    private TableView<Item_Venda> tableItems;
+    @FXML
     private TableColumn<Funcionario, Integer> tblColumnFuncionario;
     @FXML
     private TableColumn<Cliente, Integer> tblColumnCliente;
@@ -75,6 +77,8 @@ public class VendaSceneWindowController implements Initializable {
     private TableColumn<Venda, Double> tblColumnValor;
     @FXML
     private TableColumn<Venda, Integer> tblColumnData;
+    @FXML
+    private Button btnAdicionarItem;
 
     /**
      * Initializes the controller class.
@@ -84,6 +88,9 @@ public class VendaSceneWindowController implements Initializable {
     Item_Venda novoItem = null;
     Item_Venda itemSelecionado = null;
     
+
+    
+    
     @Override
     public void initialize(URL url, ResourceBundle rb) {
         try {
@@ -92,27 +99,32 @@ public class VendaSceneWindowController implements Initializable {
             Logger.getLogger(VendaSceneWindowController.class.getName()).log(Level.SEVERE, null, ex);
         }
         mascararComboBox();
-        
-       /* btnCarregarOnAction(null);
+       
+        btnCarregarOnAction(null);
+         
         mascararTableView();
         
         tableVendas.getSelectionModel().selectedItemProperty().addListener((observable,newValue,oldValue)->{
             disableFields(false);
-            unbindFields(oldValue);
-            bindFields(newValue,null);
+            unbindFieldsVenda(oldValue);
+            bindFieldsVenda(newValue);
             vendaSelecionada = newValue;
         });
-        */
+        
     }
     
+     @FXML
+    private void btnAdicionarItemOnAction(ActionEvent event) {
+        novoItem = new Item_Venda();
+        tableItems.getItems().add(novoItem);
+        bindFieldsItem_Venda(novoItem);
+    }
     
     @FXML
     private void btnSalvarItemOnAction(ActionEvent event) {
         unbindFieldsItem_Venda(novoItem);
-        novaVenda.getItens().add(novoItem);
+        novaVenda.getItens().add(novoItem); 
         clearFields("itemvenda");
-        novoItem = new Item_Venda();
-        bindFieldsItem_Venda(novoItem);
     }
 
     @FXML
@@ -125,6 +137,7 @@ public class VendaSceneWindowController implements Initializable {
         
         try {
             if(novaVenda != null){
+                novaVenda.setValorTotalCompra(); 
                 DAOFactory.getVendaDAO().save(novaVenda);
             }else{
                 if(vendaSelecionada != null){
@@ -134,7 +147,7 @@ public class VendaSceneWindowController implements Initializable {
             clearFields("venda");
             disableFields(true);
         } catch (SQLException ex) {
-            Logger.getLogger(CadastroProdutoSceneWindowController.class.getName()).log(Level.SEVERE, null, ex);
+            Logger.getLogger(VendaSceneWindowController.class.getName()).log(Level.SEVERE, null, ex);
             MeuAlerta.alertaErro(ex.getMessage()).showAndWait();
         }
     }
@@ -198,7 +211,8 @@ public class VendaSceneWindowController implements Initializable {
                             setText("Esperando");
                         } else {
                             try {
-                                setText(DAOFactory.getFuncionarioDAO().getFuncionarioByCodigo(item).getNome());
+                                Funcionario funcionario = DAOFactory.getFuncionarioDAO().getFuncionarioByCodigo(item);
+                                setText(funcionario.getNome()+"("+funcionario.getLogin()+")");
                             } catch (SQLException ex) {
                                 Logger.getLogger(VendaSceneWindowController.class.getName()).log(Level.SEVERE, null, ex);
                                 MeuAlerta.alertaErro(ex.getMessage()).showAndWait();
@@ -254,6 +268,7 @@ public class VendaSceneWindowController implements Initializable {
             return cell;
         });
 
+
         tblColumnCpf.setCellFactory((TableColumn<Cliente, Integer> param) -> {
             TableCell cell = new TableCell<Cliente, Integer>() {
                 @Override
@@ -266,7 +281,7 @@ public class VendaSceneWindowController implements Initializable {
                             setText("Esperando");
                         } else {
                             try {
-                                setText(DAOFactory.getClienteDAO().getClienteByCodigo(item).getCpf().toString());
+                                setText(DAOFactory.getClienteDAO().getClienteByCodigo(item).getCpf());
                             } catch (SQLException ex) {
                                 Logger.getLogger(VendaSceneWindowController.class.getName()).log(Level.SEVERE, null, ex);
                                 MeuAlerta.alertaErro(ex.getMessage()).showAndWait();
@@ -453,6 +468,7 @@ public class VendaSceneWindowController implements Initializable {
     private void bindFieldsItem_Venda(Item_Venda itemvenda){
         if(itemvenda != null){
             comboProduto.valueProperty().bindBidirectional(itemvenda.produtoProperty().asObject());
+            
         }
         
     }
@@ -522,4 +538,6 @@ public class VendaSceneWindowController implements Initializable {
         }
         
     }
+
+   
 }

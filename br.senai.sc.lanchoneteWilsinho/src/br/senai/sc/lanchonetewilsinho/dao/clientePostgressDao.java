@@ -26,7 +26,7 @@ public class clientePostgressDao extends connectionFactory implements clienteDao
                 "insert into cliente (nome, cpf, telefoneContato, colaborador) values (?,?,?,?)",
                 codigoGerado);
         super.prepared.setString(1, cliente.getNome());
-        super.prepared.setInt(2, cliente.getCpf());
+        super.prepared.setString(2, cliente.getCpf());
         super.prepared.setString(3, cliente.getTelefoneContato());
         super.prepared.setBoolean(4, cliente.getColaborador());
         int linhasAfetadas = super.prepared.executeUpdate();
@@ -49,7 +49,7 @@ public class clientePostgressDao extends connectionFactory implements clienteDao
         super.preparedStatementInitialize(
                 "update cliente set nome = ?, cpf = ?, telefoneContato= ?, colaborador = ? where codigo = ?");
         super.prepared.setString(1, cliente.getNome());
-        super.prepared.setInt(2, cliente.getCpf());
+        super.prepared.setString(2, cliente.getCpf());
         super.prepared.setString(3, cliente.getTelefoneContato());
         super.prepared.setBoolean(4, cliente.getColaborador());
         super.prepared.setInt(5, cliente.getCodigo());
@@ -86,7 +86,7 @@ public class clientePostgressDao extends connectionFactory implements clienteDao
         while (resultSetRows.next()) {
             rows.add(new Cliente(resultSetRows.getInt("codigo"),
                     resultSetRows.getString("nome"),
-                    resultSetRows.getInt("cpf"),
+                    resultSetRows.getString("cpf"),
                     resultSetRows.getString("telefoneContato"),
                     resultSetRows.getBoolean("colaborador")));
         }
@@ -99,13 +99,13 @@ public class clientePostgressDao extends connectionFactory implements clienteDao
     @Override
     public Cliente getClienteByCodigo(Integer codigo) throws SQLException {
         Cliente novoCliente = null;
-        super.preparedStatementInitialize("select * from produto");
+        super.preparedStatementInitialize("select * from cliente");
         super.prepared.execute();
         ResultSet resultSetRows = super.prepared.getResultSet();
         if (resultSetRows.next()) {
             novoCliente = new Cliente(resultSetRows.getInt("codigo"),
                     resultSetRows.getString("nome"),
-                    resultSetRows.getInt("cpf"),
+                    resultSetRows.getString("cpf"),
                     resultSetRows.getString("telefoneContato"),
                     resultSetRows.getBoolean("colaborador"));
         }
@@ -125,7 +125,7 @@ public class clientePostgressDao extends connectionFactory implements clienteDao
         while (resultSetRows.next()) {
             rows.add(new Cliente(resultSetRows.getInt("codigo"),
                     resultSetRows.getString("nome"),
-                    resultSetRows.getInt("cpf"),
+                    resultSetRows.getString("cpf"),
                     resultSetRows.getString("telefoneContato"),
                     resultSetRows.getBoolean("colaborador")));
         }

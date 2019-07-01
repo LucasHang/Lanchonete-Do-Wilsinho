@@ -49,6 +49,10 @@
 	-fx-border-width: 2px;
 }
 
+.tableview .table-column{
+    -fx-alignment: CENTER;
+}
+
 .tablecolumnbase{
 	-fx-background-color:   #A0522D;
 	-fx-border-color:  #EEE8AA;
@@ -57,4 +61,10 @@
 
 .sem-estoque{
     	-fx-background-color: #FF6F6F;
+}
+
+.invalido{
+    -fx-background-color:#FF6F6F;
+    -fx-border-width:2px;
+    -fx-border-color:red;
 }

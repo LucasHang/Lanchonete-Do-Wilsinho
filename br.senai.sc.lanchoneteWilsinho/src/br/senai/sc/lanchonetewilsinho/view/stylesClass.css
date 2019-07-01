@@ -49,6 +49,10 @@
 	-fx-border-width: 2px;
 }
 
+.tableview .table-column{
+    -fx-alignment: CENTER;
+}
+
 .tablecolumnbase{
 	-fx-background-color:   #A0522D;
 	-fx-border-color:  #EEE8AA;

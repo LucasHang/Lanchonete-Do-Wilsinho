@@ -113,7 +113,7 @@ public class ClienteSceneWindowController implements Initializable {
             clearFields();
             disableFields(true);
         } catch (SQLException ex) {
-            Logger.getLogger(CadastroClienteSceneWindowController.class.getName()).log(Level.SEVERE, null, ex);
+            Logger.getLogger(ClienteSceneWindowController.class.getName()).log(Level.SEVERE, null, ex);
             MeuAlerta.alertaErro(ex.getMessage()).showAndWait();
         }
         
@@ -171,7 +171,7 @@ public class ClienteSceneWindowController implements Initializable {
         if(cliente != null){
             txtFieldNome.textProperty().bindBidirectional(cliente.nomeProperty());
             txtFieldTelefoneContato.textProperty().bindBidirectional(cliente.telefoneContatoProperty());
-            txtFieldCpf.textProperty().bindBidirectional(cliente.CpfProperty(), new NumberStringConverter());
+            txtFieldCpf.textProperty().bindBidirectional(cliente.CpfProperty());
             checkBoxColaborador.selectedProperty().bindBidirectional(cliente.colaboradorProperty());
         }
         

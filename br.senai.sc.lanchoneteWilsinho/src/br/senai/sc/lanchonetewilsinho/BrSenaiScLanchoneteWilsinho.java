@@ -23,13 +23,7 @@ public class BrSenaiScLanchoneteWilsinho extends Application {
     
     private static Scene login;
     private static Scene menu;
-    private static Scene cliente;
-    private static Scene cadastroCliente;
-    private static Scene funcionario;
-    private static Scene cadastroFuncionario;
-    private static Scene produto;
-    private static Scene cadastroProduto;
-    private static Scene venda;
+
        
      
     @Override
@@ -38,7 +32,7 @@ public class BrSenaiScLanchoneteWilsinho extends Application {
         stage = primaryStage;
         
         Parent fxmlLogin = FXMLLoader.load(getClass().getResource("view/mainSceneWindow.fxml"));
-        login = new Scene(fxmlLogin, 500, 550);
+        login = new Scene(fxmlLogin, 450, 550);
         
  
         stage.setResizable(false);

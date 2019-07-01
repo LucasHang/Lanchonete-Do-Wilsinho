@@ -19,22 +19,22 @@
    <children>
       <TableView fx:id="tableFuncionarios" layoutX="43.0" layoutY="71.0" prefHeight="362.0" prefWidth="662.0" styleClass="tableview" stylesheets="@stylesClass.css">
          <columns>
-            <TableColumn prefWidth="75.0" text="Código">
-               <cellValueFactory>
-                  <PropertyValueFactory property="codigo" />
-               </cellValueFactory>
-            </TableColumn>
-            <TableColumn prefWidth="290.0000305175781" text="Nome">
+            <TableColumn prefWidth="228.0" text="Nome">
                <cellValueFactory>
                   <PropertyValueFactory property="nome" />
                </cellValueFactory>
             </TableColumn>
-            <TableColumn minWidth="7.0" prefWidth="156.0" text="Telefone">
+            <TableColumn prefWidth="180.0" text="Login">
+               <cellValueFactory>
+                  <PropertyValueFactory property="login" />
+               </cellValueFactory>
+            </TableColumn>
+            <TableColumn minWidth="7.0" prefWidth="160.0" text="Telefone">
                <cellValueFactory>
                   <PropertyValueFactory property="telefoneContato" />
                </cellValueFactory>
             </TableColumn>
-            <TableColumn fx:id="tblColumnGerente" prefWidth="138.0" text="Gerente">
+            <TableColumn fx:id="tblColumnGerente" prefWidth="92.0" text="Gerente">
                <cellValueFactory>
                   <PropertyValueFactory property="gerente" />
                </cellValueFactory>

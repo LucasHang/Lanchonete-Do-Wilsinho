@@ -111,7 +111,7 @@ public class FuncionarioSceneWindowController implements Initializable {
             clearFields();
             disableFields(true);
         } catch (SQLException ex) {
-            Logger.getLogger(CadastroFuncionarioSceneWindowController.class.getName()).log(Level.SEVERE, null, ex);
+            Logger.getLogger(FuncionarioSceneWindowController.class.getName()).log(Level.SEVERE, null, ex);
             MeuAlerta.alertaErro(ex.getMessage()).showAndWait();
         }
         
@@ -168,7 +168,7 @@ public class FuncionarioSceneWindowController implements Initializable {
         if(funcionario != null){
             txtFieldNome.textProperty().bindBidirectional(funcionario.nomeProperty());
             txtFieldTelefoneContato.textProperty().bindBidirectional(funcionario.telefoneContatoProperty());
-            txtFieldCpf.textProperty().bindBidirectional(funcionario.CpfProperty(), new NumberStringConverter());
+            txtFieldCpf.textProperty().bindBidirectional(funcionario.CpfProperty());
             checkBoxGerente.selectedProperty().bindBidirectional(funcionario.gerenteProperty());
         }
         

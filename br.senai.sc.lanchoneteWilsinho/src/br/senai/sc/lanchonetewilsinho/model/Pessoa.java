@@ -19,7 +19,7 @@ import javafx.beans.property.StringProperty;
 public class Pessoa {
     
     public final StringProperty nome = new SimpleStringProperty();
-    public final IntegerProperty cpf = new SimpleIntegerProperty();
+    public final StringProperty cpf = new SimpleStringProperty();
     public final StringProperty telefoneContato = new SimpleStringProperty();
 
     public String getTelefoneContato() {
@@ -47,15 +47,15 @@ public class Pessoa {
         return this.nome;
     }
     
-      public Integer getCpf() {
+      public String getCpf() {
         return this.cpf.get();
     }
 
-    public void setCpf(Integer value) {
+    public void setCpf(String value) {
         this.cpf.set(value);
     }
 
-    public IntegerProperty CpfProperty() {
+    public StringProperty CpfProperty() {
         return this.cpf;
     }
     

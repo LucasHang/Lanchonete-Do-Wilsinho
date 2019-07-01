@@ -94,7 +94,7 @@ public class ProdutoSceneWindowController implements Initializable {
             clearFields();
             disableFields(true);
         } catch (SQLException ex) {
-            Logger.getLogger(CadastroProdutoSceneWindowController.class.getName()).log(Level.SEVERE, null, ex);
+            Logger.getLogger(ProdutoSceneWindowController.class.getName()).log(Level.SEVERE, null, ex);
             MeuAlerta.alertaErro(ex.getMessage()).showAndWait();
         }
   
