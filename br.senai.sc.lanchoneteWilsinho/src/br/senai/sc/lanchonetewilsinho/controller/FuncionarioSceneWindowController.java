@@ -69,7 +69,7 @@ public class FuncionarioSceneWindowController implements Initializable {
         btnCarregarOnAction(null);
         mascaraTabela();
       
-      tableFuncionarios.getSelectionModel().selectedItemProperty().addListener((observable,newValue,oldValue)->{
+      tableFuncionarios.getSelectionModel().selectedItemProperty().addListener((observable,oldValue,newValue)->{
             unbindFields(oldValue);
             bindFields(newValue);
             funcionarioSelecionado = newValue;
@@ -89,7 +89,7 @@ public class FuncionarioSceneWindowController implements Initializable {
         try {
             tableFuncionarios.setItems(FXCollections.observableArrayList(DAOFactory.getFuncionarioDAO().getAll()));
         } catch (SQLException ex) {
-            Logger.getLogger(ClienteSceneWindowController.class.getName()).log(Level.SEVERE, null, ex);
+            Logger.getLogger(FuncionarioSceneWindowController.class.getName()).log(Level.SEVERE, null, ex);
             MeuAlerta.alertaErro(ex.getMessage());
         }
     }
@@ -108,6 +108,7 @@ public class FuncionarioSceneWindowController implements Initializable {
                     DAOFactory.getFuncionarioDAO().update(funcionarioSelecionado);
                 }
             }
+            btnCarregarOnAction(null);
             clearFields();
             disableFields(true);
         } catch (SQLException ex) {
@@ -169,6 +170,8 @@ public class FuncionarioSceneWindowController implements Initializable {
             txtFieldNome.textProperty().bindBidirectional(funcionario.nomeProperty());
             txtFieldTelefoneContato.textProperty().bindBidirectional(funcionario.telefoneContatoProperty());
             txtFieldCpf.textProperty().bindBidirectional(funcionario.CpfProperty());
+            txtFieldUsuario.textProperty().bindBidirectional(funcionario.loginProperty());
+            passFieldSenha.textProperty().bindBidirectional(funcionario.senhaProperty());
             checkBoxGerente.selectedProperty().bindBidirectional(funcionario.gerenteProperty());
         }
         
@@ -179,6 +182,8 @@ public class FuncionarioSceneWindowController implements Initializable {
             txtFieldNome.textProperty().unbindBidirectional(funcionario.nomeProperty());
             txtFieldTelefoneContato.textProperty().unbindBidirectional(funcionario.telefoneContatoProperty());
             txtFieldCpf.textProperty().unbindBidirectional(funcionario.CpfProperty());
+            txtFieldUsuario.textProperty().unbindBidirectional(funcionario.loginProperty());
+            passFieldSenha.textProperty().unbindBidirectional(funcionario.senhaProperty());
             checkBoxGerente.selectedProperty().unbindBidirectional(funcionario.gerenteProperty());
         }
     }

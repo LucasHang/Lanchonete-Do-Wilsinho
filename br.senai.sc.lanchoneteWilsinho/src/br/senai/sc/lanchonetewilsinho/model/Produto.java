@@ -47,7 +47,7 @@ public class Produto {
         return quantidadeProd.get();
     }
 
-    public void setQuantidadeProd(int value) {
+    public void setQuantidadeProd(Integer value) {
         quantidadeProd.set(value);
     }
 
@@ -60,7 +60,7 @@ public class Produto {
         return precoProd.get();
     }
 
-    public void setPrecoProd(double value) {
+    public void setPrecoProd(Double value) {
         precoProd.set(value);
     }
 

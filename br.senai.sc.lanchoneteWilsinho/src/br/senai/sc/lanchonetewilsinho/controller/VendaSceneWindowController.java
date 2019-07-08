@@ -16,6 +16,7 @@ import static java.lang.Integer.parseInt;
 import java.net.URL;
 import java.sql.SQLException;
 import java.text.SimpleDateFormat;
+import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.Date;
 import java.util.List;
@@ -36,6 +37,7 @@ import javafx.scene.control.TableColumn;
 import javafx.scene.control.TableView;
 import javafx.scene.control.TextField;
 import javafx.util.Callback;
+import javafx.util.StringConverter;
 import javafx.util.converter.NumberStringConverter;
 
 /**
@@ -78,6 +80,8 @@ public class VendaSceneWindowController implements Initializable {
     @FXML
     private TableColumn<Venda, Integer> tblColumnData;
     @FXML
+    private TableColumn<Item_Venda, Integer> tblColumnProduto;
+    @FXML
     private Button btnAdicionarItem;
 
     /**
@@ -89,41 +93,47 @@ public class VendaSceneWindowController implements Initializable {
     Item_Venda itemSelecionado = null;
     
 
-    
-    
     @Override
     public void initialize(URL url, ResourceBundle rb) {
+
         try {
             fillComboBoxes();
         } catch (SQLException ex) {
             Logger.getLogger(VendaSceneWindowController.class.getName()).log(Level.SEVERE, null, ex);
         }
         mascararComboBox();
-       
+
         btnCarregarOnAction(null);
-         
+
         mascararTableView();
-        
-        tableVendas.getSelectionModel().selectedItemProperty().addListener((observable,newValue,oldValue)->{
+
+        tableVendas.getSelectionModel().selectedItemProperty().addListener((observable, oldValue, newValue) -> {
             disableFields(false);
             unbindFieldsVenda(oldValue);
             bindFieldsVenda(newValue);
             vendaSelecionada = newValue;
         });
-        
+
     }
-    
-     @FXML
+
+    @FXML
     private void btnAdicionarItemOnAction(ActionEvent event) {
         novoItem = new Item_Venda();
         tableItems.getItems().add(novoItem);
         bindFieldsItem_Venda(novoItem);
     }
-    
+
     @FXML
     private void btnSalvarItemOnAction(ActionEvent event) {
         unbindFieldsItem_Venda(novoItem);
-        novaVenda.getItens().add(novoItem); 
+        try {
+            novoItem.setValorItem();
+        } catch (SQLException ex) {
+            Logger.getLogger(VendaSceneWindowController.class.getName()).log(Level.SEVERE, null, ex);
+            MeuAlerta.alertaErro(ex.getMessage()).showAndWait();
+        }
+        novaVenda.getItens().add(novoItem);
+        novaVenda.setValorTotalCompra();
         clearFields("itemvenda");
     }
 
@@ -131,19 +141,21 @@ public class VendaSceneWindowController implements Initializable {
     private void btnFinalizarCompraOnAction(ActionEvent event) {
         unbindFieldsVenda(novaVenda);
         unbindFieldsVenda(vendaSelecionada);
-        
+
         unbindFieldsItem_Venda(novoItem);
         unbindFieldsItem_Venda(itemSelecionado);
-        
+
         try {
-            if(novaVenda != null){
-                novaVenda.setValorTotalCompra(); 
+            if (novaVenda != null) {
+                novaVenda.setValorTotalCompra();
                 DAOFactory.getVendaDAO().save(novaVenda);
-            }else{
-                if(vendaSelecionada != null){
+            } else {
+                if (vendaSelecionada != null) {
                     DAOFactory.getVendaDAO().update(vendaSelecionada);
                 }
             }
+            btnCarregarOnAction(null);
+            tableItems.setItems(null);
             clearFields("venda");
             disableFields(true);
         } catch (SQLException ex) {
@@ -167,10 +179,11 @@ public class VendaSceneWindowController implements Initializable {
         disableFields(false);
         novaVenda = new Venda();
         novoItem = new Item_Venda();
-	bindFieldsVenda(novaVenda);
+        tableItems.getItems().add(novoItem);
+        bindFieldsVenda(novaVenda);
         bindFieldsItem_Venda(novoItem);
     }
-    
+
     private Integer takeActualDate() {
 
         Date date = new Date();
@@ -185,17 +198,17 @@ public class VendaSceneWindowController implements Initializable {
     }
 
     private void fillComboBoxes() throws SQLException {
-        FXCollections.observableArrayList(DAOFactory.getProdutoDAO().getAll()).forEach(produto ->{
+        FXCollections.observableArrayList(DAOFactory.getProdutoDAO().getAll()).forEach(produto -> {
             comboProduto.getItems().add(produto.getCodigo());
         });
-        FXCollections.observableArrayList(DAOFactory.getClienteDAO().getAll()).forEach(cliente ->{
-           comboCliente.getItems().add(cliente.getCodigo());
+        FXCollections.observableArrayList(DAOFactory.getClienteDAO().getAll()).forEach(cliente -> {
+            comboCliente.getItems().add(cliente.getCodigo());
         });
-        
-        FXCollections.observableArrayList(DAOFactory.getFuncionarioDAO().getAll()).forEach(funcionario ->{
+
+        FXCollections.observableArrayList(DAOFactory.getFuncionarioDAO().getAll()).forEach(funcionario -> {
             comboFuncionario.getItems().add(funcionario.getCodigo());
         });
-              
+
     }
 
     private void mascararTableView() {
@@ -212,7 +225,7 @@ public class VendaSceneWindowController implements Initializable {
                         } else {
                             try {
                                 Funcionario funcionario = DAOFactory.getFuncionarioDAO().getFuncionarioByCodigo(item);
-                                setText(funcionario.getNome()+"("+funcionario.getLogin()+")");
+                                setText(funcionario.getNome() + "(" + funcionario.getLogin() + ")");
                             } catch (SQLException ex) {
                                 Logger.getLogger(VendaSceneWindowController.class.getName()).log(Level.SEVERE, null, ex);
                                 MeuAlerta.alertaErro(ex.getMessage()).showAndWait();
@@ -267,7 +280,6 @@ public class VendaSceneWindowController implements Initializable {
             };
             return cell;
         });
-
 
         tblColumnCpf.setCellFactory((TableColumn<Cliente, Integer> param) -> {
             TableCell cell = new TableCell<Cliente, Integer>() {
@@ -347,16 +359,16 @@ public class VendaSceneWindowController implements Initializable {
                         } else {
                             String dataString = "";
                             List<String> aux = Arrays.asList(item.toString().split(""));
-                            for (String num: aux.subList(6, 8)){
-                            dataString +=  num;
+                            for (String num : aux.subList(6, 8)) {
+                                dataString += num;
                             }
                             dataString += "/";
-                            for (String num: aux.subList(4, 6)){
-                            dataString +=  num;
+                            for (String num : aux.subList(4, 6)) {
+                                dataString += num;
                             }
                             dataString += "/";
-                            for (String num: aux.subList(0, 4)){
-                            dataString +=  num;
+                            for (String num : aux.subList(0, 4)) {
+                                dataString += num;
                             }
                             setText(dataString);
 
@@ -375,8 +387,43 @@ public class VendaSceneWindowController implements Initializable {
             };
             return cell;
         });
-        
+
+        tblColumnProduto.setCellFactory((TableColumn<Item_Venda, Integer> param) -> {
+            TableCell cell = new TableCell<Item_Venda, Integer>() {
+                @Override
+                public void updateItem(Integer item, boolean empty) {
+                    super.updateItem(item, empty);
+                    setText(null);
+                    setGraphic(null);
+                    if (!empty) {
+                        if (item == null || item == 0) {
+                            setText("Esperando");
+                        } else {
+                            try {
+                                setText(DAOFactory.getProdutoDAO().getProdutoByCodigo(item).getDescricaoProd());
+                            } catch (SQLException ex) {
+                                Logger.getLogger(VendaSceneWindowController.class.getName()).log(Level.SEVERE, null, ex);
+                                MeuAlerta.alertaErro(ex.getMessage()).showAndWait();
+                            }
+
+                        }
+                    }
+                }
+
+                @Override
+                public void updateSelected(boolean upd) {
+                    super.updateSelected(upd);
+                }
+
+                private String getString() {
+                    return getItem() == null ? "" : getItem().toString();
+                }
+            };
+            return cell;
+        });
     }
+    
+        
 
     private void mascararComboBox() {
 
@@ -391,7 +438,7 @@ public class VendaSceneWindowController implements Initializable {
                             setGraphic(null);
                         } else {
                             try {
-                                setText(DAOFactory.getProdutoDAO().getProdutoByCodigo(item).getDescricaoProd());
+                                setText(item.toString()+"-"+DAOFactory.getProdutoDAO().getProdutoByCodigo(item).getDescricaoProd());
                             } catch (SQLException ex) {
                                 Logger.getLogger(VendaSceneWindowController.class.getName()).log(Level.SEVERE, null, ex);
                                 MeuAlerta.alertaErro(ex.getMessage()).showAndWait();
@@ -399,6 +446,30 @@ public class VendaSceneWindowController implements Initializable {
                         }
                     }
                 };
+            }
+        });
+
+        comboProduto.setConverter(new StringConverter<Integer>() {
+            @Override
+            public String toString(Integer object) {
+                if(object != null && object != 0){
+                    try {
+                        return object.toString()+"-" + DAOFactory.getProdutoDAO().getProdutoByCodigo(object).getDescricaoProd();
+                    } catch (SQLException ex) {
+                        Logger.getLogger(VendaSceneWindowController.class.getName()).log(Level.SEVERE, null, ex);
+                        MeuAlerta.alertaErro(ex.getMessage()).showAndWait();
+                    }
+                }
+                
+                return null;
+            }
+
+            @Override
+            public Integer fromString(String string) {
+                if(string != null && !string.isEmpty()){
+                    return Integer.parseInt(string.substring(0,0));
+                }
+                return null;
             }
         });
 
@@ -413,7 +484,7 @@ public class VendaSceneWindowController implements Initializable {
                             setGraphic(null);
                         } else {
                             try {
-                                setText(DAOFactory.getFuncionarioDAO().getFuncionarioByCodigo(item).getLogin());
+                                setText(item.toString()+"-"+DAOFactory.getFuncionarioDAO().getFuncionarioByCodigo(item).getLogin());
                             } catch (SQLException ex) {
                                 Logger.getLogger(VendaSceneWindowController.class.getName()).log(Level.SEVERE, null, ex);
                                 MeuAlerta.alertaErro(ex.getMessage()).showAndWait();
@@ -421,6 +492,31 @@ public class VendaSceneWindowController implements Initializable {
                         }
                     }
                 };
+            }
+        });
+
+        comboFuncionario.setConverter(new StringConverter<Integer>() {
+            @Override
+            public String toString(Integer object) {
+                if(object != null && object != 0){
+                    try {
+                        return object.toString()+"-" + DAOFactory.getFuncionarioDAO().getFuncionarioByCodigo(object).getLogin();
+                    } catch (SQLException ex) {
+                        Logger.getLogger(VendaSceneWindowController.class.getName()).log(Level.SEVERE, null, ex);
+                        MeuAlerta.alertaErro(ex.getMessage()).showAndWait();
+                    }
+                }
+                return null;
+            }
+
+            @Override
+            public Integer fromString(String string) {
+                if(string != null && !string.isEmpty()){
+                  
+                    return Integer.parseInt(string.substring(0,0));
+                    
+                } 
+                return null;
             }
         });
 
@@ -435,7 +531,7 @@ public class VendaSceneWindowController implements Initializable {
                             setGraphic(null);
                         } else {
                             try {
-                                setText(DAOFactory.getClienteDAO().getClienteByCodigo(item).getCpf().toString());
+                                setText(DAOFactory.getClienteDAO().getClienteByCodigo(item).getCpf()+"-"+DAOFactory.getClienteDAO().getClienteByCodigo(item).getNome());
                             } catch (SQLException ex) {
                                 Logger.getLogger(VendaSceneWindowController.class.getName()).log(Level.SEVERE, null, ex);
                                 MeuAlerta.alertaErro(ex.getMessage()).showAndWait();
@@ -446,98 +542,122 @@ public class VendaSceneWindowController implements Initializable {
             }
         });
 
+        comboCliente.setConverter(new StringConverter<Integer>() {
+            @Override
+            public String toString(Integer object) {
+                if(object != null && object != 0){
+                    try {
+                        return DAOFactory.getClienteDAO().getClienteByCodigo(object).getCpf() + "-" + DAOFactory.getClienteDAO().getClienteByCodigo(object).getNome();
+                    } catch (SQLException ex) {
+                        Logger.getLogger(VendaSceneWindowController.class.getName()).log(Level.SEVERE, null, ex);
+                        MeuAlerta.alertaErro(ex.getMessage()).showAndWait();
+                    }
+                }
+                
+                return null;
+            }
+
+            @Override
+            public Integer fromString(String string) {
+                if(string != null && !string.isEmpty()){
+                    return Integer.parseInt(string.substring(0,10));
+                }
+                
+                return null;
+            }
+        });
     }
-    
-    private void bindFieldsVenda(Venda venda){
-        if(venda != null){
+
+    private void bindFieldsVenda(Venda venda) {
+        if (venda != null) {
             comboCliente.valueProperty().bindBidirectional(venda.clienteProperty().asObject());
             comboFuncionario.valueProperty().bindBidirectional(venda.funcionarioProperty().asObject());
-            labelValorTotal.textProperty().bindBidirectional(venda.valorTotalCompraProperty(), new NumberStringConverter());   
+            labelValorTotal.textProperty().bindBidirectional(venda.valorTotalCompraProperty(), new NumberStringConverter());
         }
-        
+
     }
-    
-    private void unbindFieldsVenda(Venda venda){
-        if(venda != null){
+
+    private void unbindFieldsVenda(Venda venda) {
+        if (venda != null) {
             comboCliente.valueProperty().unbindBidirectional(venda.clienteProperty().asObject());
             comboFuncionario.valueProperty().unbindBidirectional(venda.funcionarioProperty().asObject());
             labelValorTotal.textProperty().bindBidirectional(venda.valorTotalCompraProperty(), new NumberStringConverter());
-            }
         }
-    
-    private void bindFieldsItem_Venda(Item_Venda itemvenda){
-        if(itemvenda != null){
-            comboProduto.valueProperty().bindBidirectional(itemvenda.produtoProperty().asObject());
-            
-        }
-        
     }
-    
-    private void unbindFieldsItem_Venda(Item_Venda itemvenda){
-        if(itemvenda != null){
+
+    private void bindFieldsItem_Venda(Item_Venda itemvenda) {
+        if (itemvenda != null) {
+            txtQtdProduto.textProperty().bindBidirectional(itemvenda.qtdCompradaProperty(), new NumberStringConverter());
+            comboProduto.valueProperty().bindBidirectional(itemvenda.produtoProperty().asObject());
+
+        }
+
+    }
+
+    private void unbindFieldsItem_Venda(Item_Venda itemvenda) {
+        if (itemvenda != null) {
+            txtQtdProduto.textProperty().unbindBidirectional(itemvenda.qtdCompradaProperty());
             comboProduto.valueProperty().unbindBidirectional(itemvenda.produtoProperty().asObject());
         }
-        }
-        
-        private void disableFields(Boolean value){
-            comboCliente.setDisable(value);
-            comboFuncionario.setDisable(value);
-            comboProduto.setDisable(value);
-            txtQtdProduto.setDisable(value);
+    }
 
-        }
+    private void disableFields(Boolean value) {
+        comboCliente.setDisable(value);
+        comboFuncionario.setDisable(value);
+        comboProduto.setDisable(value);
+        txtQtdProduto.setDisable(value);
 
-        public Boolean validationForm(){
+    }
+
+    public Boolean validationForm() {
         Boolean invalido = false;
 
-        if(comboCliente.valueProperty().isNull().get()){
+        if (comboCliente.valueProperty().isNull().get()) {
             comboCliente.getStyleClass().add("invalido");
-            invalido = true;     
-        }else{
+            invalido = true;
+        } else {
             comboCliente.getStyleClass().remove("invalido");
         }
-        
-        if(comboFuncionario.valueProperty().isNull().get()){
+
+        if (comboFuncionario.valueProperty().isNull().get()) {
             comboFuncionario.getStyleClass().add("invalido");
             invalido = true;
-        }else{
+        } else {
             comboFuncionario.getStyleClass().remove("invalido");
         }
-        
-        if(comboProduto.valueProperty().isNull().get()){
+
+        if (comboProduto.valueProperty().isNull().get()) {
             comboProduto.getStyleClass().add("invalido");
             invalido = true;
-        }else{
+        } else {
             comboProduto.getStyleClass().remove("invalido");
         }
-        
-        if(txtQtdProduto.textProperty().isNull().get()){
+
+        if (txtQtdProduto.textProperty().isNull().get()) {
             txtQtdProduto.getStyleClass().add("invalido");
             invalido = true;
-        }else{
+        } else {
             txtQtdProduto.getStyleClass().remove("invalido");
         }
-        
-        
+
         return invalido;
     }
-        
-        private void clearFields(String tipo){
-        switch(tipo){
+
+    private void clearFields(String tipo) {
+        switch (tipo) {
             case "venda":
                 comboCliente.setValue(null);
                 comboFuncionario.setValue(null);
                 comboProduto.setValue(null);
                 txtQtdProduto.clear();
-            break;
-                
+                break;
+
             case "itemvenda":
                 comboProduto.setValue(null);
                 txtQtdProduto.clear();
-            break;
+                break;
         }
-        
+
     }
 
-   
 }

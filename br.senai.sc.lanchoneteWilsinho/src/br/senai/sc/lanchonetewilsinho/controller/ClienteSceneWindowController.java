@@ -70,7 +70,7 @@ public class ClienteSceneWindowController implements Initializable {
         btnCarregarOnAction(null);
         mascaraTabela();
 
-        tableClientes.getSelectionModel().selectedItemProperty().addListener((observable,newValue,oldValue)->{
+        tableClientes.getSelectionModel().selectedItemProperty().addListener((observable,oldValue,newValue)->{
             disableFields(false);
             unbindFields(oldValue);
             bindFields(newValue);
@@ -110,6 +110,7 @@ public class ClienteSceneWindowController implements Initializable {
                     DAOFactory.getClienteDAO().update(clienteSelecionado);
                 }
             }
+            btnCarregarOnAction(null);
             clearFields();
             disableFields(true);
         } catch (SQLException ex) {

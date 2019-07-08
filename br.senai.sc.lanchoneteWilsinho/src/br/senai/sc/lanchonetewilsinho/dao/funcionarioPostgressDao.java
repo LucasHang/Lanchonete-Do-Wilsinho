@@ -21,7 +21,7 @@ public class funcionarioPostgressDao extends connectionFactory implements funcio
     public void save(Funcionario funcionario) throws SQLException {
         String[] codigoGerado = {"codigo"};
         super.preparedStatementInitialize(
-                "insert into funcionario (nome, cpf, telefoneContato, email, senha, gerente) values (?,?,?,?,?,?)",
+                "insert into funcionario (nome, cpf, telefoneContato, login, senha, gerente) values (?,?,?,?,?,?)",
                 codigoGerado);
         super.prepared.setString(1, funcionario.getNome());
         super.prepared.setString(2, funcionario.getCpf());

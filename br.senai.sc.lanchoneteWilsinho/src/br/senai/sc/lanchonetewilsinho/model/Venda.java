@@ -5,6 +5,7 @@
  */
 package br.senai.sc.lanchonetewilsinho.model;
 
+import java.util.ArrayList;
 import java.util.List;
 import javafx.beans.property.DoubleProperty;
 import javafx.beans.property.IntegerProperty;
@@ -22,7 +23,7 @@ public class Venda {
     
     private final IntegerProperty dataVenda = new SimpleIntegerProperty();
 
-    private List<Item_Venda> itens = null;
+    private List<Item_Venda> itens = new ArrayList<>();
     
     private final DoubleProperty valorTotalCompra = new SimpleDoubleProperty();
     
@@ -106,7 +107,10 @@ public class Venda {
     public List<Item_Venda> getItens(){
         return this.itens;
     }
-      
+     
+    public void setItens(List<Item_Venda> itens){
+        this.itens = itens;
+    }
 
     public Integer getCodigo() {
         return this.codigo.get();

@@ -34,7 +34,8 @@ public class BrSenaiScLanchoneteWilsinho extends Application {
         Parent fxmlLogin = FXMLLoader.load(getClass().getResource("view/mainSceneWindow.fxml"));
         login = new Scene(fxmlLogin, 450, 550);
         
- 
+        login.getStylesheets().add("/view/stylesClass.css");
+        
         stage.setResizable(false);
         stage.setX(710);
         stage.setY(265);

@@ -82,7 +82,7 @@
       </Button>
       <TableView fx:id="tableItems" layoutX="785.0" layoutY="240.0" prefHeight="134.0" prefWidth="399.0">
         <columns>
-          <TableColumn prefWidth="270.0" text="Produto">
+          <TableColumn fx:id="tblColumnProduto" prefWidth="270.0" text="Produto">
               <cellValueFactory>
                   <PropertyValueFactory property="produto" />
                </cellValueFactory>

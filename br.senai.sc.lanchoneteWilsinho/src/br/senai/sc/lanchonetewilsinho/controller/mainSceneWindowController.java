@@ -62,6 +62,7 @@ public class mainSceneWindowController implements Initializable {
                     MeuAlerta.alertaErro(ex.getMessage()).showAndWait();
                 }
             }
+            throw new SQLException("Senha Incorreta");
         } catch (SQLException ex) {
             Logger.getLogger(mainSceneWindowController.class.getName()).log(Level.SEVERE, null, ex);
             MeuAlerta.alertaErro(ex.getMessage()).showAndWait();

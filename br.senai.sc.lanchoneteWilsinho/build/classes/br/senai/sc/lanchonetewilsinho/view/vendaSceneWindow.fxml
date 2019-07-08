@@ -42,7 +42,7 @@
       <Separator layoutX="827.0" layoutY="141.0" prefHeight="2.0" prefWidth="315.0" styleClass="tablecolumnbase" />
       <TableView fx:id="tableVendas" layoutX="43.0" layoutY="71.0" prefHeight="362.0" prefWidth="662.0" styleClass="tableview">
         <columns>
-          <TableColumn fx:id="tblColumnFuncionario" prefWidth="140.0" style="-fx-alignment: CENTER;" text="Funcionário">
+          <TableColumn fx:id="tblColumnFuncionario" prefWidth="140.0" text="Funcionário">
               <cellValueFactory>
                   <PropertyValueFactory property="funcionario" />
                </cellValueFactory>
@@ -82,7 +82,7 @@
       </Button>
       <TableView fx:id="tableItems" layoutX="785.0" layoutY="240.0" prefHeight="134.0" prefWidth="399.0">
         <columns>
-          <TableColumn prefWidth="270.0" text="Produto">
+          <TableColumn fx:id="tblColumnProduto" prefWidth="270.0" text="Produto">
               <cellValueFactory>
                   <PropertyValueFactory property="produto" />
                </cellValueFactory>
