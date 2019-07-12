@@ -6,6 +6,10 @@
 package br.senai.sc.lanchonetewilsinho;
 
 import java.io.IOException;
+import static java.lang.Integer.parseInt;
+import java.text.SimpleDateFormat;
+import java.util.Arrays;
+import java.util.List;
 import javafx.application.Application;
 import javafx.fxml.FXMLLoader;
 import javafx.scene.Parent;
@@ -58,6 +62,17 @@ public class BrSenaiScLanchoneteWilsinho extends Application {
     
     public static void main(String[] args) {
         launch(args);
+    }
+    
+    public static Integer dateToIntegerConverter(String data){
+        SimpleDateFormat dataFormat = new SimpleDateFormat("yyyy/MM/dd");
+        List<String> anoMesDia = Arrays.asList(dataFormat.format(data).split("/"));
+        String dataNumeric = new String();
+        for (String value : anoMesDia) {
+            dataNumeric = dataNumeric + value;
+        }
+
+        return parseInt(dataNumeric);
     }
     
 }

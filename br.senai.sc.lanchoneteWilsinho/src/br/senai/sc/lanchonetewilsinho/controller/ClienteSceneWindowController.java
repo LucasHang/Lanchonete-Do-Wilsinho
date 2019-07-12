@@ -63,6 +63,8 @@ public class ClienteSceneWindowController implements Initializable {
     
     Cliente novoCliente = null;
     Cliente clienteSelecionado = null;
+    @FXML
+    private Button btnCancelarAcao;
     
     @Override
     public void initialize(URL url, ResourceBundle rb) {
@@ -70,18 +72,15 @@ public class ClienteSceneWindowController implements Initializable {
         btnCarregarOnAction(null);
         mascaraTabela();
 
-        tableClientes.getSelectionModel().selectedItemProperty().addListener((observable,oldValue,newValue)->{
-            disableFields(false);
-            unbindFields(oldValue);
-            bindFields(newValue);
-            clienteSelecionado = newValue;
-        });
+        addListenner();
         
     }    
 
     @FXML
     private void btnCadastrarClienteOnAction(ActionEvent event) throws IOException {
         disableFields(false);
+        unbindFields(clienteSelecionado);
+        clienteSelecionado = null;
         novoCliente = new Cliente();
         bindFields(novoCliente);
         
@@ -90,7 +89,13 @@ public class ClienteSceneWindowController implements Initializable {
     @FXML
     private void btnCarregarOnAction(ActionEvent event) {
         try {
-            tableClientes.setItems(FXCollections.observableArrayList(DAOFactory.getClienteDAO().getAll()));
+            if(txtCarregar.getText().isEmpty()){
+                tableClientes.setItems(FXCollections.observableArrayList(DAOFactory.getClienteDAO().getAll()));
+            }else{
+                DAOFactory.getClienteDAO().getClienteByCpf(txtCarregar.getText());
+                DAOFactory.getClienteDAO().getClienteByNome(txtCarregar.getText());
+            }
+            
         } catch (SQLException ex) {
             Logger.getLogger(ClienteSceneWindowController.class.getName()).log(Level.SEVERE, null, ex);
             MeuAlerta.alertaErro(ex.getMessage());
@@ -111,8 +116,9 @@ public class ClienteSceneWindowController implements Initializable {
                 }
             }
             btnCarregarOnAction(null);
-            clearFields();
-            disableFields(true);
+            btnCancelarAcaoOnAction(null);
+            novoCliente = null;
+            clienteSelecionado = null;
         } catch (SQLException ex) {
             Logger.getLogger(ClienteSceneWindowController.class.getName()).log(Level.SEVERE, null, ex);
             MeuAlerta.alertaErro(ex.getMessage()).showAndWait();
@@ -219,5 +225,26 @@ public class ClienteSceneWindowController implements Initializable {
         txtFieldNome.clear();
         txtFieldTelefoneContato.clear();
         checkBoxColaborador.setSelected(false);
+    }
+    
+    private void addListenner(){
+        tableClientes.getSelectionModel().selectedItemProperty().addListener((observable,oldValue,newValue)->{
+            disableFields(false);
+            novoCliente = null;
+            unbindFields(oldValue);
+            bindFields(newValue);
+            clienteSelecionado = newValue;
+        });
+        
+    }
+
+    @FXML
+    private void btnCancelarAcaoOnAction(ActionEvent event) {
+        unbindFields(novoCliente);
+        unbindFields(clienteSelecionado);
+        clearFields();
+        disableFields(true);
+        novoCliente = null;
+        clienteSelecionado = null;
     }
 }

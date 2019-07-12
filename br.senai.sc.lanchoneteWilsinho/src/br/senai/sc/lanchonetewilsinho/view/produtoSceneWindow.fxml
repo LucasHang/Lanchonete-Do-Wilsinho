@@ -12,7 +12,7 @@
 <?import javafx.scene.layout.AnchorPane?>
 <?import javafx.scene.text.Font?>
 
-<AnchorPane id="AnchorPane" prefHeight="520.0" prefWidth="1253.0" styleClass="pane" stylesheets="@stylesClass.css" xmlns="http://javafx.com/javafx/8.0.171" xmlns:fx="http://javafx.com/fxml/1" fx:controller="br.senai.sc.lanchonetewilsinho.controller.ProdutoSceneWindowController">
+<AnchorPane id="AnchorPane" prefHeight="520.0" prefWidth="1253.0" styleClass="pane" stylesheets="@stylesClass.css" xmlns="http://javafx.com/javafx/10.0.1" xmlns:fx="http://javafx.com/fxml/1" fx:controller="br.senai.sc.lanchonetewilsinho.controller.ProdutoSceneWindowController">
    <children>
       <TableView fx:id="tableProdutos" layoutX="43.0" layoutY="71.0" prefHeight="362.0" prefWidth="662.0" styleClass="tableview" stylesheets="@stylesClass.css">
          <columns>
@@ -46,16 +46,22 @@
          <font>
             <Font name="System Bold" size="17.0" />
          </font>
+         <cursor>
+            <Cursor fx:constant="HAND" />
+         </cursor>
       </Button>
       <ImageView fitHeight="269.0" fitWidth="527.0" layoutX="712.0" layoutY="144.0" opacity="0.13" pickOnBounds="true" preserveRatio="true">
          <image>
             <Image url="@imagens/slogan%20lanchonete%20pronto.jpg" />
          </image>
       </ImageView>
-      <Button fx:id="btnCadastrar" layoutX="930.0" layoutY="354.0" mnemonicParsing="false" onAction="#btnCadastrarOnAction" prefHeight="53.0" prefWidth="113.0" text="Cadastrar" textFill="WHITE">
+      <Button fx:id="btnCadastrar" layoutX="937.0" layoutY="342.0" mnemonicParsing="false" onAction="#btnCadastrarOnAction" prefHeight="53.0" prefWidth="113.0" text="Cadastrar" textFill="WHITE">
          <font>
             <Font name="System Bold" size="17.0" />
          </font>
+         <cursor>
+            <Cursor fx:constant="HAND" />
+         </cursor>
       </Button>
       <TextField fx:id="txtFieldDescricao" disable="true" layoutX="926.0" layoutY="144.0" prefHeight="29.0" prefWidth="214.0" styleClass="textfield" />
       <TextField fx:id="txtFieldQuantidade" disable="true" layoutX="993.0" layoutY="249.0" prefHeight="29.0" prefWidth="147.0" styleClass="textfield" />
@@ -75,5 +81,13 @@
          </font>
       </Label>
       <TextField fx:id="txtFieldPrecoUnitario" disable="true" layoutX="993.0" layoutY="194.0" prefHeight="29.0" prefWidth="147.0" styleClass="textfield" />
+      <Button fx:id="btnCancelarAcao" layoutX="963.0" layoutY="407.0" mnemonicParsing="false" onAction="#btnCancelarAcaoOnAction" styleClass="button2" text="Cancelar" textFill="SIENNA">
+         <font>
+            <Font name="System Bold" size="15.0" />
+         </font>
+         <cursor>
+            <Cursor fx:constant="HAND" />
+         </cursor>
+      </Button>
    </children>
 </AnchorPane>

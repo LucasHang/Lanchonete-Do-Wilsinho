@@ -27,6 +27,7 @@ import javafx.scene.control.TextField;
 import javafx.scene.layout.Background;
 import javafx.util.Callback;
 import javafx.util.converter.NumberStringConverter;
+import javax.xml.bind.Marshaller;
 
 /**
  * FXML Controller class
@@ -51,6 +52,8 @@ public class ProdutoSceneWindowController implements Initializable {
     private TextField txtFieldQuantidade;
     @FXML
     private TextField txtFieldPrecoUnitario;
+    @FXML
+    private Button btnCancelarAcao;
 
     /**
      * Initializes the controller class.
@@ -62,19 +65,14 @@ public class ProdutoSceneWindowController implements Initializable {
     public void initialize(URL url, ResourceBundle rb) {
         btnCarregarOnAction(null);
         mascaraTabela();
-        tableProdutos.getSelectionModel().selectedItemProperty().addListener((observable, oldValue, newValue) -> {
-            disableFields(false);
-            unbindFields(oldValue);
-            bindFields(newValue);
-            produtoSelecionado = newValue;
-
-        });
+        addListenner();
     }
 
     @FXML
     private void btnCadastrarProdutoOnAction(ActionEvent event) throws IOException {
-
-        disableFields(false);
+        disableFields(false);  
+        unbindFields(produtoSelecionado);
+        produtoSelecionado = null;
         novoProduto = new Produto();
         bindFields(novoProduto);
     }
@@ -93,8 +91,9 @@ public class ProdutoSceneWindowController implements Initializable {
                 }
             }
             btnCarregarOnAction(null);
-            clearFields();
-            disableFields(true);
+            btnCancelarAcaoOnAction(null);
+            novoProduto = null;
+            produtoSelecionado = null;
         } catch (SQLException ex) {
             Logger.getLogger(ProdutoSceneWindowController.class.getName()).log(Level.SEVERE, null, ex);
             MeuAlerta.alertaErro(ex.getMessage()).showAndWait();
@@ -106,7 +105,12 @@ public class ProdutoSceneWindowController implements Initializable {
     private void btnCarregarOnAction(ActionEvent event) {
 
         try {
-            tableProdutos.setItems(FXCollections.observableArrayList(DAOFactory.getProdutoDAO().getAll()));
+            if (txtCarregar.getText().isEmpty()) {
+                tableProdutos.setItems(FXCollections.observableArrayList(DAOFactory.getProdutoDAO().getAll()));
+            } else {
+                DAOFactory.getProdutoDAO().getProdutoByDescricao(txtCarregar.getText());
+            }
+
         } catch (SQLException ex) {
             Logger.getLogger(ClienteSceneWindowController.class.getName()).log(Level.SEVERE, null, ex);
             MeuAlerta.alertaErro(ex.getMessage());
@@ -196,6 +200,38 @@ public class ProdutoSceneWindowController implements Initializable {
         txtFieldPrecoUnitario.clear();
         txtFieldQuantidade.clear();
 
+    }
+
+    private void addListenner() {
+        tableProdutos.getSelectionModel().selectedItemProperty().addListener((observable, oldValue, newValue) -> {
+            disableFields(false);
+            novoProduto = null;
+            unbindFields(oldValue);
+            bindFields(newValue);
+            produtoSelecionado = newValue;
+        });
+
+    }
+
+    private void btnRemoverProdOnAction(ActionEvent event) {
+        if(produtoSelecionado != null){
+            try {
+                DAOFactory.getProdutoDAO().delete(produtoSelecionado);
+            } catch (SQLException ex) {
+                Logger.getLogger(ProdutoSceneWindowController.class.getName()).log(Level.SEVERE, null, ex);
+                MeuAlerta.alertaErro(ex.getMessage()).showAndWait();
+            }
+        }
+    }
+
+    @FXML
+    private void btnCancelarAcaoOnAction(ActionEvent event) {
+        unbindFields(novoProduto);
+        unbindFields(produtoSelecionado);
+        clearFields();
+        disableFields(true);
+        novoProduto = null;
+        produtoSelecionado = null;
     }
 
 }

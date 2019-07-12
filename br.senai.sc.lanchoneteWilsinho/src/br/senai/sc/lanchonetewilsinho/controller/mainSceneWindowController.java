@@ -9,7 +9,6 @@ import br.senai.sc.lanchonetewilsinho.BrSenaiScLanchoneteWilsinho;
 import br.senai.sc.lanchonetewilsinho.MeuAlerta;
 import br.senai.sc.lanchonetewilsinho.dao.DAOFactory;
 import br.senai.sc.lanchonetewilsinho.model.Funcionario;
-import static java.awt.SystemColor.menu;
 import java.io.IOException;
 import java.net.URL;
 import java.sql.SQLException;
@@ -20,7 +19,6 @@ import javafx.event.ActionEvent;
 import javafx.fxml.FXML;
 import javafx.fxml.Initializable;
 import javafx.scene.control.Button;
-import javafx.scene.control.Label;
 import javafx.scene.control.PasswordField;
 import javafx.scene.control.TextField;
 
@@ -61,8 +59,9 @@ public class mainSceneWindowController implements Initializable {
                     Logger.getLogger(mainSceneWindowController.class.getName()).log(Level.SEVERE, null, ex);
                     MeuAlerta.alertaErro(ex.getMessage()).showAndWait();
                 }
+            }else{
+                throw new SQLException("Senha Incorreta");
             }
-            throw new SQLException("Senha Incorreta");
         } catch (SQLException ex) {
             Logger.getLogger(mainSceneWindowController.class.getName()).log(Level.SEVERE, null, ex);
             MeuAlerta.alertaErro(ex.getMessage()).showAndWait();

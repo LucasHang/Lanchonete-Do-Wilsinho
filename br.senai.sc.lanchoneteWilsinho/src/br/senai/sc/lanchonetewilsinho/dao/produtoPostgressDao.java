@@ -88,7 +88,8 @@ public class produtoPostgressDao extends connectionFactory implements produtoDao
     @Override
     public Produto getProdutoByCodigo(Integer codigo) throws SQLException {
         Produto novoProduto = null;
-        super.preparedStatementInitialize("select * from produto");
+        super.preparedStatementInitialize("select * from produto where codigo = ?");
+        super.prepared.setInt(1, codigo);
         super.prepared.execute();
         ResultSet resultSetRows = super.prepared.getResultSet();
         if (resultSetRows.next()) {

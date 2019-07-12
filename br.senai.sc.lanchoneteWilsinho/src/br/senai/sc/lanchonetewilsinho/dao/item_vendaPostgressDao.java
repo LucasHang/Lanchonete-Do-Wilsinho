@@ -43,18 +43,18 @@ public class item_vendaPostgressDao extends connectionFactory implements item_ve
 
     @Override
     public void update(Item_Venda item_venda) throws SQLException{
-      /*    super.preparedStatementInitialize(
-                "update ItemVenda set codigoVend = ?, codigoPro= ?, qtdComprada= ?, valorTotal= ? where codigoVend = ? and codigoProd = ?");
-        super.prepared.setInt(1, item_venda.getVenda());
-        super.prepared.setInt(2,item_venda.getProduto().getCodigo());
-        super.prepared.setInt(3, item_venda.getQtdComprada());
-        super.prepared.setDouble(4, item_venda.getValorTotal());
+          super.preparedStatementInitialize(
+                "update ItemVenda set  qtdComprada= ?, valorTotal= ? where codigoVend = ? and codigoProd = ?");   
+        super.prepared.setInt(1, item_venda.getQtdComprada());
+        super.prepared.setDouble(2, item_venda.getValorItem());
+        super.prepared.setInt(3, item_venda.getVenda());
+        super.prepared.setInt(4,item_venda.getProduto());
         int linhasAfetadas = super.prepared.executeUpdate();
         if (linhasAfetadas == 0){
             throw new SQLException("Não foi possível aletrar as informações do item");
         }
         super.closeAll();
-              */
+              
     }
 
     @Override
@@ -74,7 +74,7 @@ public class item_vendaPostgressDao extends connectionFactory implements item_ve
     @Override
     public List<Item_Venda> getAll() throws SQLException {
         List<Item_Venda> rows = new ArrayList<>();
-        super.preparedStatementInitialize("select * from cliente");
+        super.preparedStatementInitialize("select * from ItemVenda");
         super.prepared.execute();
         ResultSet resultSetRows = super.prepared.getResultSet();
         while (resultSetRows.next()) {

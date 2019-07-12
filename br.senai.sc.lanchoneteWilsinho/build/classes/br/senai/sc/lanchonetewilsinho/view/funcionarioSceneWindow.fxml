@@ -15,7 +15,7 @@
 <?import javafx.scene.layout.AnchorPane?>
 <?import javafx.scene.text.Font?>
 
-<AnchorPane id="AnchorPane" prefHeight="520.0" prefWidth="1253.0" styleClass="pane" stylesheets="@stylesClass.css" xmlns="http://javafx.com/javafx/8.0.171" xmlns:fx="http://javafx.com/fxml/1" fx:controller="br.senai.sc.lanchonetewilsinho.controller.FuncionarioSceneWindowController">
+<AnchorPane id="AnchorPane" prefHeight="520.0" prefWidth="1253.0" styleClass="pane" stylesheets="@stylesClass.css" xmlns="http://javafx.com/javafx/10.0.1" xmlns:fx="http://javafx.com/fxml/1" fx:controller="br.senai.sc.lanchonetewilsinho.controller.FuncionarioSceneWindowController">
    <children>
       <TableView fx:id="tableFuncionarios" layoutX="43.0" layoutY="71.0" prefHeight="362.0" prefWidth="662.0" styleClass="tableview" stylesheets="@stylesClass.css">
          <columns>
@@ -60,7 +60,7 @@
             <Image url="@imagens/slogan%20lanchonete%20pronto.jpg" />
          </image>
       </ImageView>
-      <Button fx:id="btnCadastrar" layoutX="918.0" layoutY="410.0" mnemonicParsing="false" onAction="#btnCadastrarOnAction" prefHeight="53.0" prefWidth="113.0" text="Cadastrar" textFill="WHITE">
+      <Button fx:id="btnCadastrar" layoutX="920.0" layoutY="390.0" mnemonicParsing="false" onAction="#btnCadastrarOnAction" prefHeight="53.0" prefWidth="113.0" text="Cadastrar" textFill="WHITE">
          <font>
             <Font name="System Bold" size="17.0" />
          </font>
@@ -83,7 +83,7 @@
             <Font name="Arial Bold" size="16.0" />
          </font>
       </Label>
-      <CheckBox fx:id="checkBoxGerente" disable="true" layoutX="920.0" layoutY="360.0" mnemonicParsing="false" prefHeight="29.0" prefWidth="113.0" styleClass="label" text="Gerente" textFill="SIENNA">
+      <CheckBox fx:id="checkBoxGerente" disable="true" layoutX="920.0" layoutY="352.0" mnemonicParsing="false" prefHeight="29.0" prefWidth="113.0" styleClass="label" text="Gerente" textFill="SIENNA">
          <font>
             <Font name="System Bold" size="16.0" />
          </font>
@@ -94,5 +94,10 @@
       <TextField fx:id="txtFieldUsuario" disable="true" layoutX="931.0" layoutY="261.0" prefHeight="29.0" prefWidth="169.0" styleClass="textfield" />
       <PasswordField fx:id="passFieldSenha" disable="true" layoutX="931.0" layoutY="314.0" prefHeight="29.0" prefWidth="169.0" styleClass="textfield" />
       <Label layoutX="890.0" layoutY="224.0" styleClass="label2" text="Cadastro do Login" textFill="SIENNA" />
+      <Button fx:id="btnCancelarAcao" layoutX="946.0" layoutY="454.0" mnemonicParsing="false" onAction="#btnCancelarAcaoOnAction" styleClass="button2" text="Cancelar" textFill="SIENNA">
+         <font>
+            <Font name="System Bold" size="15.0" />
+         </font>
+      </Button>
    </children>
 </AnchorPane>

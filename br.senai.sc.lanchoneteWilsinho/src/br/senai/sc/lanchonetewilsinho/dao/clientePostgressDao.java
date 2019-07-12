@@ -99,7 +99,8 @@ public class clientePostgressDao extends connectionFactory implements clienteDao
     @Override
     public Cliente getClienteByCodigo(Integer codigo) throws SQLException {
         Cliente novoCliente = null;
-        super.preparedStatementInitialize("select * from cliente");
+        super.preparedStatementInitialize("select * from cliente where codigo = ?");
+        super.prepared.setInt(1, codigo);
         super.prepared.execute();
         ResultSet resultSetRows = super.prepared.getResultSet();
         if (resultSetRows.next()) {
@@ -133,6 +134,26 @@ public class clientePostgressDao extends connectionFactory implements clienteDao
         super.closeAll();
 
         return rows;
+    }
+
+    @Override
+    public Cliente getClienteByCpf(String cpf) throws SQLException {
+        Cliente novoCliente = null;
+        super.preparedStatementInitialize("select * from cliente where cpf like ?");
+        super.prepared.setString(1, cpf);
+        super.prepared.execute();
+        ResultSet resultSetRows = super.prepared.getResultSet();
+        if (resultSetRows.next()) {
+            novoCliente = new Cliente(resultSetRows.getInt("codigo"),
+                    resultSetRows.getString("nome"),
+                    resultSetRows.getString("cpf"),
+                    resultSetRows.getString("telefoneContato"),
+                    resultSetRows.getBoolean("colaborador"));
+        }
+        resultSetRows.close();
+        super.closeAll();
+
+        return novoCliente;
     }
     
     

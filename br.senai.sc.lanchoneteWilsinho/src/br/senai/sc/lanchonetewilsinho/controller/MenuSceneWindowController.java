@@ -30,6 +30,7 @@ import javafx.scene.layout.Pane;
  * @author Bratva
  */
 public class MenuSceneWindowController implements Initializable {
+
     @FXML
     private Button btnFuncionarios;
     @FXML
@@ -40,9 +41,23 @@ public class MenuSceneWindowController implements Initializable {
     private Button btnProdutos;
     @FXML
     private TabPane tabPanePrincipal;
-    
+
     Tab abaUnica;
     AnchorPane anchorUnico;
+
+    FXMLLoader cargaDoSceneAtiva;
+
+    FXMLLoader cargaDoSceneVenda
+            = new FXMLLoader(getClass().getResource("/br/senai/sc/lanchonetewilsinho/view/vendaSceneWindow.fxml"));
+
+    FXMLLoader cargaDoSceneProduto
+            = new FXMLLoader(getClass().getResource("/br/senai/sc/lanchonetewilsinho/view/produtoSceneWindow.fxml"));
+
+    FXMLLoader cargaDoSceneCliente
+            = new FXMLLoader(getClass().getResource("/br/senai/sc/lanchonetewilsinho/view/clienteSceneWindow.fxml"));
+
+    FXMLLoader cargaDoSceneFuncionario
+            = new FXMLLoader(getClass().getResource("/br/senai/sc/lanchonetewilsinho/view/funcionarioSceneWindow.fxml"));
 
     /**
      * Initializes the controller class.
@@ -50,186 +65,174 @@ public class MenuSceneWindowController implements Initializable {
     @Override
     public void initialize(URL url, ResourceBundle rb) {
         try {
-           
-                FXMLLoader cargaDoScene =
-                       new FXMLLoader(getClass().getResource("/br/senai/sc/lanchonetewilsinho/view/vendaSceneWindow.fxml"));
-            
             abaUnica = new Tab("Vendas");
+
+            cargaDoSceneAtiva = cargaDoSceneVenda;
             
+            FXMLLoader cargaDoScene
+            = new FXMLLoader(getClass().getResource("/br/senai/sc/lanchonetewilsinho/view/vendaSceneWindow.fxml"));
+
             anchorUnico = cargaDoScene.load();
 
             abaUnica.setContent(anchorUnico);
-            abaUnica.setOnCloseRequest((eventClose) -> {
-                if (MeuAlerta.alertaDeConfirmacao("Deseja realmente fechar a janela?").showAndWait().get() != ButtonType.YES){
-                    eventClose.consume();
-                }else{
-                    tabPanePrincipal.getTabs().remove(abaUnica);
-                    anchorUnico = null;
-                }
-            });
-            if(!tabPanePrincipal.getTabs().contains(abaUnica)){
-            tabPanePrincipal.getTabs().add(abaUnica);
+
+            if (!tabPanePrincipal.getTabs().contains(abaUnica)) {
+                tabPanePrincipal.getTabs().add(abaUnica);
             }
             tabPanePrincipal.getSelectionModel().select(abaUnica);
         } catch (IOException ex) {
             Logger.getLogger(MenuSceneWindowController.class.getName()).log(Level.SEVERE, null, ex);
             MeuAlerta.alertaErro(ex.getMessage()).showAndWait();
         }
-    }    
+    }
 
     @FXML
     private void btnFuncionariosOnAction(ActionEvent event) throws IOException {
-        
-        if(abaUnica != null){
-             abaUnica = null;
-        }
-        
-        if(anchorUnico != null){
-            anchorUnico = null;
-        }
-        
-        try {
-           
-                FXMLLoader cargaDoScene =
-                       new FXMLLoader(getClass().getResource("/br/senai/sc/lanchonetewilsinho/view/funcionarioSceneWindow.fxml"));
-            
-            abaUnica = new Tab("Funcionarios");
-            
-            anchorUnico = cargaDoScene.load();
-
-            abaUnica.setContent(anchorUnico);
-            abaUnica.setOnCloseRequest((eventClose) -> {
-                if (MeuAlerta.alertaDeConfirmacao("Deseja realmente fechar a janela?").showAndWait().get() != ButtonType.YES){
-                    eventClose.consume();
-                }else{
+        if (cargaDoSceneAtiva != cargaDoSceneFuncionario) {
+            if (abaUnica != null) {
+                if (MeuAlerta.alertaDeConfirmacao("Deseja realmente fechar a janela?").showAndWait().get() == ButtonType.YES) {
                     tabPanePrincipal.getTabs().remove(abaUnica);
+                    abaUnica = null;
                     anchorUnico = null;
+                    cargaDoSceneAtiva = null;
+
+                    try {
+
+                        abaUnica = new Tab("Funcionarios");
+
+                        cargaDoSceneAtiva = cargaDoSceneFuncionario;
+
+                        FXMLLoader cargaDoScene
+                            = new FXMLLoader(getClass().getResource("/br/senai/sc/lanchonetewilsinho/view/funcionarioSceneWindow.fxml"));
+
+                        anchorUnico = cargaDoScene.load();
+
+                        abaUnica.setContent(anchorUnico);
+
+                        if (!tabPanePrincipal.getTabs().contains(abaUnica)) {
+                            tabPanePrincipal.getTabs().add(abaUnica);
+                        }
+                        tabPanePrincipal.getSelectionModel().select(abaUnica);
+                    } catch (IOException ex) {
+                        Logger.getLogger(MenuSceneWindowController.class.getName()).log(Level.SEVERE, null, ex);
+                        MeuAlerta.alertaErro(ex.getMessage()).showAndWait();
+                    }
                 }
-            });
-            if(!tabPanePrincipal.getTabs().contains(abaUnica)){
-            tabPanePrincipal.getTabs().add(abaUnica);
+
             }
-            tabPanePrincipal.getSelectionModel().select(abaUnica);
-        } catch (IOException ex) {
-            Logger.getLogger(MenuSceneWindowController.class.getName()).log(Level.SEVERE, null, ex);
-            MeuAlerta.alertaErro(ex.getMessage()).showAndWait();
         }
+
     }
 
     @FXML
     private void btnClienteOnAction(ActionEvent event) throws IOException {
-        if(abaUnica != null){
-             abaUnica = null;
-        }
-        
-        if(anchorUnico != null){
-            anchorUnico = null;
-        }
-        
-        try {
-           
-                FXMLLoader cargaDoScene =
-                       new FXMLLoader(getClass().getResource("/br/senai/sc/lanchonetewilsinho/view/clienteSceneWindow.fxml"));
-            
-            abaUnica = new Tab("Clientes");
-            
-            anchorUnico = cargaDoScene.load();
-
-            abaUnica.setContent(anchorUnico);
-            abaUnica.setOnCloseRequest((eventClose) -> {
-                if (MeuAlerta.alertaDeConfirmacao("Deseja realmente fechar a janela?").showAndWait().get() != ButtonType.YES){
-                    eventClose.consume();
-                }else{
+        if (cargaDoSceneAtiva != cargaDoSceneCliente) {
+            if (abaUnica != null) {
+                if (MeuAlerta.alertaDeConfirmacao("Deseja realmente fechar a janela?").showAndWait().get() == ButtonType.YES) {
                     tabPanePrincipal.getTabs().remove(abaUnica);
+                    abaUnica = null;
                     anchorUnico = null;
+                    cargaDoSceneAtiva = null;
+
+                    try {
+
+                        abaUnica = new Tab("Clientes");
+
+                        cargaDoSceneAtiva = cargaDoSceneCliente;
+
+                        FXMLLoader cargaDoScene
+                            = new FXMLLoader(getClass().getResource("/br/senai/sc/lanchonetewilsinho/view/clienteSceneWindow.fxml"));
+
+                        anchorUnico = cargaDoScene.load();
+
+                        abaUnica.setContent(anchorUnico);
+
+                        if (!tabPanePrincipal.getTabs().contains(abaUnica)) {
+                            tabPanePrincipal.getTabs().add(abaUnica);
+                        }
+                        tabPanePrincipal.getSelectionModel().select(abaUnica);
+                    } catch (IOException ex) {
+                        Logger.getLogger(MenuSceneWindowController.class.getName()).log(Level.SEVERE, null, ex);
+                        MeuAlerta.alertaErro(ex.getMessage()).showAndWait();
+                    }
                 }
-            });
-            if(!tabPanePrincipal.getTabs().contains(abaUnica)){
-            tabPanePrincipal.getTabs().add(abaUnica);
             }
-            tabPanePrincipal.getSelectionModel().select(abaUnica);
-        } catch (IOException ex) {
-            Logger.getLogger(MenuSceneWindowController.class.getName()).log(Level.SEVERE, null, ex);
-            MeuAlerta.alertaErro(ex.getMessage()).showAndWait();
         }
+
     }
 
     @FXML
     private void btnVendaOnAction(ActionEvent event) throws IOException {
-        if(abaUnica != null){
-             abaUnica = null;
-        }
-        
-        if(anchorUnico != null){
-            anchorUnico = null;
-        }
-        
-        try {
-           
-                FXMLLoader cargaDoScene =
-                       new FXMLLoader(getClass().getResource("/br/senai/sc/lanchonetewilsinho/view/vendaSceneWindow.fxml"));
-            
-            abaUnica = new Tab("Vendas");
-            
-            anchorUnico = cargaDoScene.load();
-
-            abaUnica.setContent(anchorUnico);
-            abaUnica.setOnCloseRequest((eventClose) -> {
-                if (MeuAlerta.alertaDeConfirmacao("Deseja realmente fechar a janela?").showAndWait().get() != ButtonType.YES){
-                    eventClose.consume();
-                }else{
-                    tabPanePrincipal.getTabs().remove(abaUnica);
+        if (cargaDoSceneAtiva != cargaDoSceneVenda) {
+            if (abaUnica != null) {
+                if (MeuAlerta.alertaDeConfirmacao("Deseja realmente fechar a janela?").showAndWait().get() == ButtonType.YES) {
+                    abaUnica = null;
                     anchorUnico = null;
+                    cargaDoSceneAtiva = null;
+
+                    try {
+
+                        abaUnica = new Tab("Vendas");
+
+                        cargaDoSceneAtiva = cargaDoSceneVenda;
+
+                        FXMLLoader cargaDoScene
+                            = new FXMLLoader(getClass().getResource("/br/senai/sc/lanchonetewilsinho/view/vendaSceneWindow.fxml"));
+
+                        anchorUnico = cargaDoScene.load();
+
+                        abaUnica.setContent(anchorUnico);
+
+                        if (!tabPanePrincipal.getTabs().contains(abaUnica)) {
+                            tabPanePrincipal.getTabs().add(abaUnica);
+                        }
+                        tabPanePrincipal.getSelectionModel().select(abaUnica);
+                    } catch (IOException ex) {
+                        Logger.getLogger(MenuSceneWindowController.class.getName()).log(Level.SEVERE, null, ex);
+                        MeuAlerta.alertaErro(ex.getMessage()).showAndWait();
+                    }
                 }
-            });
-            if(!tabPanePrincipal.getTabs().contains(abaUnica)){
-            tabPanePrincipal.getTabs().add(abaUnica);
+
             }
-            tabPanePrincipal.getSelectionModel().select(abaUnica);
-        } catch (IOException ex) {
-            Logger.getLogger(MenuSceneWindowController.class.getName()).log(Level.SEVERE, null, ex);
-            MeuAlerta.alertaErro(ex.getMessage()).showAndWait();
         }
+
     }
 
     @FXML
     private void btnProdutosOnAction(ActionEvent event) throws IOException {
-       
-        if(abaUnica != null){
-             abaUnica = null;
-        }
-        
-        if(anchorUnico != null){
-            anchorUnico = null;
-        }
-        
-        try {
-           
-                FXMLLoader cargaDoScene =
-                       new FXMLLoader(getClass().getResource("/br/senai/sc/lanchonetewilsinho/view/produtoSceneWindow.fxml"));
-            
-            abaUnica = new Tab("Produtos");
-            
-            anchorUnico = cargaDoScene.load();
-
-            abaUnica.setContent(anchorUnico);
-            abaUnica.setOnCloseRequest((eventClose) -> {
-                if (MeuAlerta.alertaDeConfirmacao("Deseja realmente fechar a janela?").showAndWait().get() != ButtonType.YES){
-                    eventClose.consume();
-                }else{
-                    tabPanePrincipal.getTabs().remove(abaUnica);
+        if (cargaDoSceneAtiva != cargaDoSceneProduto) {
+            if (abaUnica != null) {
+                if (MeuAlerta.alertaDeConfirmacao("Deseja realmente fechar a janela?").showAndWait().get() == ButtonType.YES) {
+                    abaUnica = null;
                     anchorUnico = null;
+                    cargaDoSceneAtiva = null;
+
+                    try {
+
+                        abaUnica = new Tab("Produtos");
+
+                        cargaDoSceneAtiva = cargaDoSceneProduto;
+
+                        FXMLLoader cargaDoScene
+                            = new FXMLLoader(getClass().getResource("/br/senai/sc/lanchonetewilsinho/view/produtoSceneWindow.fxml"));
+
+                        anchorUnico = cargaDoScene.load();
+
+                        abaUnica.setContent(anchorUnico);
+
+                        if (!tabPanePrincipal.getTabs().contains(abaUnica)) {
+                            tabPanePrincipal.getTabs().add(abaUnica);
+                        }
+                        tabPanePrincipal.getSelectionModel().select(abaUnica);
+                    } catch (IOException ex) {
+                        Logger.getLogger(MenuSceneWindowController.class.getName()).log(Level.SEVERE, null, ex);
+                        MeuAlerta.alertaErro(ex.getMessage()).showAndWait();
+                    }
                 }
-            });
-            if(!tabPanePrincipal.getTabs().contains(abaUnica)){
-            tabPanePrincipal.getTabs().add(abaUnica);
+
             }
-            tabPanePrincipal.getSelectionModel().select(abaUnica);
-        } catch (IOException ex) {
-            Logger.getLogger(MenuSceneWindowController.class.getName()).log(Level.SEVERE, null, ex);
-            MeuAlerta.alertaErro(ex.getMessage()).showAndWait();
         }
-        
+
     }
-    
+
 }

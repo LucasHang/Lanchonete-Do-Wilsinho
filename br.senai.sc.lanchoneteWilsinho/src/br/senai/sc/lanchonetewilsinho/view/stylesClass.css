@@ -13,6 +13,15 @@
 	
 }
 
+.button2{
+        -fx-background-radius: 0;
+	-fx-border-radius: 0;
+        -fx-padding: 0;
+	-fx-background-color:   none;
+	-fx-border-color: #FA8072;
+	-fx-border-width: 0 0 3px 0;
+}
+
 .label{
 	-fx-border-width: 0 0 2px 0;
 	-fx-border-color: #EEE8AA;
@@ -28,8 +37,8 @@
 }
 
 .comboBox{
-	-fx-font-size: 15px;
-	-fx-font-weight: 700;
+	-fx-font-size: 14px;
+	-fx-font-weight: 600;
 	-fx-background-radius: 5px;
 	-fx-border-radius: 5px;
 	-fx-background-color:   #A0522D;
@@ -43,6 +52,15 @@
 	-fx-border-width: 2px;
 }
 
+.textfield2{
+	-fx-background-color:   none;
+	-fx-border-color:  #EEE8AA;
+	-fx-border-width: 0,0,2px,0;
+        -fx-font-size: 17px;
+	-fx-font-weight: 900;
+        -fx-font-color: #000;
+}
+
 .tableview{
 	-fx-background-color:   #FFFFF0;
 	-fx-border-color:  #EEE8AA;
@@ -54,7 +72,11 @@
 }
 
 .tablecolumnbase{
-	-fx-background-color:   #A0522D;
+	-fx-font-size: 14px;
+	-fx-font-weight: 600;
+	-fx-background-radius: 5px;
+	-fx-border-radius: 5px;
+	-fx-background-color:#EEE8AA;
 	-fx-border-color:  #EEE8AA;
 	-fx-border-width: 2px;
 }

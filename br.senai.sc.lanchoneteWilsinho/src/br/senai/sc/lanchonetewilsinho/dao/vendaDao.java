@@ -24,6 +24,8 @@ public interface vendaDao {
     
     public List<Venda> getAll()throws SQLException;
     
+    public List<Venda> getVendaByData(String data)throws SQLException;
+    
     public List<Venda> getVendaByNomeClienteOuFuncionario(String nome)throws SQLException;
     
 }

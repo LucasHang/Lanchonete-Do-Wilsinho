@@ -24,6 +24,7 @@ public class Venda {
     private final IntegerProperty dataVenda = new SimpleIntegerProperty();
 
     private List<Item_Venda> itens = new ArrayList<>();
+    Double total = 0.00;
     
     private final DoubleProperty valorTotalCompra = new SimpleDoubleProperty();
     
@@ -91,12 +92,17 @@ public class Venda {
         return this.valorTotalCompra.get();
     }
     
-    public void setValorTotalCompra(){
-        Double total = null;
-        for(Item_Venda item : itens){
-            total += item.getValorItem();
-        }
+    public void setValorTotalCompra(Double value){
+        this.valorTotalCompra.set(value);
+        
+    }
+    
+    public void calculaValorTotalCompra(){
+        this.itens.forEach(item ->{
+            total = total + item.getValorItem();
+        });
         valorTotalCompra.set(total);
+        total = 0.0;
     }
     
     public DoubleProperty valorTotalCompraProperty(){

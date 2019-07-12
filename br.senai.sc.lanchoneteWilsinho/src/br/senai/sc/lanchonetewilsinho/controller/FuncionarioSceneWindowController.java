@@ -56,6 +56,8 @@ public class FuncionarioSceneWindowController implements Initializable {
     private TextField txtFieldUsuario;
     @FXML
     private PasswordField passFieldSenha;
+    @FXML
+    private Button btnCancelarAcao;
 
     /**
      * Initializes the controller class.
@@ -64,21 +66,20 @@ public class FuncionarioSceneWindowController implements Initializable {
     Funcionario novoFuncionario= null;
     Funcionario funcionarioSelecionado = null;
     
+    
     @Override
     public void initialize(URL url, ResourceBundle rb) {
         btnCarregarOnAction(null);
         mascaraTabela();
       
-      tableFuncionarios.getSelectionModel().selectedItemProperty().addListener((observable,oldValue,newValue)->{
-            unbindFields(oldValue);
-            bindFields(newValue);
-            funcionarioSelecionado = newValue;
-        });
+        addListenner();
     }    
 
     @FXML
     private void btnCadastrarFuncionarioOnAction(ActionEvent event) throws IOException {
         disableFields(false);
+        unbindFields(funcionarioSelecionado);
+        funcionarioSelecionado = null;
         novoFuncionario = new Funcionario();
 	bindFields(novoFuncionario);
         
@@ -87,7 +88,13 @@ public class FuncionarioSceneWindowController implements Initializable {
     @FXML
     private void btnCarregarOnAction(ActionEvent event) {
         try {
-            tableFuncionarios.setItems(FXCollections.observableArrayList(DAOFactory.getFuncionarioDAO().getAll()));
+            if(txtCarregar.getText().isEmpty()){
+                tableFuncionarios.setItems(FXCollections.observableArrayList(DAOFactory.getFuncionarioDAO().getAll()));
+            }else{
+                DAOFactory.getFuncionarioDAO().getFuncionarioByLogin(txtCarregar.getText());
+                DAOFactory.getFuncionarioDAO().getFuncionarioByNome(txtCarregar.getText());
+            }
+            
         } catch (SQLException ex) {
             Logger.getLogger(FuncionarioSceneWindowController.class.getName()).log(Level.SEVERE, null, ex);
             MeuAlerta.alertaErro(ex.getMessage());
@@ -109,8 +116,7 @@ public class FuncionarioSceneWindowController implements Initializable {
                 }
             }
             btnCarregarOnAction(null);
-            clearFields();
-            disableFields(true);
+            btnCancelarAcaoOnAction(null);
         } catch (SQLException ex) {
             Logger.getLogger(FuncionarioSceneWindowController.class.getName()).log(Level.SEVERE, null, ex);
             MeuAlerta.alertaErro(ex.getMessage()).showAndWait();
@@ -237,4 +243,26 @@ public class FuncionarioSceneWindowController implements Initializable {
         passFieldSenha.clear();
         checkBoxGerente.setSelected(false);
     }
+    
+    private void addListenner() {
+        tableFuncionarios.getSelectionModel().selectedItemProperty().addListener((observable,oldValue,newValue)->{
+            disableFields(false);
+            novoFuncionario = null;
+            unbindFields(oldValue);
+            bindFields(newValue);
+            funcionarioSelecionado = newValue;
+        });
+    }
+
+    @FXML
+    private void btnCancelarAcaoOnAction(ActionEvent event) {
+        unbindFields(novoFuncionario);
+        unbindFields(funcionarioSelecionado);
+        clearFields();
+        disableFields(true);
+        novoFuncionario = null;
+        funcionarioSelecionado = null;
+    }
+
+    
 }

@@ -42,7 +42,11 @@ public class Item_Venda {
         return this.valorItem.get();
     }
 
-    public void setValorItem() throws SQLException {
+    public void setValorItem(Double value)  {
+        this.valorItem.set(value);
+    }
+    
+    public void calculaValorItem() throws SQLException{
         this.valorItem.set(DAOFactory.getProdutoDAO().getProdutoByCodigo(produto.get()).getPrecoProd() * qtdComprada.get());
     }
 
@@ -54,7 +58,7 @@ public class Item_Venda {
         return this.produto.get();
     }
 
-    public void setProduto(int value) {
+    public void setProduto(Integer value) {
         this.produto.set(value);
     }
 

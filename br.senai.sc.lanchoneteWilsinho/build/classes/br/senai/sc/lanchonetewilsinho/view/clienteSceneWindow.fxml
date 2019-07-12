@@ -13,7 +13,7 @@
 <?import javafx.scene.layout.AnchorPane?>
 <?import javafx.scene.text.Font?>
 
-<AnchorPane id="AnchorPane" prefHeight="520.0" prefWidth="1253.0" styleClass="pane" stylesheets="@stylesClass.css" xmlns="http://javafx.com/javafx/8.0.171" xmlns:fx="http://javafx.com/fxml/1" fx:controller="br.senai.sc.lanchonetewilsinho.controller.ClienteSceneWindowController">
+<AnchorPane id="AnchorPane" prefHeight="520.0" prefWidth="1253.0" styleClass="pane" stylesheets="@stylesClass.css" xmlns="http://javafx.com/javafx/10.0.1" xmlns:fx="http://javafx.com/fxml/1" fx:controller="br.senai.sc.lanchonetewilsinho.controller.ClienteSceneWindowController">
    <children>
       <TableView fx:id="tableClientes" layoutX="43.0" layoutY="71.0" prefHeight="362.0" prefWidth="662.0" styleClass="tableview" stylesheets="@stylesClass.css">
          <columns>
@@ -58,7 +58,7 @@
             <Image url="@imagens/slogan%20lanchonete%20pronto.jpg" />
          </image>
       </ImageView>
-      <Button fx:id="btnCadastrar" layoutX="930.0" layoutY="355.0" mnemonicParsing="false" onAction="#btnCadastrarOnAction" prefHeight="53.0" prefWidth="113.0" text="Cadastrar" textFill="WHITE">
+      <Button fx:id="btnCadastrar" layoutX="953.0" layoutY="351.0" mnemonicParsing="false" onAction="#btnCadastrarOnAction" prefHeight="53.0" prefWidth="113.0" text="Cadastrar" textFill="WHITE">
          <font>
             <Font name="System Bold" size="17.0" />
          </font>
@@ -86,5 +86,10 @@
             <Font name="System Bold" size="16.0" />
          </font>
       </CheckBox>
+      <Button fx:id="btnCancelarAcao" layoutX="979.0" layoutY="421.0" mnemonicParsing="false" onAction="#btnCancelarAcaoOnAction" styleClass="button2" text="Cancelar" textFill="SIENNA">
+         <font>
+            <Font name="System Bold" size="15.0" />
+         </font>
+      </Button>
    </children>
 </AnchorPane>

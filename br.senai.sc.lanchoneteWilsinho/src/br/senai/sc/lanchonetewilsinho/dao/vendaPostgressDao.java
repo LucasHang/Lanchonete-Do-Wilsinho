@@ -5,6 +5,7 @@
  */
 package br.senai.sc.lanchonetewilsinho.dao;
 
+import br.senai.sc.lanchonetewilsinho.BrSenaiScLanchoneteWilsinho;
 import br.senai.sc.lanchonetewilsinho.MeuAlerta;
 import br.senai.sc.lanchonetewilsinho.model.Item_Venda;
 import br.senai.sc.lanchonetewilsinho.model.Venda;
@@ -23,6 +24,7 @@ public class vendaPostgressDao extends connectionFactory implements vendaDao{
 
     @Override
     public void save(Venda venda) throws SQLException {
+        
         String[] codigoGerado = {"codigo"};
         super.preparedStatementInitialize(
                 "insert into venda (codigoCli, codigoFunc, valorCompra, dataVenda) values (?,?,?,?)",
@@ -52,6 +54,7 @@ public class vendaPostgressDao extends connectionFactory implements vendaDao{
                 MeuAlerta.alertaErro(ex.getMessage()).showAndWait();
             }
         });
+        
     }
 
     @Override
@@ -146,6 +149,27 @@ public class vendaPostgressDao extends connectionFactory implements vendaDao{
 
         return rows;
         
+    }
+
+    @Override
+    public List<Venda> getVendaByData(String data) throws SQLException {
+        List<Venda> rows = new ArrayList<>();
+        super.preparedStatementInitialize("select * from venda where dataVenda = ?");
+        super.prepared.setInt(1, BrSenaiScLanchoneteWilsinho.dateToIntegerConverter(data));
+        super.prepared.execute();
+        ResultSet resultSetRows = super.prepared.getResultSet();
+        while (resultSetRows.next()) {
+            rows.add(new Venda(resultSetRows.getInt("codigo"),
+                    resultSetRows.getInt("codigoCli"),
+                    resultSetRows.getInt("codigoFunc"),
+                    resultSetRows.getDouble("valorCompra"),
+                    DAOFactory.getItem_vendaDAO().getItemVendaByCodigoVenda(resultSetRows.getInt("codigo")),
+                    resultSetRows.getInt("dataVenda")));
+        }
+        resultSetRows.close();
+        super.closeAll();
+
+        return rows;
     }
         
 }
