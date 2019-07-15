@@ -9,8 +9,10 @@ import java.util.ArrayList;
 import java.util.List;
 import javafx.beans.property.DoubleProperty;
 import javafx.beans.property.IntegerProperty;
+import javafx.beans.property.ObjectProperty;
 import javafx.beans.property.SimpleDoubleProperty;
 import javafx.beans.property.SimpleIntegerProperty;
+import javafx.beans.property.SimpleObjectProperty;
 import javafx.beans.property.SimpleStringProperty;
 import javafx.beans.property.StringProperty;
 
@@ -22,32 +24,41 @@ public class Venda {
     private final IntegerProperty codigo = new SimpleIntegerProperty();
     
     private final IntegerProperty dataVenda = new SimpleIntegerProperty();
+    private final IntegerProperty horaVenda = new SimpleIntegerProperty();
 
     private List<Item_Venda> itens = new ArrayList<>();
     Double total = 0.00;
     
     private final DoubleProperty valorTotalCompra = new SimpleDoubleProperty();
     
-    private final IntegerProperty cliente = new SimpleIntegerProperty();
-    private final IntegerProperty funcionario = new SimpleIntegerProperty();
-
-    
-
-    
-    
-    
+    private final ObjectProperty<Integer> cliente = new SimpleObjectProperty();
+    private final ObjectProperty<Integer> funcionario = new SimpleObjectProperty();
+ 
           
     public Venda(){
         
     }
     
-    public Venda(Integer codigo, Integer codCliente, Integer codFuncionario,Double valor, List<Item_Venda> itens,Integer data){
+    public Venda(Integer codigo, Integer codCliente, Integer codFuncionario,Double valor, List<Item_Venda> itens,Integer data,Integer hora){
         this.codigo.set(codigo);
         this.cliente.set(codCliente);
         this.funcionario.set(codFuncionario);
         this.valorTotalCompra.set(valor);
         this.dataVenda.set(data);
         this.itens = itens;
+        this.horaVenda.set(hora);
+    }
+    
+    public Integer getHoraVenda() {
+        return this.horaVenda.get();
+    }
+
+    public void setHoraVenda(Integer value) {
+        this.horaVenda.set(value);
+    }
+
+    public IntegerProperty horaVendaProperty() {
+        return this.horaVenda;
     }
     
     
@@ -59,7 +70,7 @@ public class Venda {
         this.funcionario.set(value);
     }
 
-    public IntegerProperty funcionarioProperty() {
+    public ObjectProperty<Integer> funcionarioProperty() {
         return this.funcionario;
     }
     
@@ -71,7 +82,7 @@ public class Venda {
         this.cliente.set(value);
     }
 
-    public IntegerProperty clienteProperty() {
+    public ObjectProperty<Integer> clienteProperty() {
         return this.cliente;
     }
     

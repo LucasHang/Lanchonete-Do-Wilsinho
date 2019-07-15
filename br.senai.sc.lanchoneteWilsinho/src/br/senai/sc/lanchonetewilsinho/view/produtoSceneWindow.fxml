@@ -7,14 +7,15 @@
 <?import javafx.scene.control.TableView?>
 <?import javafx.scene.control.TextField?>
 <?import javafx.scene.control.cell.PropertyValueFactory?>
+<?import javafx.scene.effect.Glow?>
 <?import javafx.scene.image.Image?>
 <?import javafx.scene.image.ImageView?>
 <?import javafx.scene.layout.AnchorPane?>
 <?import javafx.scene.text.Font?>
 
-<AnchorPane id="AnchorPane" prefHeight="520.0" prefWidth="1253.0" styleClass="pane" stylesheets="@stylesClass.css" xmlns="http://javafx.com/javafx/10.0.1" xmlns:fx="http://javafx.com/fxml/1" fx:controller="br.senai.sc.lanchonetewilsinho.controller.ProdutoSceneWindowController">
+<AnchorPane id="AnchorPane" fx:id="anchorProduto" prefHeight="520.0" prefWidth="1253.0" styleClass="pane" stylesheets="@stylesClass.css" xmlns="http://javafx.com/javafx/8.0.171" xmlns:fx="http://javafx.com/fxml/1" fx:controller="br.senai.sc.lanchonetewilsinho.controller.ProdutoSceneWindowController">
    <children>
-      <TableView fx:id="tableProdutos" layoutX="43.0" layoutY="71.0" prefHeight="362.0" prefWidth="662.0" styleClass="tableview" stylesheets="@stylesClass.css">
+      <TableView fx:id="tableProdutos" layoutX="43.0" layoutY="71.0" prefHeight="362.0" prefWidth="662.0" styleClass="comboBox" stylesheets="@stylesClass.css">
          <columns>
             <TableColumn prefWidth="401.0" text="Descrição">
                <cellValueFactory>
@@ -34,7 +35,7 @@
          </columns>
       </TableView>
       <TextField fx:id="txtCarregar" layoutX="170.0" layoutY="28.0" prefHeight="29.0" prefWidth="241.0" promptText="Pesquisar na tabela" styleClass="textfield" stylesheets="@stylesClass.css" />
-      <Button layoutX="63.0" layoutY="20.0" mnemonicParsing="false" onAction="#btnCarregarOnAction" prefHeight="41.0" prefWidth="98.0" stylesheets="@stylesClass.css" text="Carregar" textFill="WHITE">
+      <Button fx:id="btnCarregar" layoutX="63.0" layoutY="20.0" mnemonicParsing="false" onAction="#btnCarregarOnAction" prefHeight="41.0" prefWidth="98.0" stylesheets="@stylesClass.css" text="Carregar" textFill="WHITE">
          <font>
             <Font name="System Bold" size="15.0" />
          </font>
@@ -65,17 +66,17 @@
       </Button>
       <TextField fx:id="txtFieldDescricao" disable="true" layoutX="926.0" layoutY="144.0" prefHeight="29.0" prefWidth="214.0" styleClass="textfield" />
       <TextField fx:id="txtFieldQuantidade" disable="true" layoutX="993.0" layoutY="249.0" prefHeight="29.0" prefWidth="147.0" styleClass="textfield" />
-      <Label layoutX="833.0" layoutY="144.0" text="Descrição:" textFill="SIENNA">
+      <Label fx:id="lblDesc" layoutX="833.0" layoutY="144.0" text="Descrição:" textFill="SIENNA">
          <font>
             <Font name="Arial Bold" size="16.0" />
          </font>
       </Label>
-      <Label layoutX="881.0" layoutY="249.0" text="Quantidade:" textFill="SIENNA">
+      <Label fx:id="lblQtd" layoutX="881.0" layoutY="249.0" text="Quantidade:" textFill="SIENNA">
          <font>
             <Font name="Arial Bold" size="16.0" />
          </font>
       </Label>
-      <Label layoutX="852.0" layoutY="194.0" text="Preço Unitário:" textFill="SIENNA">
+      <Label fx:id="lblPreco" layoutX="852.0" layoutY="194.0" text="Preço Unitário:" textFill="SIENNA">
          <font>
             <Font name="Arial Bold" size="16.0" />
          </font>
@@ -89,5 +90,10 @@
             <Cursor fx:constant="HAND" />
          </cursor>
       </Button>
+      <Label fx:id="labelBloqueado" alignment="CENTER" layoutX="433.0" layoutY="248.0" style="-fx-font-size: 20px;" text="Apenas gerentes podem alterar Produtos" visible="false">
+         <effect>
+            <Glow level="0.55" />
+         </effect>
+      </Label>
    </children>
 </AnchorPane>

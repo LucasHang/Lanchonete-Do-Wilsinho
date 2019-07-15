@@ -56,6 +56,8 @@ public class ClienteSceneWindowController implements Initializable {
     private TextField txtFieldTelefoneContato;
     @FXML
     private CheckBox checkBoxColaborador;
+    @FXML
+    private Button btnCancelarAcao;
 
     /**
      * Initializes the controller class.
@@ -63,8 +65,7 @@ public class ClienteSceneWindowController implements Initializable {
     
     Cliente novoCliente = null;
     Cliente clienteSelecionado = null;
-    @FXML
-    private Button btnCancelarAcao;
+    
     
     @Override
     public void initialize(URL url, ResourceBundle rb) {
@@ -92,8 +93,11 @@ public class ClienteSceneWindowController implements Initializable {
             if(txtCarregar.getText().isEmpty()){
                 tableClientes.setItems(FXCollections.observableArrayList(DAOFactory.getClienteDAO().getAll()));
             }else{
-                DAOFactory.getClienteDAO().getClienteByCpf(txtCarregar.getText());
-                DAOFactory.getClienteDAO().getClienteByNome(txtCarregar.getText());
+                if(BrSenaiScLanchoneteWilsinho.stringContainsNumber(txtCarregar.getText())){
+                    tableClientes.setItems(FXCollections.observableArrayList(DAOFactory.getClienteDAO().getClienteByCpf(txtCarregar.getText())));
+                }else{
+                    tableClientes.setItems(FXCollections.observableArrayList(DAOFactory.getClienteDAO().getClienteByNome(txtCarregar.getText())));
+                }                
             }
             
         } catch (SQLException ex) {

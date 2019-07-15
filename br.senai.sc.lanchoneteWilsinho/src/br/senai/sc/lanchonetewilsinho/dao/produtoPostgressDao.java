@@ -122,5 +122,18 @@ public class produtoPostgressDao extends connectionFactory implements produtoDao
 
         return rows;
     }
+
+    @Override
+    public void updateQtdEstoque(Integer codProduto,Integer qtdComprada) throws SQLException {
+        super.preparedStatementInitialize(
+                "update produto set quantidade = ? where codigo = ?");
+        super.prepared.setInt(1,(DAOFactory.getProdutoDAO().getProdutoByCodigo(codProduto).getQuantidadeProd() - qtdComprada));
+        super.prepared.setInt(2, codProduto);
+        int linhasAfetadas = super.prepared.executeUpdate();
+        if (linhasAfetadas == 0){
+            throw new SQLException("Não foi possível aletrar as informações do produto");
+        }
+        super.closeAll();
+    }
     
 }

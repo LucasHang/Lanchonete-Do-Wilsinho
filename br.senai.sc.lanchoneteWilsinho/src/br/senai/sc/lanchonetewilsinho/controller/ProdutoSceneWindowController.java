@@ -20,10 +20,12 @@ import javafx.event.ActionEvent;
 import javafx.fxml.FXML;
 import javafx.fxml.Initializable;
 import javafx.scene.control.Button;
+import javafx.scene.control.Label;
 import javafx.scene.control.TableCell;
 import javafx.scene.control.TableColumn;
 import javafx.scene.control.TableView;
 import javafx.scene.control.TextField;
+import javafx.scene.layout.AnchorPane;
 import javafx.scene.layout.Background;
 import javafx.util.Callback;
 import javafx.util.converter.NumberStringConverter;
@@ -54,15 +56,30 @@ public class ProdutoSceneWindowController implements Initializable {
     private TextField txtFieldPrecoUnitario;
     @FXML
     private Button btnCancelarAcao;
-
+    @FXML
+    private AnchorPane anchorProduto;
     /**
      * Initializes the controller class.
      */
     Produto novoProduto = null;
     Produto produtoSelecionado = null;
+    @FXML
+    private Button btnCarregar;
+    @FXML
+    private Label labelBloqueado;
+    @FXML
+    private Label lblDesc;
+    @FXML
+    private Label lblQtd;
+    @FXML
+    private Label lblPreco;
+    
 
     @Override
     public void initialize(URL url, ResourceBundle rb) {
+        if(permissaoFuncionario()){
+            return;
+        }
         btnCarregarOnAction(null);
         mascaraTabela();
         addListenner();
@@ -108,13 +125,24 @@ public class ProdutoSceneWindowController implements Initializable {
             if (txtCarregar.getText().isEmpty()) {
                 tableProdutos.setItems(FXCollections.observableArrayList(DAOFactory.getProdutoDAO().getAll()));
             } else {
-                DAOFactory.getProdutoDAO().getProdutoByDescricao(txtCarregar.getText());
+                tableProdutos.setItems(FXCollections.observableArrayList(DAOFactory.getProdutoDAO().getProdutoByDescricao(txtCarregar.getText())));
+                
             }
 
         } catch (SQLException ex) {
             Logger.getLogger(ClienteSceneWindowController.class.getName()).log(Level.SEVERE, null, ex);
             MeuAlerta.alertaErro(ex.getMessage());
         }
+    }
+    
+    @FXML
+    private void btnCancelarAcaoOnAction(ActionEvent event) {
+        unbindFields(novoProduto);
+        unbindFields(produtoSelecionado);
+        clearFields();
+        disableFields(true);
+        novoProduto = null;
+        produtoSelecionado = null;
     }
 
     private void mascaraTabela() {
@@ -143,6 +171,36 @@ public class ProdutoSceneWindowController implements Initializable {
         });
 
     }
+    
+    
+    
+    private Boolean permissaoFuncionario(){
+        if(!mainSceneWindowController.gerente){
+            anchorProduto.setDisable(true);
+            btnCadastrar.setDisable(true);
+            btnCadastrarProduto.setDisable(true);
+            btnCancelarAcao.setDisable(true);
+            btnCarregar.setDisable(true);
+            tableProdutos.setDisable(true);
+            txtCarregar.setDisable(true);
+            
+            btnCadastrar.setOpacity(0.20);
+            btnCadastrarProduto.setOpacity(0.20);
+            btnCancelarAcao.setOpacity(0.20);
+            btnCarregar.setOpacity(0.20);
+            tableProdutos.setOpacity(0.20);
+            txtCarregar.setOpacity(0.20);
+            lblDesc.setOpacity(0.20);
+            lblPreco.setOpacity(0.20);
+            lblQtd.setOpacity(0.20);
+            
+            labelBloqueado.setVisible(true);
+            return true;
+        }
+        return false;
+    }
+    
+    
 
     private void disableFields(Boolean value) {
         txtFieldDescricao.setDisable(value);
@@ -224,14 +282,6 @@ public class ProdutoSceneWindowController implements Initializable {
         }
     }
 
-    @FXML
-    private void btnCancelarAcaoOnAction(ActionEvent event) {
-        unbindFields(novoProduto);
-        unbindFields(produtoSelecionado);
-        clearFields();
-        disableFields(true);
-        novoProduto = null;
-        produtoSelecionado = null;
-    }
+    
 
 }

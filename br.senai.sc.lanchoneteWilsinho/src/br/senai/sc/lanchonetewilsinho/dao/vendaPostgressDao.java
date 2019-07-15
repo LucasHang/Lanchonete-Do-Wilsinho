@@ -27,12 +27,13 @@ public class vendaPostgressDao extends connectionFactory implements vendaDao{
         
         String[] codigoGerado = {"codigo"};
         super.preparedStatementInitialize(
-                "insert into venda (codigoCli, codigoFunc, valorCompra, dataVenda) values (?,?,?,?)",
+                "insert into venda (codigoCli, codigoFunc, valorCompra, dataVenda,horaVenda) values (?,?,?,?,?)",
                 codigoGerado);
         super.prepared.setInt(1, venda.getCliente());
         super.prepared.setInt(2, venda.getFuncionario());
         super.prepared.setDouble(3, venda.getValorTotalCompra());
         super.prepared.setInt(4, venda.getDataVenda());
+        super.prepared.setInt(5, venda.getHoraVenda());
         int linhasAfetadas = super.prepared.executeUpdate();
         if (linhasAfetadas == 0){
             throw new SQLException("Não foi possível cadastrar a nova venda");
@@ -48,6 +49,7 @@ public class vendaPostgressDao extends connectionFactory implements vendaDao{
         venda.getItens().forEach(item -> {
             item.setVenda(venda.getCodigo());
             try {
+                DAOFactory.getProdutoDAO().updateQtdEstoque(item.getProduto(), item.getQtdComprada());
                 DAOFactory.getItem_vendaDAO().save(item);
             } catch (SQLException ex) {
                 Logger.getLogger(vendaPostgressDao.class.getName()).log(Level.SEVERE, null, ex);
@@ -60,12 +62,11 @@ public class vendaPostgressDao extends connectionFactory implements vendaDao{
     @Override
     public void update(Venda venda) throws SQLException{
          super.preparedStatementInitialize(
-                "update venda set codigoCli = ?, codigoFunc = ?, valorCompra = ?, dataVenda = ? where codigo = ?");
+                "update venda set codigoCli = ?, codigoFunc = ?, valorCompra = ? where codigo = ?");
         super.prepared.setInt(1, venda.getCliente());
         super.prepared.setInt(2, venda.getFuncionario());
         super.prepared.setDouble(3, venda.getValorTotalCompra());
-        super.prepared.setInt(4, venda.getDataVenda());
-        super.prepared.setInt(5, venda.getCodigo());
+        super.prepared.setInt(4, venda.getCodigo());
         int linhasAfetadas = super.prepared.executeUpdate();
         if (linhasAfetadas == 0){
             throw new SQLException("Não foi possível aletrar as informações da venda");
@@ -98,7 +99,8 @@ public class vendaPostgressDao extends connectionFactory implements vendaDao{
                     resultSetRows.getInt("codigoFunc"),
                     resultSetRows.getDouble("valorCompra"),
                     DAOFactory.getItem_vendaDAO().getItemVendaByCodigoVenda(resultSetRows.getInt("codigo")),
-                    resultSetRows.getInt("dataVenda")));
+                    resultSetRows.getInt("dataVenda"),
+                    resultSetRows.getInt("horaVenda")));
         }
         resultSetRows.close();
         super.closeAll();
@@ -106,50 +108,6 @@ public class vendaPostgressDao extends connectionFactory implements vendaDao{
         return rows;
     }
 
-    @Override
-    public List<Venda> getVendaByNomeClienteOuFuncionario(String nome) throws SQLException {
-        List<Venda> rows = new ArrayList<>();
-        super.preparedStatementInitialize("select b.nome from venda a,cliente b where a.codigoCli = b.codigo"
-                + "and b.nome like ? ");
-        super.prepared.setString(1,"%"+ nome.toUpperCase()+"%");
-        super.prepared.execute();
-        ResultSet resultSetRows = super.prepared.getResultSet();
-        if(resultSetRows.next()){
-        while (resultSetRows.next()) {
-            rows.add(new Venda(resultSetRows.getInt("codigo"),
-                    resultSetRows.getInt("codigoCli"),
-                    resultSetRows.getInt("codigoFunc"),
-                    resultSetRows.getDouble("valorCompra"),
-                    DAOFactory.getItem_vendaDAO().getItemVendaByCodigoVenda(resultSetRows.getInt("codigo")),
-                    resultSetRows.getInt("dataVenda")));
-            }
-        }else{
-            resultSetRows.close();
-            super.closeAll();
-            
-            super.preparedStatementInitialize("select b.nome from venda a,funcionario b where a.codigoFunc = b.codigo"
-                + "and b.nome like ? ");
-        super.prepared.setString(1,"%"+ nome.toUpperCase()+"%");
-        super.prepared.execute();
-        resultSetRows = super.prepared.getResultSet();
-        
-        while (resultSetRows.next()) {
-            rows.add(new Venda(resultSetRows.getInt("codigo"),
-                    resultSetRows.getInt("codigoCli"),
-                    resultSetRows.getInt("codigoFunc"),
-                    resultSetRows.getDouble("valorCompra"),
-                    DAOFactory.getItem_vendaDAO().getItemVendaByCodigoVenda(resultSetRows.getInt("codigo")),
-                    resultSetRows.getInt("dataVenda")));
-            }
-            
-        }
-        
-        resultSetRows.close();
-        super.closeAll();
-
-        return rows;
-        
-    }
 
     @Override
     public List<Venda> getVendaByData(String data) throws SQLException {
@@ -164,12 +122,61 @@ public class vendaPostgressDao extends connectionFactory implements vendaDao{
                     resultSetRows.getInt("codigoFunc"),
                     resultSetRows.getDouble("valorCompra"),
                     DAOFactory.getItem_vendaDAO().getItemVendaByCodigoVenda(resultSetRows.getInt("codigo")),
-                    resultSetRows.getInt("dataVenda")));
+                    resultSetRows.getInt("dataVenda"),
+                    resultSetRows.getInt("horaVenda")));
         }
         resultSetRows.close();
         super.closeAll();
 
         return rows;
+    }
+
+    @Override
+    public List<Venda> getVendaByNomeCliente(String nome) throws SQLException {
+        List<Venda> rows = new ArrayList<>();
+        super.preparedStatementInitialize("select a.* from venda a,cliente b where a.codigoCli = b.codigo and upper(b.nome) like ? ");
+        super.prepared.setString(1,"%"+ nome.toUpperCase()+"%");
+        super.prepared.execute();
+        ResultSet resultSetRows = super.prepared.getResultSet();
+
+        while (resultSetRows.next()) {
+            rows.add(new Venda(resultSetRows.getInt("codigo"),
+                    resultSetRows.getInt("codigoCli"),
+                    resultSetRows.getInt("codigoFunc"),
+                    resultSetRows.getDouble("valorCompra"),
+                    DAOFactory.getItem_vendaDAO().getItemVendaByCodigoVenda(resultSetRows.getInt("codigo")),
+                    resultSetRows.getInt("dataVenda"),
+                    resultSetRows.getInt("horaVenda")));
+            }
+       
+            resultSetRows.close();
+            super.closeAll();
+            
+            return rows;
+}
+
+    @Override
+    public List<Venda> getVendaByNomeFuncionario(String nome) throws SQLException {
+        List<Venda> rows = new ArrayList<>();
+        super.preparedStatementInitialize("select a.* from venda a,funcionario b where a.codigoFunc = b.codigo and upper(b.nome) like ? ");
+        super.prepared.setString(1,"%"+ nome.toUpperCase()+"%");
+        super.prepared.execute();
+        ResultSet resultSetRows = super.prepared.getResultSet();
+
+        while (resultSetRows.next()) {
+            rows.add(new Venda(resultSetRows.getInt("codigo"),
+                    resultSetRows.getInt("codigoCli"),
+                    resultSetRows.getInt("codigoFunc"),
+                    resultSetRows.getDouble("valorCompra"),
+                    DAOFactory.getItem_vendaDAO().getItemVendaByCodigoVenda(resultSetRows.getInt("codigo")),
+                    resultSetRows.getInt("dataVenda"),
+                    resultSetRows.getInt("horaVenda")));
+            }
+       
+            resultSetRows.close();
+            super.closeAll();
+            
+            return rows;
     }
         
 }

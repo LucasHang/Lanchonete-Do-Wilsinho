@@ -21,11 +21,13 @@ import javafx.fxml.FXML;
 import javafx.fxml.Initializable;
 import javafx.scene.control.Button;
 import javafx.scene.control.CheckBox;
+import javafx.scene.control.Label;
 import javafx.scene.control.PasswordField;
 import javafx.scene.control.TableCell;
 import javafx.scene.control.TableColumn;
 import javafx.scene.control.TableView;
 import javafx.scene.control.TextField;
+import javafx.scene.layout.AnchorPane;
 import javafx.util.converter.NumberStringConverter;
 
 /**
@@ -34,6 +36,7 @@ import javafx.util.converter.NumberStringConverter;
  * @author Bratva
  */
 public class FuncionarioSceneWindowController implements Initializable {
+
     @FXML
     private Button btnCadastrarFuncionario;
     @FXML
@@ -58,22 +61,42 @@ public class FuncionarioSceneWindowController implements Initializable {
     private PasswordField passFieldSenha;
     @FXML
     private Button btnCancelarAcao;
+    @FXML
+    private AnchorPane anchorFuncionario;
+    @FXML
+    private Label lblNome;
+    @FXML
+    private Label lblCpf;
+    @FXML
+    private Label lblTel;
+    @FXML
+    private Label lblUser;
+    @FXML
+    private Label lblSenha;
+    @FXML
+    private Label lblCadastro;
+    @FXML
+    private Button btnCarregar;
+    @FXML
+    private Label labelBloqueado;
 
     /**
      * Initializes the controller class.
      */
-    
-    Funcionario novoFuncionario= null;
+    Funcionario novoFuncionario = null;
     Funcionario funcionarioSelecionado = null;
     
-    
+
     @Override
     public void initialize(URL url, ResourceBundle rb) {
+        if(permissaoFuncionario()){
+            return;
+        }
         btnCarregarOnAction(null);
         mascaraTabela();
-      
+
         addListenner();
-    }    
+    }
 
     @FXML
     private void btnCadastrarFuncionarioOnAction(ActionEvent event) throws IOException {
@@ -81,37 +104,42 @@ public class FuncionarioSceneWindowController implements Initializable {
         unbindFields(funcionarioSelecionado);
         funcionarioSelecionado = null;
         novoFuncionario = new Funcionario();
-	bindFields(novoFuncionario);
-        
+        bindFields(novoFuncionario);
+
     }
 
     @FXML
     private void btnCarregarOnAction(ActionEvent event) {
         try {
-            if(txtCarregar.getText().isEmpty()){
+            if (txtCarregar.getText().isEmpty()) {
                 tableFuncionarios.setItems(FXCollections.observableArrayList(DAOFactory.getFuncionarioDAO().getAll()));
-            }else{
-                DAOFactory.getFuncionarioDAO().getFuncionarioByLogin(txtCarregar.getText());
-                DAOFactory.getFuncionarioDAO().getFuncionarioByNome(txtCarregar.getText());
+            } else {
+                Funcionario funcionario = DAOFactory.getFuncionarioDAO().getFuncionarioByLogin(txtCarregar.getText());
+                if (funcionario != null) {
+                    tableFuncionarios.setItems(FXCollections.observableArrayList(funcionario));
+                } else {
+                    tableFuncionarios.setItems(FXCollections.observableArrayList(DAOFactory.getFuncionarioDAO().getFuncionarioByNome(txtCarregar.getText())));
+                }
+
             }
-            
+
         } catch (SQLException ex) {
             Logger.getLogger(FuncionarioSceneWindowController.class.getName()).log(Level.SEVERE, null, ex);
             MeuAlerta.alertaErro(ex.getMessage());
         }
     }
-    
+
     @FXML
     private void btnCadastrarOnAction(ActionEvent event) {
-        
+
         unbindFields(novoFuncionario);
         unbindFields(funcionarioSelecionado);
-        
+
         try {
-            if(novoFuncionario != null){
+            if (novoFuncionario != null) {
                 DAOFactory.getFuncionarioDAO().save(novoFuncionario);
-            }else{
-                if(funcionarioSelecionado != null){
+            } else {
+                if (funcionarioSelecionado != null) {
                     DAOFactory.getFuncionarioDAO().update(funcionarioSelecionado);
                 }
             }
@@ -121,11 +149,10 @@ public class FuncionarioSceneWindowController implements Initializable {
             Logger.getLogger(FuncionarioSceneWindowController.class.getName()).log(Level.SEVERE, null, ex);
             MeuAlerta.alertaErro(ex.getMessage()).showAndWait();
         }
-        
-        
+
     }
-    
-    private void mascaraTabela(){
+
+    private void mascaraTabela() {
         tblColumnGerente.setCellFactory((TableColumn<Funcionario, Boolean> param) -> {
             TableCell cell = new TableCell<Funcionario, Boolean>() {
 
@@ -138,12 +165,12 @@ public class FuncionarioSceneWindowController implements Initializable {
                         if (item == null) {
                             setText("");
                         } else {
-                            if(item){
-                              setText("Gerente");  
-                            }else{
+                            if (item) {
+                                setText("Gerente");
+                            } else {
                                 setText("Vendedor");
                             }
-                            
+
                         }
 
                     }
@@ -161,8 +188,37 @@ public class FuncionarioSceneWindowController implements Initializable {
             return cell;
         });
     }
+    
+    private Boolean permissaoFuncionario(){
+        if(!mainSceneWindowController.gerente){
+            anchorFuncionario.setDisable(true);
+            btnCadastrar.setDisable(true);
+            btnCadastrarFuncionario.setDisable(true);
+            btnCancelarAcao.setDisable(true);
+            btnCarregar.setDisable(true);
+            tableFuncionarios.setDisable(true);
+            txtCarregar.setDisable(true);
+            
+            btnCadastrar.setOpacity(0.20);
+            btnCadastrarFuncionario.setOpacity(0.20);
+            btnCancelarAcao.setOpacity(0.20);
+            btnCarregar.setOpacity(0.20);
+            tableFuncionarios.setOpacity(0.20);
+            txtCarregar.setOpacity(0.20);
+            lblCadastro.setOpacity(0.20);
+            lblCpf.setOpacity(0.20);
+            lblNome.setOpacity(0.20);
+            lblSenha.setOpacity(0.20);
+            lblTel.setOpacity(0.20);
+            lblUser.setOpacity(0.20);
+            
+            labelBloqueado.setVisible(true);
+            return true;
+        }
+        return false;
+    }
 
-    private void disableFields(Boolean value){
+    private void disableFields(Boolean value) {
         txtFieldCpf.setDisable(value);
         txtFieldNome.setDisable(value);
         txtFieldTelefoneContato.setDisable(value);
@@ -170,9 +226,9 @@ public class FuncionarioSceneWindowController implements Initializable {
         passFieldSenha.setDisable(value);
         checkBoxGerente.setDisable(value);
     }
-    
-    private void bindFields(Funcionario funcionario){
-        if(funcionario != null){
+
+    private void bindFields(Funcionario funcionario) {
+        if (funcionario != null) {
             txtFieldNome.textProperty().bindBidirectional(funcionario.nomeProperty());
             txtFieldTelefoneContato.textProperty().bindBidirectional(funcionario.telefoneContatoProperty());
             txtFieldCpf.textProperty().bindBidirectional(funcionario.CpfProperty());
@@ -180,11 +236,11 @@ public class FuncionarioSceneWindowController implements Initializable {
             passFieldSenha.textProperty().bindBidirectional(funcionario.senhaProperty());
             checkBoxGerente.selectedProperty().bindBidirectional(funcionario.gerenteProperty());
         }
-        
+
     }
-    
-    private void unbindFields(Funcionario funcionario){
-        if(funcionario != null){
+
+    private void unbindFields(Funcionario funcionario) {
+        if (funcionario != null) {
             txtFieldNome.textProperty().unbindBidirectional(funcionario.nomeProperty());
             txtFieldTelefoneContato.textProperty().unbindBidirectional(funcionario.telefoneContatoProperty());
             txtFieldCpf.textProperty().unbindBidirectional(funcionario.CpfProperty());
@@ -193,49 +249,49 @@ public class FuncionarioSceneWindowController implements Initializable {
             checkBoxGerente.selectedProperty().unbindBidirectional(funcionario.gerenteProperty());
         }
     }
-    
-    public Boolean validationForm(){
+
+    public Boolean validationForm() {
         Boolean invalido = false;
 
-        if(txtFieldCpf.textProperty().isNull().get()){
+        if (txtFieldCpf.textProperty().isNull().get()) {
             txtFieldCpf.getStyleClass().add("invalido");
-            invalido = true;     
-        }else{
+            invalido = true;
+        } else {
             txtFieldCpf.getStyleClass().remove("invalido");
         }
-        
-        if(txtFieldNome.textProperty().isNull().get()){
+
+        if (txtFieldNome.textProperty().isNull().get()) {
             txtFieldNome.getStyleClass().add("invalido");
             invalido = true;
-        }else{
+        } else {
             txtFieldNome.getStyleClass().remove("invalido");
         }
-        
-        if(txtFieldTelefoneContato.textProperty().isNull().get()){
+
+        if (txtFieldTelefoneContato.textProperty().isNull().get()) {
             txtFieldTelefoneContato.getStyleClass().add("invalido");
             invalido = true;
-        }else{
+        } else {
             txtFieldTelefoneContato.getStyleClass().remove("invalido");
         }
-        
-        if(txtFieldUsuario.textProperty().isNull().get()){
+
+        if (txtFieldUsuario.textProperty().isNull().get()) {
             txtFieldUsuario.getStyleClass().add("invalido");
             invalido = true;
-        }else{
+        } else {
             txtFieldUsuario.getStyleClass().remove("invalido");
         }
-        
-        if(passFieldSenha.textProperty().isNull().get()){
+
+        if (passFieldSenha.textProperty().isNull().get()) {
             passFieldSenha.getStyleClass().add("invalido");
             invalido = true;
-        }else{
+        } else {
             passFieldSenha.getStyleClass().remove("invalido");
         }
-       
+
         return invalido;
     }
-    
-    private void clearFields(){
+
+    private void clearFields() {
         txtFieldCpf.clear();
         txtFieldNome.clear();
         txtFieldTelefoneContato.clear();
@@ -243,9 +299,9 @@ public class FuncionarioSceneWindowController implements Initializable {
         passFieldSenha.clear();
         checkBoxGerente.setSelected(false);
     }
-    
+
     private void addListenner() {
-        tableFuncionarios.getSelectionModel().selectedItemProperty().addListener((observable,oldValue,newValue)->{
+        tableFuncionarios.getSelectionModel().selectedItemProperty().addListener((observable, oldValue, newValue) -> {
             disableFields(false);
             novoFuncionario = null;
             unbindFields(oldValue);
@@ -264,5 +320,4 @@ public class FuncionarioSceneWindowController implements Initializable {
         funcionarioSelecionado = null;
     }
 
-    
 }

@@ -15,7 +15,7 @@
 <?import javafx.scene.layout.AnchorPane?>
 <?import javafx.scene.text.Font?>
 
-<AnchorPane id="AnchorPane" prefHeight="520.0" prefWidth="1253.0" styleClass="pane" stylesheets="@stylesClass.css" xmlns="http://javafx.com/javafx/10.0.1" xmlns:fx="http://javafx.com/fxml/1" fx:controller="br.senai.sc.lanchonetewilsinho.controller.VendaSceneWindowController">
+<AnchorPane id="AnchorPane" prefHeight="520.0" prefWidth="1253.0" styleClass="pane" stylesheets="@stylesClass.css" xmlns="http://javafx.com/javafx/8.0.171" xmlns:fx="http://javafx.com/fxml/1" fx:controller="br.senai.sc.lanchonetewilsinho.controller.VendaSceneWindowController">
    <children>
       <ImageView fitHeight="230.0" fitWidth="510.0" layoutX="731.0" layoutY="93.0" opacity="0.13" pickOnBounds="true" preserveRatio="true">
          <image>
@@ -43,12 +43,12 @@
       <Separator layoutX="828.0" layoutY="121.0" prefHeight="2.0" prefWidth="315.0" styleClass="tablecolumnbase" />
       <TableView fx:id="tableVendas" layoutX="43.0" layoutY="71.0" prefHeight="362.0" prefWidth="662.0" styleClass="comboBox">
         <columns>
-          <TableColumn fx:id="tblColumnFuncionario" prefWidth="140.0" text="Funcionário">
+          <TableColumn fx:id="tblColumnFuncionario" prefWidth="127.0" text="Funcionário">
               <cellValueFactory>
                   <PropertyValueFactory property="funcionario" />
                </cellValueFactory>
           </TableColumn>
-          <TableColumn fx:id="tblColumnCliente" prefWidth="185.0" text="Cliente">
+          <TableColumn fx:id="tblColumnCliente" prefWidth="156.0" text="Cliente">
               <cellValueFactory>
                   <PropertyValueFactory property="cliente" />
                </cellValueFactory>
@@ -58,14 +58,19 @@
                   <PropertyValueFactory property="cliente" />
                </cellValueFactory>
             </TableColumn>
-            <TableColumn fx:id="tblColumnValor" prefWidth="87.0" text="  Valor&#10;Compra">
+            <TableColumn fx:id="tblColumnValor" prefWidth="58.0" text="Valor&#10;">
             <cellValueFactory>
                   <PropertyValueFactory property="valorTotalCompra" />
                </cellValueFactory>
             </TableColumn>
-            <TableColumn fx:id="tblColumnData" prefWidth="100.0" text="  Data&#10;Compra">
+            <TableColumn fx:id="tblColumnData" prefWidth="104.0" text="Data&#10;">
             <cellValueFactory>
                   <PropertyValueFactory property="dataVenda" />
+               </cellValueFactory>
+            </TableColumn>
+            <TableColumn fx:id="tblColumnHora" prefWidth="67.0" text="Hora&#10;">
+            <cellValueFactory>
+                  <PropertyValueFactory property="horaVenda" />
                </cellValueFactory>
             </TableColumn>
         </columns>

@@ -13,9 +13,9 @@
 <?import javafx.scene.layout.AnchorPane?>
 <?import javafx.scene.text.Font?>
 
-<AnchorPane id="AnchorPane" prefHeight="520.0" prefWidth="1253.0" styleClass="pane" stylesheets="@stylesClass.css" xmlns="http://javafx.com/javafx/10.0.1" xmlns:fx="http://javafx.com/fxml/1" fx:controller="br.senai.sc.lanchonetewilsinho.controller.ClienteSceneWindowController">
+<AnchorPane id="AnchorPane" prefHeight="520.0" prefWidth="1253.0" styleClass="pane" stylesheets="@stylesClass.css" xmlns="http://javafx.com/javafx/8.0.171" xmlns:fx="http://javafx.com/fxml/1" fx:controller="br.senai.sc.lanchonetewilsinho.controller.ClienteSceneWindowController">
    <children>
-      <TableView fx:id="tableClientes" layoutX="43.0" layoutY="71.0" prefHeight="362.0" prefWidth="662.0" styleClass="tableview" stylesheets="@stylesClass.css">
+      <TableView fx:id="tableClientes" layoutX="43.0" layoutY="71.0" prefHeight="362.0" prefWidth="662.0" styleClass="comboBox" stylesheets="@stylesClass.css">
          <columns>
             <TableColumn prefWidth="133.0" text="Cpf">
                <cellValueFactory>

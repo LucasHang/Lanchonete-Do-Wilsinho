@@ -33,7 +33,6 @@ public class Produto {
         this.precoProd.set(preco);
         this.quantidadeProd.set(quantidade);
     }
-
     
     public void adcProduto(Integer qtd){
         this.quantidadeProd.set(this.quantidadeProd.get() + qtd);

@@ -13,14 +13,23 @@ import java.io.IOException;
 import java.net.URL;
 import java.sql.SQLException;
 import java.util.ResourceBundle;
+import java.util.concurrent.ExecutorService;
+import java.util.concurrent.Executors;
 import java.util.logging.Level;
 import java.util.logging.Logger;
+import javafx.beans.value.ChangeListener;
+import javafx.beans.value.ObservableValue;
+import javafx.concurrent.Task;
 import javafx.event.ActionEvent;
+import javafx.event.EventHandler;
 import javafx.fxml.FXML;
 import javafx.fxml.Initializable;
 import javafx.scene.control.Button;
+import javafx.scene.control.Label;
 import javafx.scene.control.PasswordField;
+import javafx.scene.control.ProgressIndicator;
 import javafx.scene.control.TextField;
+import javafx.scene.input.KeyCode;
 
 /**
  * FXML Controller class
@@ -39,45 +48,49 @@ public class mainSceneWindowController implements Initializable {
     /**
      * Initializes the controller class.
      */
-    
     Funcionario funcionario;
     static Boolean gerente;
-    
+
     @Override
     public void initialize(URL url, ResourceBundle rb) {
-        // TODO
-    }    
+        passFieldLogin.setOnKeyReleased(event -> {
+            if (event.getCode() == KeyCode.ENTER) {
+                btnEntrarOnAction(null);
+            }
+        });
+    }
 
     @FXML
-    private void bntEntrarOnAction(ActionEvent event) {
-          try {
-            if(loginVrified()){
+    private void btnEntrarOnAction(ActionEvent event) {
+        try {
+            if (loginVrified()) {
                 gerente = funcionario.getGerente();
                 try {
                     BrSenaiScLanchoneteWilsinho.mudarTela("menu");
+
                 } catch (IOException ex) {
                     Logger.getLogger(mainSceneWindowController.class.getName()).log(Level.SEVERE, null, ex);
                     MeuAlerta.alertaErro(ex.getMessage()).showAndWait();
                 }
-            }else{
+            } else {
                 throw new SQLException("Senha Incorreta");
             }
         } catch (SQLException ex) {
             Logger.getLogger(mainSceneWindowController.class.getName()).log(Level.SEVERE, null, ex);
             MeuAlerta.alertaErro(ex.getMessage()).showAndWait();
         }
-        
     }
-    
-    private Boolean loginVrified() throws SQLException{
-            
-            funcionario = DAOFactory.getFuncionarioDAO().getFuncionarioByLogin(txtFieldLogin.getText());
-            
-            if(funcionario != null){
-                return funcionario.getSenha().equals(passFieldLogin.getText());
-            }else{
-                throw new SQLException("Funcionário não encontrado");
-            }
-            
+
+    private Boolean loginVrified() throws SQLException {
+
+        funcionario = DAOFactory.getFuncionarioDAO().getFuncionarioByLogin(txtFieldLogin.getText());
+
+        if (funcionario != null) {
+            return funcionario.getSenha().equals(passFieldLogin.getText());
+        } else {
+            throw new SQLException("Funcionário não encontrado");
         }
+
+    }
+
 }

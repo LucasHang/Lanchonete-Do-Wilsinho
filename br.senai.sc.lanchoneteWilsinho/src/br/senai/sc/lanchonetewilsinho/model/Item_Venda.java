@@ -9,8 +9,10 @@ import br.senai.sc.lanchonetewilsinho.dao.DAOFactory;
 import java.sql.SQLException;
 import javafx.beans.property.DoubleProperty;
 import javafx.beans.property.IntegerProperty;
+import javafx.beans.property.ObjectProperty;
 import javafx.beans.property.SimpleDoubleProperty;
 import javafx.beans.property.SimpleIntegerProperty;
+import javafx.beans.property.SimpleObjectProperty;
 
 /**
  *
@@ -22,7 +24,7 @@ public class Item_Venda {
         
     private final IntegerProperty qtdComprada = new SimpleIntegerProperty();
 
-    private final IntegerProperty produto = new SimpleIntegerProperty();
+    private final ObjectProperty<Integer> produto = new SimpleObjectProperty();
     
     private final DoubleProperty valorItem = new SimpleDoubleProperty();
 
@@ -62,7 +64,7 @@ public class Item_Venda {
         this.produto.set(value);
     }
 
-    public IntegerProperty produtoProperty() {
+    public ObjectProperty<Integer> produtoProperty() {
         return this.produto;
     }
     

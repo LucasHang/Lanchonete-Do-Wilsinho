@@ -15,11 +15,13 @@ import java.util.List;
  */
 public interface produtoDao {
     
-    public void save(Produto conta)throws SQLException;
+    public void save(Produto produto)throws SQLException;
     
-    public void update(Produto conta)throws SQLException;
+    public void update(Produto produto)throws SQLException;
     
-    public void delete(Produto conta)throws SQLException;
+    public void updateQtdEstoque(Integer codProduto,Integer qtdComprada)throws SQLException;
+    
+    public void delete(Produto produto)throws SQLException;
     
     public List<Produto> getAll()throws SQLException;
     

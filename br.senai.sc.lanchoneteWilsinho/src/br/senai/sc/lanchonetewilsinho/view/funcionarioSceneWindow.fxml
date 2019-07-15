@@ -10,14 +10,15 @@
 <?import javafx.scene.control.TableView?>
 <?import javafx.scene.control.TextField?>
 <?import javafx.scene.control.cell.PropertyValueFactory?>
+<?import javafx.scene.effect.Glow?>
 <?import javafx.scene.image.Image?>
 <?import javafx.scene.image.ImageView?>
 <?import javafx.scene.layout.AnchorPane?>
 <?import javafx.scene.text.Font?>
 
-<AnchorPane id="AnchorPane" prefHeight="520.0" prefWidth="1253.0" styleClass="pane" stylesheets="@stylesClass.css" xmlns="http://javafx.com/javafx/10.0.1" xmlns:fx="http://javafx.com/fxml/1" fx:controller="br.senai.sc.lanchonetewilsinho.controller.FuncionarioSceneWindowController">
+<AnchorPane id="AnchorPane" fx:id="anchorFuncionario" prefHeight="520.0" prefWidth="1253.0" styleClass="pane" stylesheets="@stylesClass.css" xmlns="http://javafx.com/javafx/8.0.171" xmlns:fx="http://javafx.com/fxml/1" fx:controller="br.senai.sc.lanchonetewilsinho.controller.FuncionarioSceneWindowController">
    <children>
-      <TableView fx:id="tableFuncionarios" layoutX="43.0" layoutY="71.0" prefHeight="362.0" prefWidth="662.0" styleClass="tableview" stylesheets="@stylesClass.css">
+      <TableView fx:id="tableFuncionarios" layoutX="43.0" layoutY="71.0" prefHeight="362.0" prefWidth="662.0" styleClass="comboBox" stylesheets="@stylesClass.css">
          <columns>
             <TableColumn prefWidth="228.0" text="Nome">
                <cellValueFactory>
@@ -42,7 +43,7 @@
          </columns>
       </TableView>
       <TextField fx:id="txtCarregar" layoutX="170.0" layoutY="28.0" prefHeight="29.0" prefWidth="241.0" promptText="Pesquisar na tabela" styleClass="textfield" stylesheets="@stylesClass.css" />
-      <Button layoutX="63.0" layoutY="20.0" mnemonicParsing="false" onAction="#btnCarregarOnAction" prefHeight="41.0" prefWidth="98.0" stylesheets="@stylesClass.css" text="Carregar" textFill="WHITE">
+      <Button fx:id="btnCarregar" layoutX="63.0" layoutY="20.0" mnemonicParsing="false" onAction="#btnCarregarOnAction" prefHeight="41.0" prefWidth="98.0" stylesheets="@stylesClass.css" text="Carregar" textFill="WHITE">
          <font>
             <Font name="System Bold" size="15.0" />
          </font>
@@ -60,7 +61,7 @@
             <Image url="@imagens/slogan%20lanchonete%20pronto.jpg" />
          </image>
       </ImageView>
-      <Button fx:id="btnCadastrar" layoutX="920.0" layoutY="390.0" mnemonicParsing="false" onAction="#btnCadastrarOnAction" prefHeight="53.0" prefWidth="113.0" text="Cadastrar" textFill="WHITE">
+      <Button fx:id="btnCadastrar" layoutX="931.0" layoutY="388.0" mnemonicParsing="false" onAction="#btnCadastrarOnAction" prefHeight="53.0" prefWidth="113.0" text="Cadastrar" textFill="WHITE">
          <font>
             <Font name="System Bold" size="17.0" />
          </font>
@@ -68,36 +69,41 @@
       <TextField fx:id="txtFieldNome" disable="true" layoutX="975.0" layoutY="57.0" prefHeight="25.0" prefWidth="169.0" styleClass="textfield" />
       <TextField fx:id="txtFieldCpf" disable="true" layoutX="974.0" layoutY="103.0" prefHeight="25.0" prefWidth="169.0" styleClass="textfield" />
       <TextField fx:id="txtFieldTelefoneContato" disable="true" layoutX="975.0" layoutY="157.0" prefHeight="25.0" prefWidth="169.0" styleClass="textfield" />
-      <Label layoutX="818.0" layoutY="57.0" text="Nome completo:" textFill="SIENNA">
+      <Label fx:id="lblNome" layoutX="818.0" layoutY="57.0" text="Nome completo:" textFill="SIENNA">
          <font>
             <Font name="Arial Bold" size="16.0" />
          </font>
       </Label>
-      <Label layoutX="922.0" layoutY="106.0" text="CPF:" textFill="SIENNA">
+      <Label fx:id="lblCpf" layoutX="922.0" layoutY="106.0" text="CPF:" textFill="SIENNA">
          <font>
             <Font name="Arial Bold" size="16.0" />
          </font>
       </Label>
-      <Label layoutX="784.0" layoutY="158.0" text="Telefone de contato:" textFill="SIENNA">
+      <Label fx:id="lblTel" layoutX="784.0" layoutY="158.0" text="Telefone de contato:" textFill="SIENNA">
          <font>
             <Font name="Arial Bold" size="16.0" />
          </font>
       </Label>
-      <CheckBox fx:id="checkBoxGerente" disable="true" layoutX="920.0" layoutY="352.0" mnemonicParsing="false" prefHeight="29.0" prefWidth="113.0" styleClass="label" text="Gerente" textFill="SIENNA">
+      <CheckBox fx:id="checkBoxGerente" disable="true" layoutX="931.0" layoutY="350.0" mnemonicParsing="false" prefHeight="29.0" prefWidth="113.0" styleClass="label" text="Gerente" textFill="SIENNA">
          <font>
             <Font name="System Bold" size="16.0" />
          </font>
       </CheckBox>
       <Separator layoutX="839.0" layoutY="204.0" prefHeight="3.0" prefWidth="270.0" styleClass="tablecolumnbase" />
-      <Label layoutX="849.0" layoutY="261.0" text="Usuário:" textFill="SIENNA" />
-      <Label layoutX="862.0" layoutY="314.0" text="Senha:" textFill="SIENNA" />
+      <Label fx:id="lblUser" layoutX="849.0" layoutY="261.0" text="Usuário:" textFill="SIENNA" />
+      <Label fx:id="lblSenha" layoutX="862.0" layoutY="314.0" text="Senha:" textFill="SIENNA" />
       <TextField fx:id="txtFieldUsuario" disable="true" layoutX="931.0" layoutY="261.0" prefHeight="29.0" prefWidth="169.0" styleClass="textfield" />
       <PasswordField fx:id="passFieldSenha" disable="true" layoutX="931.0" layoutY="314.0" prefHeight="29.0" prefWidth="169.0" styleClass="textfield" />
-      <Label layoutX="890.0" layoutY="224.0" styleClass="label2" text="Cadastro do Login" textFill="SIENNA" />
-      <Button fx:id="btnCancelarAcao" layoutX="946.0" layoutY="454.0" mnemonicParsing="false" onAction="#btnCancelarAcaoOnAction" styleClass="button2" text="Cancelar" textFill="SIENNA">
+      <Label fx:id="lblCadastro" layoutX="890.0" layoutY="224.0" styleClass="label2" text="Cadastro do Login" textFill="SIENNA" />
+      <Button fx:id="btnCancelarAcao" layoutX="957.0" layoutY="452.0" mnemonicParsing="false" onAction="#btnCancelarAcaoOnAction" styleClass="button2" text="Cancelar" textFill="SIENNA">
          <font>
             <Font name="System Bold" size="15.0" />
          </font>
       </Button>
+      <Label fx:id="labelBloqueado" layoutX="416.0" layoutY="245.0" style="-fx-font-size: 20px;" text="Apenas gerentes podem alterar Funcionários" visible="false">
+         <effect>
+            <Glow level="0.55" />
+         </effect>
+      </Label>
    </children>
 </AnchorPane>

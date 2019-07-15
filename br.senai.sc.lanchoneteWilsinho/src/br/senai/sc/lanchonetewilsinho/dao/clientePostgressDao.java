@@ -140,7 +140,7 @@ public class clientePostgressDao extends connectionFactory implements clienteDao
     public Cliente getClienteByCpf(String cpf) throws SQLException {
         Cliente novoCliente = null;
         super.preparedStatementInitialize("select * from cliente where cpf like ?");
-        super.prepared.setString(1, cpf);
+        super.prepared.setString(1,"%"+cpf+"%");
         super.prepared.execute();
         ResultSet resultSetRows = super.prepared.getResultSet();
         if (resultSetRows.next()) {
