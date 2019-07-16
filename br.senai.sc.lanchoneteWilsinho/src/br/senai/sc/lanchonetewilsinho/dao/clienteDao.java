@@ -29,4 +29,6 @@ public interface clienteDao {
     
     public List<Cliente> getClienteByNome(String nome)throws SQLException;
     
+    public List<Cliente> procurarCliente(String texto)throws SQLException;
+    
 }

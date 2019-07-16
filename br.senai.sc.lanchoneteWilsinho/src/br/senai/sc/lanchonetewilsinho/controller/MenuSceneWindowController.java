@@ -6,6 +6,7 @@
 package br.senai.sc.lanchonetewilsinho.controller;
 
 import br.senai.sc.lanchonetewilsinho.BrSenaiScLanchoneteWilsinho;
+import br.senai.sc.lanchonetewilsinho.DoWork;
 import br.senai.sc.lanchonetewilsinho.MeuAlerta;
 import static br.senai.sc.lanchonetewilsinho.MeuAlerta.alerta;
 import java.io.IOException;
@@ -17,6 +18,7 @@ import javafx.event.ActionEvent;
 import javafx.fxml.FXML;
 import javafx.fxml.FXMLLoader;
 import javafx.fxml.Initializable;
+import javafx.scene.Cursor;
 import javafx.scene.control.Button;
 import javafx.scene.control.ButtonType;
 import javafx.scene.control.Tab;
@@ -43,7 +45,11 @@ public class MenuSceneWindowController implements Initializable {
     private TabPane tabPanePrincipal;
 
     Tab abaUnica;
-    AnchorPane anchorUnico;
+    AnchorPane anchorAtual;
+    AnchorPane anchorAnterior;
+
+    DoWork task;
+    Thread tredi;
 
     FXMLLoader cargaDoSceneAtiva;
 
@@ -68,13 +74,13 @@ public class MenuSceneWindowController implements Initializable {
             abaUnica = new Tab("Vendas");
 
             cargaDoSceneAtiva = cargaDoSceneVenda;
-            
+
             FXMLLoader cargaDoScene
-            = new FXMLLoader(getClass().getResource("/br/senai/sc/lanchonetewilsinho/view/vendaSceneWindow.fxml"));
+                    = new FXMLLoader(getClass().getResource("/br/senai/sc/lanchonetewilsinho/view/vendaSceneWindow.fxml"));
 
-            anchorUnico = cargaDoScene.load();
+            anchorAtual = cargaDoScene.load();
 
-            abaUnica.setContent(anchorUnico);
+            abaUnica.setContent(anchorAtual);
 
             if (!tabPanePrincipal.getTabs().contains(abaUnica)) {
                 tabPanePrincipal.getTabs().add(abaUnica);
@@ -84,6 +90,7 @@ public class MenuSceneWindowController implements Initializable {
             Logger.getLogger(MenuSceneWindowController.class.getName()).log(Level.SEVERE, null, ex);
             MeuAlerta.alertaErro(ex.getMessage()).showAndWait();
         }
+
     }
 
     @FXML
@@ -91,32 +98,44 @@ public class MenuSceneWindowController implements Initializable {
         if (cargaDoSceneAtiva != cargaDoSceneFuncionario) {
             if (abaUnica != null) {
                 if (MeuAlerta.alertaDeConfirmacao("Deseja realmente fechar a janela?").showAndWait().get() == ButtonType.YES) {
-                    tabPanePrincipal.getTabs().remove(abaUnica);
+
                     abaUnica = null;
-                    anchorUnico = null;
+                    anchorAnterior = anchorAtual;
+                    anchorAtual = null;
                     cargaDoSceneAtiva = null;
 
-                    try {
+                    task = new DoWork();
+                    tredi = new Thread(task);
+                    tredi.start();
 
-                        abaUnica = new Tab("Funcionarios");
+                    task.setOnRunning(ev -> {
+                        anchorAnterior.setCursor(Cursor.WAIT);
+                        try {
 
-                        cargaDoSceneAtiva = cargaDoSceneFuncionario;
+                            abaUnica = new Tab("Funcionarios");
 
-                        FXMLLoader cargaDoScene
-                            = new FXMLLoader(getClass().getResource("/br/senai/sc/lanchonetewilsinho/view/funcionarioSceneWindow.fxml"));
+                            cargaDoSceneAtiva = cargaDoSceneFuncionario;
 
-                        anchorUnico = cargaDoScene.load();
+                            FXMLLoader cargaDoScene
+                                    = new FXMLLoader(getClass().getResource("/br/senai/sc/lanchonetewilsinho/view/funcionarioSceneWindow.fxml"));
 
-                        abaUnica.setContent(anchorUnico);
+                            anchorAtual = cargaDoScene.load();
+
+                        } catch (IOException ex) {
+                            Logger.getLogger(MenuSceneWindowController.class.getName()).log(Level.SEVERE, null, ex);
+                            MeuAlerta.alertaErro(ex.getMessage()).showAndWait();
+                        }
+                    });
+
+                    task.setOnSucceeded(ev -> {
+                        abaUnica.setContent(anchorAtual);
 
                         if (!tabPanePrincipal.getTabs().contains(abaUnica)) {
                             tabPanePrincipal.getTabs().add(abaUnica);
                         }
                         tabPanePrincipal.getSelectionModel().select(abaUnica);
-                    } catch (IOException ex) {
-                        Logger.getLogger(MenuSceneWindowController.class.getName()).log(Level.SEVERE, null, ex);
-                        MeuAlerta.alertaErro(ex.getMessage()).showAndWait();
-                    }
+                        anchorAnterior.setCursor(Cursor.DEFAULT);
+                    });
                 }
 
             }
@@ -129,32 +148,44 @@ public class MenuSceneWindowController implements Initializable {
         if (cargaDoSceneAtiva != cargaDoSceneCliente) {
             if (abaUnica != null) {
                 if (MeuAlerta.alertaDeConfirmacao("Deseja realmente fechar a janela?").showAndWait().get() == ButtonType.YES) {
-                    tabPanePrincipal.getTabs().remove(abaUnica);
+
                     abaUnica = null;
-                    anchorUnico = null;
+                    anchorAnterior = anchorAtual;
+                    anchorAtual = null;
                     cargaDoSceneAtiva = null;
 
-                    try {
+                    task = new DoWork();
+                    tredi = new Thread(task);
+                    tredi.start();
 
-                        abaUnica = new Tab("Clientes");
+                    task.setOnRunning(ev -> {
+                        anchorAnterior.setCursor(Cursor.WAIT);
+                        try {
 
-                        cargaDoSceneAtiva = cargaDoSceneCliente;
+                            abaUnica = new Tab("Clientes");
 
-                        FXMLLoader cargaDoScene
-                            = new FXMLLoader(getClass().getResource("/br/senai/sc/lanchonetewilsinho/view/clienteSceneWindow.fxml"));
+                            cargaDoSceneAtiva = cargaDoSceneCliente;
 
-                        anchorUnico = cargaDoScene.load();
+                            FXMLLoader cargaDoScene
+                                    = new FXMLLoader(getClass().getResource("/br/senai/sc/lanchonetewilsinho/view/clienteSceneWindow.fxml"));
 
-                        abaUnica.setContent(anchorUnico);
+                            anchorAtual = cargaDoScene.load();
+
+                        } catch (IOException ex) {
+                            Logger.getLogger(MenuSceneWindowController.class.getName()).log(Level.SEVERE, null, ex);
+                            MeuAlerta.alertaErro(ex.getMessage()).showAndWait();
+                        }
+                    });
+
+                    task.setOnSucceeded(ev -> {
+                        abaUnica.setContent(anchorAtual);
 
                         if (!tabPanePrincipal.getTabs().contains(abaUnica)) {
                             tabPanePrincipal.getTabs().add(abaUnica);
                         }
                         tabPanePrincipal.getSelectionModel().select(abaUnica);
-                    } catch (IOException ex) {
-                        Logger.getLogger(MenuSceneWindowController.class.getName()).log(Level.SEVERE, null, ex);
-                        MeuAlerta.alertaErro(ex.getMessage()).showAndWait();
-                    }
+                        anchorAnterior.setCursor(Cursor.DEFAULT);
+                    });
                 }
             }
         }
@@ -166,31 +197,44 @@ public class MenuSceneWindowController implements Initializable {
         if (cargaDoSceneAtiva != cargaDoSceneVenda) {
             if (abaUnica != null) {
                 if (MeuAlerta.alertaDeConfirmacao("Deseja realmente fechar a janela?").showAndWait().get() == ButtonType.YES) {
+
                     abaUnica = null;
-                    anchorUnico = null;
+                    anchorAnterior = anchorAtual;
+                    anchorAtual = null;
                     cargaDoSceneAtiva = null;
 
-                    try {
+                    task = new DoWork();
+                    tredi = new Thread(task);
+                    tredi.start();
 
-                        abaUnica = new Tab("Vendas");
+                    task.setOnRunning(ev -> {
+                        anchorAnterior.setCursor(Cursor.WAIT);
+                        try {
 
-                        cargaDoSceneAtiva = cargaDoSceneVenda;
+                            abaUnica = new Tab("Vendas");
 
-                        FXMLLoader cargaDoScene
-                            = new FXMLLoader(getClass().getResource("/br/senai/sc/lanchonetewilsinho/view/vendaSceneWindow.fxml"));
+                            cargaDoSceneAtiva = cargaDoSceneVenda;
 
-                        anchorUnico = cargaDoScene.load();
+                            FXMLLoader cargaDoScene
+                                    = new FXMLLoader(getClass().getResource("/br/senai/sc/lanchonetewilsinho/view/vendaSceneWindow.fxml"));
 
-                        abaUnica.setContent(anchorUnico);
+                            anchorAtual = cargaDoScene.load();
+
+                        } catch (IOException ex) {
+                            Logger.getLogger(MenuSceneWindowController.class.getName()).log(Level.SEVERE, null, ex);
+                            MeuAlerta.alertaErro(ex.getMessage()).showAndWait();
+                        }
+                    });
+
+                    task.setOnSucceeded(ev -> {
+                        abaUnica.setContent(anchorAtual);
 
                         if (!tabPanePrincipal.getTabs().contains(abaUnica)) {
                             tabPanePrincipal.getTabs().add(abaUnica);
                         }
                         tabPanePrincipal.getSelectionModel().select(abaUnica);
-                    } catch (IOException ex) {
-                        Logger.getLogger(MenuSceneWindowController.class.getName()).log(Level.SEVERE, null, ex);
-                        MeuAlerta.alertaErro(ex.getMessage()).showAndWait();
-                    }
+                        anchorAnterior.setCursor(Cursor.DEFAULT);
+                    });
                 }
 
             }
@@ -203,31 +247,44 @@ public class MenuSceneWindowController implements Initializable {
         if (cargaDoSceneAtiva != cargaDoSceneProduto) {
             if (abaUnica != null) {
                 if (MeuAlerta.alertaDeConfirmacao("Deseja realmente fechar a janela?").showAndWait().get() == ButtonType.YES) {
+
                     abaUnica = null;
-                    anchorUnico = null;
+                    anchorAnterior = anchorAtual;
+                    anchorAtual = null;
                     cargaDoSceneAtiva = null;
 
-                    try {
+                    task = new DoWork();
+                    tredi = new Thread(task);
+                    tredi.start();
 
-                        abaUnica = new Tab("Produtos");
+                    task.setOnRunning(ev -> {
+                        anchorAnterior.setCursor(Cursor.WAIT);
+                        try {
 
-                        cargaDoSceneAtiva = cargaDoSceneProduto;
+                            abaUnica = new Tab("Produtos");
 
-                        FXMLLoader cargaDoScene
-                            = new FXMLLoader(getClass().getResource("/br/senai/sc/lanchonetewilsinho/view/produtoSceneWindow.fxml"));
+                            cargaDoSceneAtiva = cargaDoSceneProduto;
 
-                        anchorUnico = cargaDoScene.load();
+                            FXMLLoader cargaDoScene
+                                    = new FXMLLoader(getClass().getResource("/br/senai/sc/lanchonetewilsinho/view/produtoSceneWindow.fxml"));
 
-                        abaUnica.setContent(anchorUnico);
+                            anchorAtual = cargaDoScene.load();
+
+                        } catch (IOException ex) {
+                            Logger.getLogger(MenuSceneWindowController.class.getName()).log(Level.SEVERE, null, ex);
+                            MeuAlerta.alertaErro(ex.getMessage()).showAndWait();
+                        }
+                    });
+
+                    task.setOnSucceeded(ev -> {
+                        abaUnica.setContent(anchorAtual);
 
                         if (!tabPanePrincipal.getTabs().contains(abaUnica)) {
                             tabPanePrincipal.getTabs().add(abaUnica);
                         }
                         tabPanePrincipal.getSelectionModel().select(abaUnica);
-                    } catch (IOException ex) {
-                        Logger.getLogger(MenuSceneWindowController.class.getName()).log(Level.SEVERE, null, ex);
-                        MeuAlerta.alertaErro(ex.getMessage()).showAndWait();
-                    }
+                        anchorAnterior.setCursor(Cursor.DEFAULT);
+                    });
                 }
 
             }

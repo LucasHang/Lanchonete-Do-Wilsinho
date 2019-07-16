@@ -6,6 +6,7 @@
 package br.senai.sc.lanchonetewilsinho.controller;
 
 import br.senai.sc.lanchonetewilsinho.BrSenaiScLanchoneteWilsinho;
+import br.senai.sc.lanchonetewilsinho.DoWork;
 import br.senai.sc.lanchonetewilsinho.MeuAlerta;
 import br.senai.sc.lanchonetewilsinho.dao.DAOFactory;
 import br.senai.sc.lanchonetewilsinho.model.Cliente;
@@ -14,6 +15,7 @@ import br.senai.sc.lanchonetewilsinho.model.Item_Venda;
 import br.senai.sc.lanchonetewilsinho.model.Produto;
 import br.senai.sc.lanchonetewilsinho.model.Venda;
 import java.awt.Color;
+import java.io.IOException;
 import static java.lang.Integer.parseInt;
 import java.net.URL;
 import java.security.Provider.Service;
@@ -36,6 +38,7 @@ import javafx.event.ActionEvent;
 import javafx.event.EventHandler;
 import javafx.fxml.FXML;
 import javafx.fxml.Initializable;
+import javafx.scene.Cursor;
 import javafx.scene.control.Button;
 import javafx.scene.control.ComboBox;
 import javafx.scene.control.Label;
@@ -46,7 +49,10 @@ import javafx.scene.control.TableCell;
 import javafx.scene.control.TableColumn;
 import javafx.scene.control.TableView;
 import javafx.scene.control.TextField;
+import javafx.scene.input.KeyCode;
+import javafx.scene.input.KeyEvent;
 import javafx.scene.input.MouseEvent;
+import javafx.scene.layout.AnchorPane;
 import javafx.util.Callback;
 import javafx.util.StringConverter;
 import javafx.util.converter.NumberStringConverter;
@@ -101,9 +107,7 @@ public class VendaSceneWindowController implements Initializable {
     @FXML
     private TextField txtValorTotal;
     @FXML
-    private ProgressIndicator progressIndicator;
-    @FXML
-    private Label txtState;
+    private AnchorPane paneVenda;
 
     /**
      * Initializes the controller class.
@@ -113,9 +117,9 @@ public class VendaSceneWindowController implements Initializable {
     Item_Venda novoItem = null;
     Item_Venda itemSelecionado = null;
     Boolean estoqueInsuficiente;
-    
-    
-    
+
+    DoWork task;
+    Thread tredi;
 
     @Override
     public void initialize(URL url, ResourceBundle rb) {
@@ -138,7 +142,9 @@ public class VendaSceneWindowController implements Initializable {
 
     @FXML
     private void btnAdicionarItemOnAction(ActionEvent event) {
-        novoItem = new Item_Venda();
+        if(novoItem == null){
+           novoItem = new Item_Venda(); 
+        }
         bindFieldsItem_Venda(novoItem);
     }
 
@@ -164,10 +170,9 @@ public class VendaSceneWindowController implements Initializable {
         tableItems.getItems().add(novoItem);
         novaVenda.getItens().add(novoItem);
         novaVenda.calculaValorTotalCompra();
+        novoItem = null;
         clearFields("itemvenda");
     }
-    
-    
 
     @FXML
     private void btnFinalizarCompraOnAction(ActionEvent event) {
@@ -176,8 +181,13 @@ public class VendaSceneWindowController implements Initializable {
 
         unbindFieldsItem_Venda(novoItem);
         unbindFieldsItem_Venda(itemSelecionado);
-        
+
+        task = new DoWork();
+        tredi = new Thread(task);
+        tredi.start();
+
         try {
+
             if (novaVenda != null) {
                 novaVenda.setDataVenda(takeActualDate("date"));
                 novaVenda.setHoraVenda(takeActualDate("hour"));
@@ -186,15 +196,32 @@ public class VendaSceneWindowController implements Initializable {
             } else {
                 if (vendaSelecionada != null) {
                     DAOFactory.getVendaDAO().update(vendaSelecionada);
+                }else{
+                    task.cancel();
                 }
             }
-            btnCarregarOnAction(null);
-            btnCancelarAcaoOnAction(null);
-            fillComboBoxes("produto");
         } catch (SQLException ex) {
             Logger.getLogger(VendaSceneWindowController.class.getName()).log(Level.SEVERE, null, ex);
             MeuAlerta.alertaErro(ex.getMessage()).showAndWait();
         }
+
+        task.setOnRunning(ev -> {
+            paneVenda.setCursor(Cursor.WAIT);
+
+        });
+
+        task.setOnSucceeded(ev -> {
+            try {
+                btnCarregarOnAction(null);
+                btnCancelarAcaoOnAction(null);
+                fillComboBoxes("produto");
+            } catch (SQLException ex) {
+                Logger.getLogger(VendaSceneWindowController.class.getName()).log(Level.SEVERE, null, ex);
+                MeuAlerta.alertaErro(ex.getMessage()).showAndWait();
+            }
+            paneVenda.setCursor(Cursor.DEFAULT);
+        });
+
     }
 
     @FXML
@@ -203,23 +230,21 @@ public class VendaSceneWindowController implements Initializable {
             if (txtCarregar.getText().isEmpty()) {
                 tableVendas.setItems(FXCollections.observableArrayList(DAOFactory.getVendaDAO().getAll()));
             } else {
-                if(BrSenaiScLanchoneteWilsinho.stringContainsNumber(txtCarregar.getText())){
+                List<Venda> vendas = DAOFactory.getVendaDAO().procurarVenda(txtCarregar.getText());
+                if (!vendas.isEmpty()) {
+                    tableVendas.setItems(FXCollections.observableArrayList(vendas));
+                } else {
                     tableVendas.setItems(FXCollections.observableArrayList(DAOFactory.getVendaDAO().getVendaByData(txtCarregar.getText())));
-                }else{
-                    List<Venda> vendas = DAOFactory.getVendaDAO().getVendaByNomeCliente(txtCarregar.getText());
-                    if(!vendas.isEmpty()){
-                        tableVendas.setItems(FXCollections.observableArrayList(vendas));
-                    }else{
-                        tableVendas.setItems(FXCollections.observableArrayList(DAOFactory.getVendaDAO().getVendaByNomeFuncionario(txtCarregar.getText())));
-                    }
-                    
                 }
+
             }
 
         } catch (SQLException ex) {
             Logger.getLogger(VendaSceneWindowController.class.getName()).log(Level.SEVERE, null, ex);
             MeuAlerta.alertaErro(ex.getMessage()).showAndWait();
+
         }
+
     }
 
     @FXML
@@ -230,31 +255,48 @@ public class VendaSceneWindowController implements Initializable {
         unbindFieldsVenda(vendaSelecionada);
         vendaSelecionada = null;
         itemSelecionado = null;
-        novaVenda = new Venda();
-        novoItem = new Item_Venda();
+        if(novaVenda == null && novoItem == null){
+            novaVenda = new Venda();
+            novoItem = new Item_Venda();
+        }
         bindFieldsVenda(novaVenda);
         bindFieldsItem_Venda(novoItem);
     }
 
     @FXML
     private void btnRemoverOnAction(ActionEvent event) {
-        if (vendaSelecionada != null) {
-            try {
-                vendaSelecionada.getItens().forEach(item -> {
-                    try {
-                        DAOFactory.getItem_vendaDAO().delete(item);
-                    } catch (SQLException ex) {
-                        Logger.getLogger(VendaSceneWindowController.class.getName()).log(Level.SEVERE, null, ex);
-                        MeuAlerta.alertaErro(ex.getMessage()).showAndWait();
-                    }
-                });
-                DAOFactory.getVendaDAO().delete(vendaSelecionada);
-                tableVendas.getItems().remove(vendaSelecionada);
-            } catch (SQLException ex) {
-                Logger.getLogger(VendaSceneWindowController.class.getName()).log(Level.SEVERE, null, ex);
-                MeuAlerta.alertaErro(ex.getMessage()).showAndWait();
+
+        task = new DoWork();
+        tredi = new Thread(task);
+        tredi.start();
+
+        task.setOnRunning(ev -> {
+            paneVenda.setCursor(Cursor.WAIT);
+            if (vendaSelecionada != null) {
+
+                try {
+                    vendaSelecionada.getItens().forEach(item -> {
+                        try {
+                            DAOFactory.getItem_vendaDAO().delete(item);
+                        } catch (SQLException ex) {
+                            Logger.getLogger(VendaSceneWindowController.class.getName()).log(Level.SEVERE, null, ex);
+                            MeuAlerta.alertaErro(ex.getMessage()).showAndWait();
+                        }
+                    });
+                    DAOFactory.getVendaDAO().delete(vendaSelecionada);
+
+                } catch (SQLException ex) {
+                    Logger.getLogger(VendaSceneWindowController.class.getName()).log(Level.SEVERE, null, ex);
+                    MeuAlerta.alertaErro(ex.getMessage()).showAndWait();
+                }
             }
-        }
+        });
+
+        task.setOnSucceeded(ev -> {
+            tableVendas.getItems().remove(vendaSelecionada);
+            paneVenda.setCursor(Cursor.DEFAULT);
+        });
+
     }
 
     @FXML
@@ -288,7 +330,7 @@ public class VendaSceneWindowController implements Initializable {
 
     private Integer takeActualDate(String tipo) {
         Date date = new Date();
-        switch (tipo) {  
+        switch (tipo) {
             case "date":
                 SimpleDateFormat dataFormat = new SimpleDateFormat("yyyy/MM/dd");
                 List<String> anoMesDia = Arrays.asList(dataFormat.format(date).split("/"));
@@ -357,7 +399,7 @@ public class VendaSceneWindowController implements Initializable {
     }
 
     private void mascararTableView() {
-        
+
         tblColumnHora.setCellFactory((TableColumn<Venda, Integer> param) -> {
             TableCell cell = new TableCell<Venda, Integer>() {
                 @Override
@@ -377,9 +419,9 @@ public class VendaSceneWindowController implements Initializable {
                             hourString += ":";
                             for (String mm : aux.subList(2, 4)) {
                                 hourString += mm;
-                            }              
+                            }
                             setText(hourString);
-                        }  
+                        }
                     }
                 }
 
@@ -394,7 +436,7 @@ public class VendaSceneWindowController implements Initializable {
             };
             return cell;
         });
-        
+
         tblColumnFuncionario.setCellFactory((TableColumn<Funcionario, Integer> param) -> {
             TableCell cell = new TableCell<Funcionario, Integer>() {
                 @Override
@@ -884,6 +926,26 @@ public class VendaSceneWindowController implements Initializable {
             vendaSelecionada = newValue;
             tableItems.setItems(FXCollections.observableArrayList(vendaSelecionada.getItens()));
         });
+    }
+
+    @FXML
+    private void ENTER(KeyEvent event) {
+        if (event.getCode() == KeyCode.ENTER) {
+            task = new DoWork();
+            tredi = new Thread(task);
+            tredi.start();
+
+            task.setOnRunning(ev -> {
+                paneVenda.setCursor(Cursor.WAIT);
+            });
+
+            task.setOnSucceeded(ev -> {
+
+                btnCarregarOnAction(null);
+                paneVenda.setCursor(Cursor.DEFAULT);
+            });
+
+        }
     }
 
 }

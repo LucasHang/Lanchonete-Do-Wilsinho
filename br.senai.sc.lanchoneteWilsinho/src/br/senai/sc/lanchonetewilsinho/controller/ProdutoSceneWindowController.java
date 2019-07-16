@@ -6,6 +6,7 @@
 package br.senai.sc.lanchonetewilsinho.controller;
 
 import br.senai.sc.lanchonetewilsinho.BrSenaiScLanchoneteWilsinho;
+import br.senai.sc.lanchonetewilsinho.DoWork;
 import br.senai.sc.lanchonetewilsinho.MeuAlerta;
 import br.senai.sc.lanchonetewilsinho.dao.DAOFactory;
 import br.senai.sc.lanchonetewilsinho.model.Produto;
@@ -19,12 +20,15 @@ import javafx.collections.FXCollections;
 import javafx.event.ActionEvent;
 import javafx.fxml.FXML;
 import javafx.fxml.Initializable;
+import javafx.scene.Cursor;
 import javafx.scene.control.Button;
 import javafx.scene.control.Label;
 import javafx.scene.control.TableCell;
 import javafx.scene.control.TableColumn;
 import javafx.scene.control.TableView;
 import javafx.scene.control.TextField;
+import javafx.scene.input.KeyCode;
+import javafx.scene.input.KeyEvent;
 import javafx.scene.layout.AnchorPane;
 import javafx.scene.layout.Background;
 import javafx.util.Callback;
@@ -58,11 +62,6 @@ public class ProdutoSceneWindowController implements Initializable {
     private Button btnCancelarAcao;
     @FXML
     private AnchorPane anchorProduto;
-    /**
-     * Initializes the controller class.
-     */
-    Produto novoProduto = null;
-    Produto produtoSelecionado = null;
     @FXML
     private Button btnCarregar;
     @FXML
@@ -73,11 +72,18 @@ public class ProdutoSceneWindowController implements Initializable {
     private Label lblQtd;
     @FXML
     private Label lblPreco;
-    
+    /**
+     * Initializes the controller class.
+     */
+    Produto novoProduto = null;
+    Produto produtoSelecionado = null;
+
+    DoWork task;
+    Thread tredi;
 
     @Override
     public void initialize(URL url, ResourceBundle rb) {
-        if(permissaoFuncionario()){
+        if (permissaoFuncionario()) {
             return;
         }
         btnCarregarOnAction(null);
@@ -87,17 +93,32 @@ public class ProdutoSceneWindowController implements Initializable {
 
     @FXML
     private void btnCadastrarProdutoOnAction(ActionEvent event) throws IOException {
-        disableFields(false);  
+        disableFields(false);
         unbindFields(produtoSelecionado);
         produtoSelecionado = null;
-        novoProduto = new Produto();
+        if(novoProduto == null){
+            novoProduto = new Produto();
+        }
         bindFields(novoProduto);
     }
 
     @FXML
     private void btnCadastrarOnAction(ActionEvent event) {
+        
+        if(validationForm()){
+            return;
+        }
+        
+        txtFieldDescricao.getStyleClass().remove("invalido");
+        txtFieldPrecoUnitario.getStyleClass().remove("invalido");
+        txtFieldQuantidade.getStyleClass().remove("invalido");
+        
         unbindFields(novoProduto);
         unbindFields(produtoSelecionado);
+
+        task = new DoWork();
+        tredi = new Thread(task);
+        tredi.start();
 
         try {
             if (novoProduto != null) {
@@ -105,16 +126,27 @@ public class ProdutoSceneWindowController implements Initializable {
             } else {
                 if (produtoSelecionado != null) {
                     DAOFactory.getProdutoDAO().update(produtoSelecionado);
+                }else{
+                    task.cancel();
                 }
             }
-            btnCarregarOnAction(null);
-            btnCancelarAcaoOnAction(null);
-            novoProduto = null;
-            produtoSelecionado = null;
+
         } catch (SQLException ex) {
             Logger.getLogger(ProdutoSceneWindowController.class.getName()).log(Level.SEVERE, null, ex);
             MeuAlerta.alertaErro(ex.getMessage()).showAndWait();
         }
+
+        task.setOnRunning(ev -> {
+            anchorProduto.setCursor(Cursor.WAIT);
+
+        });
+
+        task.setOnSucceeded(ev -> {
+            btnCarregarOnAction(null);
+            btnCancelarAcaoOnAction(null);
+
+            anchorProduto.setCursor(Cursor.DEFAULT);
+        });
 
     }
 
@@ -126,7 +158,7 @@ public class ProdutoSceneWindowController implements Initializable {
                 tableProdutos.setItems(FXCollections.observableArrayList(DAOFactory.getProdutoDAO().getAll()));
             } else {
                 tableProdutos.setItems(FXCollections.observableArrayList(DAOFactory.getProdutoDAO().getProdutoByDescricao(txtCarregar.getText())));
-                
+
             }
 
         } catch (SQLException ex) {
@@ -134,7 +166,7 @@ public class ProdutoSceneWindowController implements Initializable {
             MeuAlerta.alertaErro(ex.getMessage());
         }
     }
-    
+
     @FXML
     private void btnCancelarAcaoOnAction(ActionEvent event) {
         unbindFields(novoProduto);
@@ -143,6 +175,9 @@ public class ProdutoSceneWindowController implements Initializable {
         disableFields(true);
         novoProduto = null;
         produtoSelecionado = null;
+        txtFieldDescricao.getStyleClass().remove("invalido");
+        txtFieldPrecoUnitario.getStyleClass().remove("invalido");
+        txtFieldQuantidade.getStyleClass().remove("invalido");
     }
 
     private void mascaraTabela() {
@@ -171,11 +206,9 @@ public class ProdutoSceneWindowController implements Initializable {
         });
 
     }
-    
-    
-    
-    private Boolean permissaoFuncionario(){
-        if(!mainSceneWindowController.gerente){
+
+    private Boolean permissaoFuncionario() {
+        if (!mainSceneWindowController.gerente) {
             anchorProduto.setDisable(true);
             btnCadastrar.setDisable(true);
             btnCadastrarProduto.setDisable(true);
@@ -183,7 +216,7 @@ public class ProdutoSceneWindowController implements Initializable {
             btnCarregar.setDisable(true);
             tableProdutos.setDisable(true);
             txtCarregar.setDisable(true);
-            
+
             btnCadastrar.setOpacity(0.20);
             btnCadastrarProduto.setOpacity(0.20);
             btnCancelarAcao.setOpacity(0.20);
@@ -193,14 +226,12 @@ public class ProdutoSceneWindowController implements Initializable {
             lblDesc.setOpacity(0.20);
             lblPreco.setOpacity(0.20);
             lblQtd.setOpacity(0.20);
-            
+
             labelBloqueado.setVisible(true);
             return true;
         }
         return false;
     }
-    
-    
 
     private void disableFields(Boolean value) {
         txtFieldDescricao.setDisable(value);
@@ -271,17 +302,25 @@ public class ProdutoSceneWindowController implements Initializable {
 
     }
 
-    private void btnRemoverProdOnAction(ActionEvent event) {
-        if(produtoSelecionado != null){
-            try {
-                DAOFactory.getProdutoDAO().delete(produtoSelecionado);
-            } catch (SQLException ex) {
-                Logger.getLogger(ProdutoSceneWindowController.class.getName()).log(Level.SEVERE, null, ex);
-                MeuAlerta.alertaErro(ex.getMessage()).showAndWait();
-            }
+
+    @FXML
+    private void ENTER(KeyEvent event) {
+        if (event.getCode() == KeyCode.ENTER) {
+            task = new DoWork();
+            tredi = new Thread(task);
+            tredi.start();
+
+            task.setOnRunning(ev -> {
+                anchorProduto.setCursor(Cursor.WAIT);
+            });
+
+            task.setOnSucceeded(ev -> {
+
+                btnCarregarOnAction(null);
+                anchorProduto.setCursor(Cursor.DEFAULT);
+            });
+
         }
     }
-
-    
 
 }

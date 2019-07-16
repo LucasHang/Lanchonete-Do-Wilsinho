@@ -5,9 +5,9 @@
  */
 package br.senai.sc.lanchonetewilsinho.controller;
 
-
 import br.senai.sc.lanchonetewilsinho.MeuAlerta;
 import br.senai.sc.lanchonetewilsinho.BrSenaiScLanchoneteWilsinho;
+import br.senai.sc.lanchonetewilsinho.DoWork;
 import br.senai.sc.lanchonetewilsinho.MeuAlerta;
 import br.senai.sc.lanchonetewilsinho.dao.DAOFactory;
 import br.senai.sc.lanchonetewilsinho.model.Cliente;
@@ -22,15 +22,17 @@ import javafx.collections.ObservableList;
 import javafx.event.ActionEvent;
 import javafx.fxml.FXML;
 import javafx.fxml.Initializable;
+import javafx.scene.Cursor;
 import javafx.scene.control.Button;
 import javafx.scene.control.CheckBox;
 import javafx.scene.control.TableCell;
 import javafx.scene.control.TableColumn;
 import javafx.scene.control.TableView;
 import javafx.scene.control.TextField;
+import javafx.scene.input.KeyCode;
+import javafx.scene.input.KeyEvent;
+import javafx.scene.layout.AnchorPane;
 import javafx.util.converter.NumberStringConverter;
-
-        
 
 /**
  * FXML Controller class
@@ -38,6 +40,7 @@ import javafx.util.converter.NumberStringConverter;
  * @author Bratva
  */
 public class ClienteSceneWindowController implements Initializable {
+
     @FXML
     private Button btnCadastrarCliente;
     @FXML
@@ -45,7 +48,7 @@ public class ClienteSceneWindowController implements Initializable {
     @FXML
     private TextField txtCarregar;
     @FXML
-    private TableColumn<Cliente,Boolean> tblColumnColaborador;
+    private TableColumn<Cliente, Boolean> tblColumnColaborador;
     @FXML
     private Button btnCadastrar;
     @FXML
@@ -58,81 +61,107 @@ public class ClienteSceneWindowController implements Initializable {
     private CheckBox checkBoxColaborador;
     @FXML
     private Button btnCancelarAcao;
+    @FXML
+    private AnchorPane paneCliente;
 
     /**
      * Initializes the controller class.
      */
-    
     Cliente novoCliente = null;
     Cliente clienteSelecionado = null;
+
+    DoWork task;
+    Thread tredi;
     
-    
+
     @Override
     public void initialize(URL url, ResourceBundle rb) {
-        
+
         btnCarregarOnAction(null);
         mascaraTabela();
 
         addListenner();
-        
-    }    
+
+    }
 
     @FXML
     private void btnCadastrarClienteOnAction(ActionEvent event) throws IOException {
         disableFields(false);
         unbindFields(clienteSelecionado);
         clienteSelecionado = null;
-        novoCliente = new Cliente();
-        bindFields(novoCliente);
+        if(novoCliente == null){
+            novoCliente = new Cliente();
+        }
         
+        bindFields(novoCliente);
+
     }
 
     @FXML
     private void btnCarregarOnAction(ActionEvent event) {
         try {
-            if(txtCarregar.getText().isEmpty()){
+            if (txtCarregar.getText().isEmpty()) {
                 tableClientes.setItems(FXCollections.observableArrayList(DAOFactory.getClienteDAO().getAll()));
-            }else{
-                if(BrSenaiScLanchoneteWilsinho.stringContainsNumber(txtCarregar.getText())){
-                    tableClientes.setItems(FXCollections.observableArrayList(DAOFactory.getClienteDAO().getClienteByCpf(txtCarregar.getText())));
-                }else{
-                    tableClientes.setItems(FXCollections.observableArrayList(DAOFactory.getClienteDAO().getClienteByNome(txtCarregar.getText())));
-                }                
+            } else {
+                tableClientes.setItems(FXCollections.observableArrayList(DAOFactory.getClienteDAO().procurarCliente(txtCarregar.getText())));
             }
-            
+
         } catch (SQLException ex) {
             Logger.getLogger(ClienteSceneWindowController.class.getName()).log(Level.SEVERE, null, ex);
             MeuAlerta.alertaErro(ex.getMessage());
         }
     }
-    
+
     @FXML
     private void btnCadastrarOnAction(ActionEvent event) {
+        
+        if(validationForm()){
+            return;
+        }
+        
+        txtFieldCpf.getStyleClass().remove("invalido");
+        txtFieldTelefoneContato.getStyleClass().remove("invalido");
+        txtFieldNome.getStyleClass().remove("invalido");
+
+        
         unbindFields(novoCliente);
         unbindFields(clienteSelecionado);
-        
+
+        task = new DoWork();
+        tredi = new Thread(task);
+        tredi.start();
+
         try {
-            if(novoCliente != null){
+            if (novoCliente != null) {
                 DAOFactory.getClienteDAO().save(novoCliente);
-            }else{
-                if(clienteSelecionado != null){
+            } else {
+                if (clienteSelecionado != null) {
                     DAOFactory.getClienteDAO().update(clienteSelecionado);
+                } else {
+                    task.cancel();
                 }
             }
-            btnCarregarOnAction(null);
-            btnCancelarAcaoOnAction(null);
-            novoCliente = null;
-            clienteSelecionado = null;
+
         } catch (SQLException ex) {
             Logger.getLogger(ClienteSceneWindowController.class.getName()).log(Level.SEVERE, null, ex);
             MeuAlerta.alertaErro(ex.getMessage()).showAndWait();
         }
-        
-    
+
+        task.setOnRunning(ev -> {
+            paneCliente.setCursor(Cursor.WAIT);
+
+        });
+
+        task.setOnSucceeded(ev -> {
+            btnCarregarOnAction(null);
+            btnCancelarAcaoOnAction(null);
+
+            paneCliente.setCursor(Cursor.DEFAULT);
+        });
+
     }
-    
-    
-    private void mascaraTabela(){
+
+    private void mascaraTabela() {
         tblColumnColaborador.setCellFactory((TableColumn<Cliente, Boolean> param) -> {
             TableCell cell = new TableCell<Cliente, Boolean>() {
 
@@ -145,12 +174,12 @@ public class ClienteSceneWindowController implements Initializable {
                         if (item == null) {
                             setText("");
                         } else {
-                            if(item){
-                              setText("Colaborador");  
-                            }else{
+                            if (item) {
+                                setText("Colaborador");
+                            } else {
                                 setText("Aluno");
                             }
-                            
+
                         }
 
                     }
@@ -169,77 +198,75 @@ public class ClienteSceneWindowController implements Initializable {
         });
     }
 
-    
-    
-    private void disableFields(Boolean value){
+    private void disableFields(Boolean value) {
         txtFieldCpf.setDisable(value);
         txtFieldNome.setDisable(value);
         txtFieldTelefoneContato.setDisable(value);
         checkBoxColaborador.setDisable(value);
     }
-    
-    private void bindFields(Cliente cliente){
-        if(cliente != null){
+
+    private void bindFields(Cliente cliente) {
+        if (cliente != null) {
             txtFieldNome.textProperty().bindBidirectional(cliente.nomeProperty());
             txtFieldTelefoneContato.textProperty().bindBidirectional(cliente.telefoneContatoProperty());
             txtFieldCpf.textProperty().bindBidirectional(cliente.CpfProperty());
             checkBoxColaborador.selectedProperty().bindBidirectional(cliente.colaboradorProperty());
         }
-        
+
     }
-    
-    private void unbindFields(Cliente cliente){
-        if(cliente != null){
+
+    private void unbindFields(Cliente cliente) {
+        if (cliente != null) {
             txtFieldNome.textProperty().unbindBidirectional(cliente.nomeProperty());
             txtFieldTelefoneContato.textProperty().unbindBidirectional(cliente.telefoneContatoProperty());
             txtFieldCpf.textProperty().unbindBidirectional(cliente.CpfProperty());
             checkBoxColaborador.selectedProperty().unbindBidirectional(cliente.colaboradorProperty());
         }
     }
-    
-    public Boolean validationForm(){
+
+    public Boolean validationForm() {
         Boolean invalido = false;
 
-        if(txtFieldCpf.textProperty().isNull().get()){
+        if (txtFieldCpf.textProperty().isNull().get()) {
             txtFieldCpf.getStyleClass().add("invalido");
-            invalido = true;     
-        }else{
+            invalido = true;
+        } else {
             txtFieldCpf.getStyleClass().remove("invalido");
         }
-        
-        if(txtFieldNome.textProperty().isNull().get()){
+
+        if (txtFieldNome.textProperty().isNull().get()) {
             txtFieldNome.getStyleClass().add("invalido");
             invalido = true;
-        }else{
+        } else {
             txtFieldNome.getStyleClass().remove("invalido");
         }
-        
-        if(txtFieldTelefoneContato.textProperty().isNull().get()){
+
+        if (txtFieldTelefoneContato.textProperty().isNull().get()) {
             txtFieldTelefoneContato.getStyleClass().add("invalido");
             invalido = true;
-        }else{
+        } else {
             txtFieldTelefoneContato.getStyleClass().remove("invalido");
         }
-        
+
         return invalido;
     }
-    
-    private void clearFields(){
+
+    private void clearFields() {
         txtFieldCpf.clear();
         txtFieldNome.clear();
         txtFieldTelefoneContato.clear();
         checkBoxColaborador.setSelected(false);
     }
-    
-    private void addListenner(){
-        tableClientes.getSelectionModel().selectedItemProperty().addListener((observable,oldValue,newValue)->{
+
+    private void addListenner() {
+        tableClientes.getSelectionModel().selectedItemProperty().addListener((observable, oldValue, newValue) -> {
             disableFields(false);
             novoCliente = null;
             unbindFields(oldValue);
             bindFields(newValue);
             clienteSelecionado = newValue;
         });
-        
+
     }
 
     @FXML
@@ -250,5 +277,28 @@ public class ClienteSceneWindowController implements Initializable {
         disableFields(true);
         novoCliente = null;
         clienteSelecionado = null;
+        txtFieldCpf.getStyleClass().remove("invalido");
+        txtFieldTelefoneContato.getStyleClass().remove("invalido");
+        txtFieldNome.getStyleClass().remove("invalido");
+    }
+
+    @FXML
+    private void ENTER(KeyEvent event) {
+        if (event.getCode() == KeyCode.ENTER) {
+            task = new DoWork();
+            tredi = new Thread(task);
+            tredi.start();
+
+            task.setOnRunning(ev -> {
+                paneCliente.setCursor(Cursor.WAIT);
+            });
+
+            task.setOnSucceeded(ev -> {
+
+                btnCarregarOnAction(null);
+                paneCliente.setCursor(Cursor.DEFAULT);
+            });
+
+        }
     }
 }

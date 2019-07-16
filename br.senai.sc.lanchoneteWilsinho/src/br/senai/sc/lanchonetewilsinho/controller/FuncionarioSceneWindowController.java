@@ -6,6 +6,7 @@
 package br.senai.sc.lanchonetewilsinho.controller;
 
 import br.senai.sc.lanchonetewilsinho.BrSenaiScLanchoneteWilsinho;
+import br.senai.sc.lanchonetewilsinho.DoWork;
 import br.senai.sc.lanchonetewilsinho.MeuAlerta;
 import br.senai.sc.lanchonetewilsinho.dao.DAOFactory;
 import br.senai.sc.lanchonetewilsinho.model.Funcionario;
@@ -19,6 +20,7 @@ import javafx.collections.FXCollections;
 import javafx.event.ActionEvent;
 import javafx.fxml.FXML;
 import javafx.fxml.Initializable;
+import javafx.scene.Cursor;
 import javafx.scene.control.Button;
 import javafx.scene.control.CheckBox;
 import javafx.scene.control.Label;
@@ -27,6 +29,8 @@ import javafx.scene.control.TableCell;
 import javafx.scene.control.TableColumn;
 import javafx.scene.control.TableView;
 import javafx.scene.control.TextField;
+import javafx.scene.input.KeyCode;
+import javafx.scene.input.KeyEvent;
 import javafx.scene.layout.AnchorPane;
 import javafx.util.converter.NumberStringConverter;
 
@@ -85,11 +89,13 @@ public class FuncionarioSceneWindowController implements Initializable {
      */
     Funcionario novoFuncionario = null;
     Funcionario funcionarioSelecionado = null;
-    
+
+    DoWork task;
+    Thread tredi;
 
     @Override
     public void initialize(URL url, ResourceBundle rb) {
-        if(permissaoFuncionario()){
+        if (permissaoFuncionario()) {
             return;
         }
         btnCarregarOnAction(null);
@@ -103,7 +109,9 @@ public class FuncionarioSceneWindowController implements Initializable {
         disableFields(false);
         unbindFields(funcionarioSelecionado);
         funcionarioSelecionado = null;
-        novoFuncionario = new Funcionario();
+        if(novoFuncionario == null){
+            novoFuncionario = new Funcionario();
+        }
         bindFields(novoFuncionario);
 
     }
@@ -114,12 +122,7 @@ public class FuncionarioSceneWindowController implements Initializable {
             if (txtCarregar.getText().isEmpty()) {
                 tableFuncionarios.setItems(FXCollections.observableArrayList(DAOFactory.getFuncionarioDAO().getAll()));
             } else {
-                Funcionario funcionario = DAOFactory.getFuncionarioDAO().getFuncionarioByLogin(txtCarregar.getText());
-                if (funcionario != null) {
-                    tableFuncionarios.setItems(FXCollections.observableArrayList(funcionario));
-                } else {
-                    tableFuncionarios.setItems(FXCollections.observableArrayList(DAOFactory.getFuncionarioDAO().getFuncionarioByNome(txtCarregar.getText())));
-                }
+                tableFuncionarios.setItems(FXCollections.observableArrayList(DAOFactory.getFuncionarioDAO().procurarFuncionario(txtCarregar.getText())));
 
             }
 
@@ -132,23 +135,51 @@ public class FuncionarioSceneWindowController implements Initializable {
     @FXML
     private void btnCadastrarOnAction(ActionEvent event) {
 
+        if(validationForm()){
+            return;
+        }
+        
+        txtFieldCpf.getStyleClass().remove("invalido");
+        txtFieldNome.getStyleClass().remove("invalido");
+        txtFieldTelefoneContato.getStyleClass().remove("invalido");
+        txtFieldUsuario.getStyleClass().remove("invalido");
+        passFieldSenha.getStyleClass().remove("invalido");
+        
+        
         unbindFields(novoFuncionario);
         unbindFields(funcionarioSelecionado);
 
+        task = new DoWork();
+        tredi = new Thread(task);
+        tredi.start();
+        
         try {
-            if (novoFuncionario != null) {
-                DAOFactory.getFuncionarioDAO().save(novoFuncionario);
-            } else {
-                if (funcionarioSelecionado != null) {
-                    DAOFactory.getFuncionarioDAO().update(funcionarioSelecionado);
+                if (novoFuncionario != null) {
+                    DAOFactory.getFuncionarioDAO().save(novoFuncionario);
+                } else {
+                    if (funcionarioSelecionado != null) {
+                        DAOFactory.getFuncionarioDAO().update(funcionarioSelecionado);
+                    }else{
+                        task.cancel();
+                    }
                 }
+
+            } catch (SQLException ex) {
+                Logger.getLogger(FuncionarioSceneWindowController.class.getName()).log(Level.SEVERE, null, ex);
+                MeuAlerta.alertaErro(ex.getMessage()).showAndWait();
             }
+
+        task.setOnRunning(ev -> {
+            anchorFuncionario.setCursor(Cursor.WAIT);
+            
+        });
+
+        task.setOnSucceeded(ev -> {
+
             btnCarregarOnAction(null);
             btnCancelarAcaoOnAction(null);
-        } catch (SQLException ex) {
-            Logger.getLogger(FuncionarioSceneWindowController.class.getName()).log(Level.SEVERE, null, ex);
-            MeuAlerta.alertaErro(ex.getMessage()).showAndWait();
-        }
+            anchorFuncionario.setCursor(Cursor.DEFAULT);
+        });
 
     }
 
@@ -188,9 +219,9 @@ public class FuncionarioSceneWindowController implements Initializable {
             return cell;
         });
     }
-    
-    private Boolean permissaoFuncionario(){
-        if(!mainSceneWindowController.gerente){
+
+    private Boolean permissaoFuncionario() {
+        if (!mainSceneWindowController.gerente) {
             anchorFuncionario.setDisable(true);
             btnCadastrar.setDisable(true);
             btnCadastrarFuncionario.setDisable(true);
@@ -198,7 +229,7 @@ public class FuncionarioSceneWindowController implements Initializable {
             btnCarregar.setDisable(true);
             tableFuncionarios.setDisable(true);
             txtCarregar.setDisable(true);
-            
+
             btnCadastrar.setOpacity(0.20);
             btnCadastrarFuncionario.setOpacity(0.20);
             btnCancelarAcao.setOpacity(0.20);
@@ -211,7 +242,7 @@ public class FuncionarioSceneWindowController implements Initializable {
             lblSenha.setOpacity(0.20);
             lblTel.setOpacity(0.20);
             lblUser.setOpacity(0.20);
-            
+
             labelBloqueado.setVisible(true);
             return true;
         }
@@ -318,6 +349,31 @@ public class FuncionarioSceneWindowController implements Initializable {
         disableFields(true);
         novoFuncionario = null;
         funcionarioSelecionado = null;
+        txtFieldCpf.getStyleClass().remove("invalido");
+        txtFieldNome.getStyleClass().remove("invalido");
+        txtFieldTelefoneContato.getStyleClass().remove("invalido");
+        txtFieldUsuario.getStyleClass().remove("invalido");
+        passFieldSenha.getStyleClass().remove("invalido");
+    }
+
+    @FXML
+    private void ENTER(KeyEvent event) {
+        if (event.getCode() == KeyCode.ENTER) {
+            task = new DoWork();
+            tredi = new Thread(task);
+            tredi.start();
+
+            task.setOnRunning(ev -> {
+                anchorFuncionario.setCursor(Cursor.WAIT);
+            });
+
+            task.setOnSucceeded(ev -> {
+
+                btnCarregarOnAction(null);
+                anchorFuncionario.setCursor(Cursor.DEFAULT);
+            });
+
+        }
     }
 
 }

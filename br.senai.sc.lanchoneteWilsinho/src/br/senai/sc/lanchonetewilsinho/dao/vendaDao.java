@@ -30,4 +30,6 @@ public interface vendaDao {
     
     public List<Venda> getVendaByNomeFuncionario(String nome)throws SQLException;
     
+    public List<Venda> procurarVenda(String texto)throws SQLException;
+    
 }

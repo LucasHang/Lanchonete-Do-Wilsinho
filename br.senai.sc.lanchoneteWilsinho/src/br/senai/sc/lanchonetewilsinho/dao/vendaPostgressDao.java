@@ -178,5 +178,30 @@ public class vendaPostgressDao extends connectionFactory implements vendaDao{
             
             return rows;
     }
+
+    @Override
+    public List<Venda> procurarVenda(String texto) throws SQLException {
+        List<Venda> rows = new ArrayList<>();
+        super.preparedStatementInitialize("select a.* from venda a ,funcionario b,cliente c where a.codigoFunc = b.codigo and a.codigoCli = c.codigo and (upper(b.nome) like ? or upper(c.nome) like ?)");
+        super.prepared.setString(1,"%"+ texto.toUpperCase()+"%");
+        super.prepared.setString(2,"%"+ texto.toUpperCase()+"%");
+        super.prepared.execute();
+        ResultSet resultSetRows = super.prepared.getResultSet();
+
+        while (resultSetRows.next()) {
+            rows.add(new Venda(resultSetRows.getInt("codigo"),
+                    resultSetRows.getInt("codigoCli"),
+                    resultSetRows.getInt("codigoFunc"),
+                    resultSetRows.getDouble("valorCompra"),
+                    DAOFactory.getItem_vendaDAO().getItemVendaByCodigoVenda(resultSetRows.getInt("codigo")),
+                    resultSetRows.getInt("dataVenda"),
+                    resultSetRows.getInt("horaVenda")));
+            }
+       
+            resultSetRows.close();
+            super.closeAll();
+            
+            return rows;
+    }
         
 }

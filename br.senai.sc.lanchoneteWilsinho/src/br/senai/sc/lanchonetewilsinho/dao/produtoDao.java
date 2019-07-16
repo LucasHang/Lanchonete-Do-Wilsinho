@@ -28,4 +28,5 @@ public interface produtoDao {
     public Produto getProdutoByCodigo(Integer codigo)throws SQLException;
     
     public List<Produto> getProdutoByDescricao(String descricao)throws SQLException;
+    
 }

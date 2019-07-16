@@ -62,7 +62,11 @@
 }
 
 .tableview{
-	-fx-background-color:   #FFFFF0;
+	-fx-font-size: 14px;
+	-fx-font-weight: 600;
+	-fx-background-radius: 5px;
+	-fx-border-radius: 5px;
+	-fx-background-color:   #A0522D;
 	-fx-border-color:  #EEE8AA;
 	-fx-border-width: 2px;
 }

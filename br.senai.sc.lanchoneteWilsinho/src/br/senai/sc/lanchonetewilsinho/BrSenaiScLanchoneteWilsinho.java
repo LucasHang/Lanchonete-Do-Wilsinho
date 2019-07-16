@@ -87,10 +87,8 @@ public class BrSenaiScLanchoneteWilsinho extends Application {
             Logger.getLogger(BrSenaiScLanchoneteWilsinho.class.getName()).log(Level.SEVERE, null, ex);
             MeuAlerta.alertaErro(ex.getMessage()).showAndWait();
         }
-        System.out.println(dataaux);
         SimpleDateFormat dataFormat = new SimpleDateFormat("yyyy/MM/dd");
         List<String> anoMesDia = Arrays.asList(dataFormat.format(dataaux).split("/"));
-        System.out.println(anoMesDia);
         String dataNumeric = new String();
         for (String value : anoMesDia) {
             dataNumeric = dataNumeric + value;

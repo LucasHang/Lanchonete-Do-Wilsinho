@@ -13,9 +13,9 @@
 <?import javafx.scene.layout.AnchorPane?>
 <?import javafx.scene.text.Font?>
 
-<AnchorPane id="AnchorPane" prefHeight="520.0" prefWidth="1253.0" styleClass="pane" stylesheets="@stylesClass.css" xmlns="http://javafx.com/javafx/8.0.171" xmlns:fx="http://javafx.com/fxml/1" fx:controller="br.senai.sc.lanchonetewilsinho.controller.ClienteSceneWindowController">
+<AnchorPane id="AnchorPane" fx:id="paneCliente" prefHeight="520.0" prefWidth="1253.0" styleClass="pane" stylesheets="@stylesClass.css" xmlns="http://javafx.com/javafx/8.0.171" xmlns:fx="http://javafx.com/fxml/1" fx:controller="br.senai.sc.lanchonetewilsinho.controller.ClienteSceneWindowController">
    <children>
-      <TableView fx:id="tableClientes" layoutX="43.0" layoutY="71.0" prefHeight="362.0" prefWidth="662.0" styleClass="comboBox" stylesheets="@stylesClass.css">
+      <TableView fx:id="tableClientes" layoutX="43.0" layoutY="71.0" prefHeight="362.0" prefWidth="662.0" styleClass="tableview" stylesheets="@stylesClass.css">
          <columns>
             <TableColumn prefWidth="133.0" text="Cpf">
                <cellValueFactory>
@@ -39,7 +39,7 @@
             </TableColumn>
          </columns>
       </TableView>
-      <TextField fx:id="txtCarregar" layoutX="170.0" layoutY="28.0" prefHeight="29.0" prefWidth="241.0" promptText="Pesquisar na tabela" styleClass="textfield" stylesheets="@stylesClass.css" />
+      <TextField fx:id="txtCarregar" layoutX="170.0" layoutY="28.0" onKeyReleased="#ENTER" prefHeight="29.0" prefWidth="241.0" promptText="Pesquisar na tabela" styleClass="textfield" stylesheets="@stylesClass.css" />
       <Button layoutX="63.0" layoutY="20.0" mnemonicParsing="false" onAction="#btnCarregarOnAction" prefHeight="41.0" prefWidth="98.0" stylesheets="@stylesClass.css" text="Carregar" textFill="WHITE">
          <font>
             <Font name="System Bold" size="15.0" />

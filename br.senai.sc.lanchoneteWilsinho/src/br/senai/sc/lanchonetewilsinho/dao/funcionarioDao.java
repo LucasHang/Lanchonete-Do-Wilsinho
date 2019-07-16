@@ -28,4 +28,6 @@ public interface funcionarioDao {
     public Funcionario getFuncionarioByLogin (String login)throws SQLException;
     
     public List<Funcionario> getFuncionarioByNome(String nome)throws SQLException;
+    
+    public List<Funcionario> procurarFuncionario(String texto)throws SQLException;
 }

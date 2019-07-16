@@ -18,7 +18,7 @@
 
 <AnchorPane id="AnchorPane" fx:id="anchorFuncionario" prefHeight="520.0" prefWidth="1253.0" styleClass="pane" stylesheets="@stylesClass.css" xmlns="http://javafx.com/javafx/8.0.171" xmlns:fx="http://javafx.com/fxml/1" fx:controller="br.senai.sc.lanchonetewilsinho.controller.FuncionarioSceneWindowController">
    <children>
-      <TableView fx:id="tableFuncionarios" layoutX="43.0" layoutY="71.0" prefHeight="362.0" prefWidth="662.0" styleClass="comboBox" stylesheets="@stylesClass.css">
+      <TableView fx:id="tableFuncionarios" layoutX="43.0" layoutY="71.0" prefHeight="362.0" prefWidth="662.0" styleClass="tableview" stylesheets="@stylesClass.css">
          <columns>
             <TableColumn prefWidth="228.0" text="Nome">
                <cellValueFactory>
@@ -42,7 +42,7 @@
             </TableColumn>
          </columns>
       </TableView>
-      <TextField fx:id="txtCarregar" layoutX="170.0" layoutY="28.0" prefHeight="29.0" prefWidth="241.0" promptText="Pesquisar na tabela" styleClass="textfield" stylesheets="@stylesClass.css" />
+      <TextField fx:id="txtCarregar" layoutX="170.0" layoutY="28.0" onKeyReleased="#ENTER" prefHeight="29.0" prefWidth="241.0" promptText="Pesquisar na tabela" styleClass="textfield" stylesheets="@stylesClass.css" />
       <Button fx:id="btnCarregar" layoutX="63.0" layoutY="20.0" mnemonicParsing="false" onAction="#btnCarregarOnAction" prefHeight="41.0" prefWidth="98.0" stylesheets="@stylesClass.css" text="Carregar" textFill="WHITE">
          <font>
             <Font name="System Bold" size="15.0" />
@@ -55,6 +55,9 @@
          <font>
             <Font name="System Bold" size="17.0" />
          </font>
+         <cursor>
+            <Cursor fx:constant="HAND" />
+         </cursor>
       </Button>
       <ImageView fitHeight="230.0" fitWidth="510.0" layoutX="720.0" layoutY="93.0" opacity="0.13" pickOnBounds="true" preserveRatio="true">
          <image>
@@ -65,6 +68,9 @@
          <font>
             <Font name="System Bold" size="17.0" />
          </font>
+         <cursor>
+            <Cursor fx:constant="HAND" />
+         </cursor>
       </Button>
       <TextField fx:id="txtFieldNome" disable="true" layoutX="975.0" layoutY="57.0" prefHeight="25.0" prefWidth="169.0" styleClass="textfield" />
       <TextField fx:id="txtFieldCpf" disable="true" layoutX="974.0" layoutY="103.0" prefHeight="25.0" prefWidth="169.0" styleClass="textfield" />
@@ -99,6 +105,9 @@
          <font>
             <Font name="System Bold" size="15.0" />
          </font>
+         <cursor>
+            <Cursor fx:constant="HAND" />
+         </cursor>
       </Button>
       <Label fx:id="labelBloqueado" layoutX="416.0" layoutY="245.0" style="-fx-font-size: 20px;" text="Apenas gerentes podem alterar Funcionários" visible="false">
          <effect>

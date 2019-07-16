@@ -159,5 +159,28 @@ public class funcionarioPostgressDao extends connectionFactory implements funcio
 
         return rows;
     }
+
+    @Override
+    public List<Funcionario> procurarFuncionario(String texto) throws SQLException {
+        List<Funcionario> rows = new ArrayList<>();
+        super.preparedStatementInitialize("select * from funcionario where upper(nome) like ? or upper(login) like ?");
+        super.prepared.setString(1, "%"+texto.toUpperCase()+"%");
+        super.prepared.setString(2, "%"+texto.toUpperCase()+"%");
+        super.prepared.execute();
+        ResultSet resultSetRows = super.prepared.getResultSet();
+        while (resultSetRows.next()) {
+            rows.add(new Funcionario(resultSetRows.getInt("codigo"),
+                    resultSetRows.getString("nome"),
+                    resultSetRows.getString("cpf"),
+                    resultSetRows.getString("telefoneContato"),
+                    resultSetRows.getString("login"),
+                    resultSetRows.getString("senha"),
+                    resultSetRows.getBoolean("gerente")));
+        }
+        resultSetRows.close();
+        super.closeAll();
+
+        return rows;
+    }
     
 }

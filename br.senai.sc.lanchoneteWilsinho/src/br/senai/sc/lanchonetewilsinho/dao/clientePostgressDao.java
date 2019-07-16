@@ -155,6 +155,27 @@ public class clientePostgressDao extends connectionFactory implements clienteDao
 
         return novoCliente;
     }
+
+    @Override
+    public List<Cliente> procurarCliente(String texto) throws SQLException {
+        List<Cliente> rows = new ArrayList<>();
+        super.preparedStatementInitialize("select * from cliente where upper(nome) like ? or cpf like ?");
+        super.prepared.setString(1, "%"+texto.toUpperCase()+"%");
+        super.prepared.setString(2, texto);
+        super.prepared.execute();
+        ResultSet resultSetRows = super.prepared.getResultSet();
+        while (resultSetRows.next()) {
+            rows.add(new Cliente(resultSetRows.getInt("codigo"),
+                    resultSetRows.getString("nome"),
+                    resultSetRows.getString("cpf"),
+                    resultSetRows.getString("telefoneContato"),
+                    resultSetRows.getBoolean("colaborador")));
+        }
+        resultSetRows.close();
+        super.closeAll();
+
+        return rows;
+    }
     
     
 }
