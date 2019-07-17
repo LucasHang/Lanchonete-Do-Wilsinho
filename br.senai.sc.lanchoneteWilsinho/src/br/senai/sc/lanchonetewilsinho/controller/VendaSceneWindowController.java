@@ -39,6 +39,7 @@ import javafx.scene.control.TableView;
 import javafx.scene.control.TextField;
 import javafx.scene.input.KeyCode;
 import javafx.scene.input.KeyEvent;
+import javafx.scene.input.MouseEvent;
 import javafx.scene.layout.AnchorPane;
 import javafx.util.Callback;
 import javafx.util.StringConverter;
@@ -94,6 +95,8 @@ public class VendaSceneWindowController implements Initializable {
     private TextField txtValorTotal;
     @FXML
     private AnchorPane paneVenda;
+    @FXML
+    private Button btnCarregar;
 
     /**
      * Initializes the controller class.
@@ -107,6 +110,7 @@ public class VendaSceneWindowController implements Initializable {
 
     DoWork task;
     Thread tredi;
+    
 
     @Override
     public void initialize(URL url, ResourceBundle rb) {
@@ -124,6 +128,8 @@ public class VendaSceneWindowController implements Initializable {
         mascararTableView();
 
         addListenner();
+        
+        addEffectEvent();
 
     }
 
@@ -863,5 +869,22 @@ public class VendaSceneWindowController implements Initializable {
 
         }
     }
+    
+    private void addEffectEvent(){
+        DoWork.createButtonEffectEvent(btnCarregar, "buttonEffect");
+        DoWork.createButtonEffectEvent(btnAdicionarItem, "buttonEffect");
+        DoWork.createButtonEffectEvent(btnCadastrarVenda, "buttonEffect");
+        DoWork.createButtonEffectEvent(btnFinalizarCompra, "buttonEffect");
+        DoWork.createButtonEffectEvent(btnRemover, "buttonEffect");
+        DoWork.createButtonEffectEvent(btnSalvarItem, "buttonEffect");
+        DoWork.createButtonEffectEvent(btnCancelarAcao, "button2Effect");
+        
+        DoWork.createFieldEffectEvent(txtCarregar, "textfieldEffect");
+        DoWork.createFieldEffectEvent(txtQtdProduto, "textfieldEffect");
+        
+    }
+    
+    
+    
 
 }

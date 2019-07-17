@@ -90,6 +90,8 @@ public class MenuSceneWindowController implements Initializable {
             Logger.getLogger(MenuSceneWindowController.class.getName()).log(Level.SEVERE, null, ex);
             MeuAlerta.alertaErro(ex.getMessage()).showAndWait();
         }
+        
+        addEffectEvent();
 
     }
 
@@ -290,6 +292,14 @@ public class MenuSceneWindowController implements Initializable {
             }
         }
 
+    }
+    
+    
+    private void addEffectEvent(){
+        DoWork.createButtonEffectEvent(btnVenda, "buttonEffect");
+        DoWork.createButtonEffectEvent(btnCliente, "buttonEffect");
+        DoWork.createButtonEffectEvent(btnFuncionarios, "buttonEffect");
+        DoWork.createButtonEffectEvent(btnProdutos, "buttonEffect");
     }
 
 }

@@ -31,7 +31,10 @@ import javafx.scene.control.TableView;
 import javafx.scene.control.TextField;
 import javafx.scene.input.KeyCode;
 import javafx.scene.input.KeyEvent;
+import javafx.scene.input.MouseDragEvent;
+import javafx.scene.input.MouseEvent;
 import javafx.scene.layout.AnchorPane;
+import javafx.scene.layout.Pane;
 import javafx.util.converter.NumberStringConverter;
 
 /**
@@ -72,6 +75,8 @@ public class ClienteSceneWindowController implements Initializable {
 
     DoWork task;
     Thread tredi;
+    @FXML
+    private Button btnCarregar;
     
 
     @Override
@@ -81,6 +86,7 @@ public class ClienteSceneWindowController implements Initializable {
         mascaraTabela();
 
         addListenner();
+        addEffectEvent();
 
     }
 
@@ -294,11 +300,26 @@ public class ClienteSceneWindowController implements Initializable {
             });
 
             task.setOnSucceeded(ev -> {
-
                 btnCarregarOnAction(null);
                 paneCliente.setCursor(Cursor.DEFAULT);
             });
 
         }
     }
+
+    
+    private void addEffectEvent(){
+        DoWork.createButtonEffectEvent(btnCadastrar, "buttonEffect");
+        DoWork.createButtonEffectEvent(btnCadastrarCliente, "buttonEffect");
+        DoWork.createButtonEffectEvent(btnCarregar, "buttonEffect");
+        DoWork.createButtonEffectEvent(btnCancelarAcao, "button2Effect");
+        DoWork.createFieldEffectEvent(txtCarregar, "textfieldEffect");
+        DoWork.createFieldEffectEvent(txtFieldCpf, "textfieldEffect");
+        DoWork.createFieldEffectEvent(txtFieldNome, "textfieldEffect");
+        DoWork.createFieldEffectEvent(txtFieldTelefoneContato, "textfieldEffect");
+        
+        
+    }
+    
+   
 }

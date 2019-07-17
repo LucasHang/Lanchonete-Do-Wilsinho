@@ -22,12 +22,12 @@
       </Button>
       <TextField fx:id="txtFieldLogin" layoutX="141.0" layoutY="276.0" prefHeight="29.0" prefWidth="234.0" styleClass="textfield" />
       <PasswordField fx:id="passFieldLogin" layoutX="141.0" layoutY="347.0" onKeyReleased="#ENTER" prefHeight="29.0" prefWidth="234.0" styleClass="textfield" />
-      <Label layoutX="71.0" layoutY="348.0" prefHeight="27.0" prefWidth="58.0" text="Senha:" textFill="SIENNA">
+      <Label fx:id="lblSenha" layoutX="71.0" layoutY="346.0" prefHeight="27.0" prefWidth="58.0" text="Senha:" textFill="SIENNA">
          <font>
             <Font name="System Bold" size="16.0" />
          </font>
       </Label>
-      <Label layoutX="71.0" layoutY="277.0" prefHeight="27.0" prefWidth="58.0" text="Login:" textFill="SIENNA">
+      <Label fx:id="lblLogin" layoutX="71.0" layoutY="275.0" prefHeight="27.0" prefWidth="58.0" text="Login:" textFill="SIENNA">
          <font>
             <Font name="System Bold" size="16.0" />
          </font>

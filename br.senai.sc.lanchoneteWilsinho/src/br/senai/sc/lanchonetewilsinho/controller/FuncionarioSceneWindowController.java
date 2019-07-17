@@ -102,6 +102,8 @@ public class FuncionarioSceneWindowController implements Initializable {
         mascaraTabela();
 
         addListenner();
+        
+        addEffectEvent();
     }
 
     @FXML
@@ -374,6 +376,19 @@ public class FuncionarioSceneWindowController implements Initializable {
             });
 
         }
+    }
+    
+    private void addEffectEvent(){
+        DoWork.createButtonEffectEvent(btnCadastrar, "buttonEffect");
+        DoWork.createButtonEffectEvent(btnCadastrarFuncionario, "buttonEffect");
+        DoWork.createButtonEffectEvent(btnCarregar, "buttonEffect");
+        DoWork.createButtonEffectEvent(btnCancelarAcao, "button2Effect");
+        DoWork.createFieldEffectEvent(txtCarregar, "textfieldEffect");
+        DoWork.createFieldEffectEvent(txtFieldCpf, "textfieldEffect");
+        DoWork.createFieldEffectEvent(txtFieldNome, "textfieldEffect");
+        DoWork.createFieldEffectEvent(txtFieldTelefoneContato, "textfieldEffect");
+        DoWork.createFieldEffectEvent(txtFieldUsuario, "textfieldEffect");
+        DoWork.createFieldEffectEvent(passFieldSenha, "textfieldEffect");
     }
 
 }

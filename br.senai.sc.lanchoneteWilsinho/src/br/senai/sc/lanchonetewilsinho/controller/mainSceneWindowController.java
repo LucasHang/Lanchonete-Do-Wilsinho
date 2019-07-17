@@ -34,8 +34,10 @@ import javafx.scene.control.Label;
 import javafx.scene.control.PasswordField;
 import javafx.scene.control.ProgressIndicator;
 import javafx.scene.control.TextField;
+import javafx.scene.input.DragEvent;
 import javafx.scene.input.KeyCode;
 import javafx.scene.input.KeyEvent;
+import javafx.scene.input.MouseEvent;
 import javafx.scene.layout.AnchorPane;
 import javafx.scene.layout.VBox;
 import static javax.management.Query.lt;
@@ -57,6 +59,10 @@ public class mainSceneWindowController implements Initializable {
     private Label lblCapsAlert;
     @FXML
     private AnchorPane paneLogin;
+    @FXML
+    private Label lblSenha;
+    @FXML
+    private Label lblLogin;
 
     /**
      * Initializes the controller class.
@@ -66,11 +72,14 @@ public class mainSceneWindowController implements Initializable {
     boolean capsOn;
     DoWork task;
     Thread tredi;
+    
 
     @Override
     public void initialize(URL url, ResourceBundle rb) {
         capsOn = Toolkit.getDefaultToolkit().getLockingKeyState(20);
         lblCapsAlert.setVisible(capsOn);
+        
+        addEffectEvent();
 
     }
 
@@ -146,9 +155,10 @@ public class mainSceneWindowController implements Initializable {
         }
     }
 
-    private void loading() {
-        paneLogin.setCursor(Cursor.WAIT);
-
+    private void addEffectEvent(){
+        DoWork.createButtonEffectEvent(btnEntrar, "buttonEffect");
+        DoWork.createFieldEffectEvent(txtFieldLogin, "textfieldEffect");
+        DoWork.createFieldEffectEvent(passFieldLogin, "textfieldEffect");
     }
 
 }

@@ -89,6 +89,8 @@ public class ProdutoSceneWindowController implements Initializable {
         btnCarregarOnAction(null);
         mascaraTabela();
         addListenner();
+        
+        addEffectEvent();
     }
 
     @FXML
@@ -321,6 +323,18 @@ public class ProdutoSceneWindowController implements Initializable {
             });
 
         }
+    }
+    
+    private void addEffectEvent(){
+        DoWork.createButtonEffectEvent(btnCadastrar, "buttonEffect");
+        DoWork.createButtonEffectEvent(btnCadastrarProduto, "buttonEffect");
+        DoWork.createButtonEffectEvent(btnCarregar, "buttonEffect");
+        DoWork.createButtonEffectEvent(btnCancelarAcao, "button2Effect");
+        
+        DoWork.createFieldEffectEvent(txtCarregar, "textfieldEffect");
+        DoWork.createFieldEffectEvent(txtFieldDescricao, "textfieldEffect");
+        DoWork.createFieldEffectEvent(txtFieldPrecoUnitario, "textfieldEffect");
+        DoWork.createFieldEffectEvent(txtFieldQuantidade, "textfieldEffect");
     }
 
 }
