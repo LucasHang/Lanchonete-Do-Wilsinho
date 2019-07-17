@@ -221,7 +221,7 @@ public class FuncionarioSceneWindowController implements Initializable {
     }
 
     private Boolean permissaoFuncionario() {
-        if (!mainSceneWindowController.gerente) {
+        if (!mainSceneWindowController.funcLogado.getGerente()) {
             anchorFuncionario.setDisable(true);
             btnCadastrar.setDisable(true);
             btnCadastrarFuncionario.setDisable(true);

@@ -23,10 +23,9 @@
             <Image url="@imagens/slogan%20lanchonete%20pronto.jpg" />
          </image>
       </ImageView>
-      <ComboBox fx:id="comboFuncionario" disable="true" editable="true" layoutX="741.0" layoutY="73.0" prefHeight="0.0" prefWidth="212.0" promptText="Funcionário" styleClass="comboBox" />
-      <ComboBox fx:id="comboCliente" disable="true" editable="true" layoutX="1003.0" layoutY="75.0" prefHeight="34.0" prefWidth="212.0" promptText="Cliente" styleClass="comboBox" />
-      <ComboBox fx:id="comboProduto" disable="true" editable="true" layoutX="741.0" layoutY="165.0" prefHeight="35.0" prefWidth="265.0" promptText="Produto" styleClass="comboBox" />
-      <Button fx:id="btnSalvarItem" layoutX="1075.0" layoutY="162.0" mnemonicParsing="false" onAction="#btnSalvarItemOnAction" prefHeight="42.0" prefWidth="78.0" text="Salvar" textFill="WHITE">
+      <ComboBox fx:id="comboCliente" disable="true" editable="true" layoutX="866.0" layoutY="61.0" prefHeight="34.0" prefWidth="241.0" promptText="Cliente" styleClass="comboBox" />
+      <ComboBox fx:id="comboProduto" disable="true" editable="true" layoutX="742.0" layoutY="158.0" prefHeight="35.0" prefWidth="248.0" promptText="Produto" styleClass="comboBox" />
+      <Button fx:id="btnSalvarItem" layoutX="1076.0" layoutY="155.0" mnemonicParsing="false" onAction="#btnSalvarItemOnAction" prefHeight="42.0" prefWidth="78.0" text="Salvar" textFill="WHITE">
          <font>
             <Font name="System Bold" size="17.0" />
          </font>
@@ -34,10 +33,10 @@
             <Cursor fx:constant="HAND" />
          </cursor>
       </Button>
-      <TextField fx:id="txtQtdProduto" disable="true" layoutX="1019.0" layoutY="164.0" prefHeight="37.0" prefWidth="45.0" promptText="Qtd" />
-      <Label layoutX="910.0" layoutY="128.0" styleClass="label2" text="Itens da compra" textFill="SIENNA" />
-      <Label layoutX="929.0" layoutY="356.0" styleClass="label2" text="Total: R$" />
-      <Button fx:id="btnFinalizarCompra" layoutX="866.0" layoutY="433.0" mnemonicParsing="false" onAction="#btnFinalizarCompraOnAction" prefHeight="66.0" prefWidth="132.0" text="Finalizar &#10;Compra" textAlignment="CENTER" textFill="WHITE">
+      <TextField fx:id="txtQtdProduto" disable="true" layoutX="1020.0" layoutY="157.0" prefHeight="37.0" prefWidth="45.0" promptText="Qtd" />
+      <Label layoutX="911.0" layoutY="121.0" styleClass="label2" text="Itens da compra" textFill="SIENNA" />
+      <Label layoutX="929.0" layoutY="353.0" styleClass="label2" text="Total: R$" />
+      <Button fx:id="btnFinalizarCompra" layoutX="866.0" layoutY="430.0" mnemonicParsing="false" onAction="#btnFinalizarCompraOnAction" prefHeight="66.0" prefWidth="132.0" text="Finalizar &#10;Compra" textAlignment="CENTER" textFill="WHITE">
          <font>
             <Font name="System Bold" size="17.0" />
          </font>
@@ -45,9 +44,8 @@
             <Cursor fx:constant="HAND" />
          </cursor>
       </Button>
-      <Label layoutX="741.0" layoutY="34.0" text="Funcionário:" />
-      <Label layoutX="1007.0" layoutY="38.0" text="Cliente:" />
-      <Separator layoutX="828.0" layoutY="121.0" prefHeight="2.0" prefWidth="315.0" styleClass="tablecolumnbase" />
+      <Label layoutX="867.0" layoutY="28.0" text="Cliente:" />
+      <Separator layoutX="829.0" layoutY="114.0" prefHeight="2.0" prefWidth="315.0" styleClass="tablecolumnbase" />
       <TableView fx:id="tableVendas" layoutX="43.0" layoutY="71.0" prefHeight="362.0" prefWidth="662.0" styleClass="tableview">
         <columns>
           <TableColumn fx:id="tblColumnFuncionario" prefWidth="127.0" text="Funcionário">
@@ -99,7 +97,7 @@
             <Cursor fx:constant="HAND" />
          </cursor>
       </Button>
-      <TableView fx:id="tableItems" layoutX="787.0" layoutY="208.0" prefHeight="134.0" prefWidth="399.0" styleClass="comboBox">
+      <TableView fx:id="tableItems" layoutX="787.0" layoutY="209.0" prefHeight="134.0" prefWidth="399.0" styleClass="comboBox">
         <columns>
           <TableColumn fx:id="tblColumnProduto" prefWidth="270.0" text="Produto">
               <cellValueFactory>
@@ -118,7 +116,7 @@
             </TableColumn>
         </columns>
       </TableView>
-      <Button fx:id="btnAdicionarItem" alignment="TOP_CENTER" layoutX="1170.0" layoutY="177.0" mnemonicParsing="false" onAction="#btnAdicionarItemOnAction" prefHeight="42.0" prefWidth="52.0" style="-fx-background-radius: 40; -fx-border-radius: 40;" text="+" textFill="WHITE">
+      <Button fx:id="btnAdicionarItem" alignment="TOP_CENTER" layoutX="1170.0" layoutY="178.0" mnemonicParsing="false" onAction="#btnAdicionarItemOnAction" prefHeight="42.0" prefWidth="52.0" style="-fx-background-radius: 40; -fx-border-radius: 40;" text="+" textFill="WHITE">
          <font>
             <Font name="System Bold" size="19.0" />
          </font>
@@ -129,7 +127,7 @@
             <Cursor fx:constant="HAND" />
          </cursor>
       </Button>
-      <Button fx:id="btnRemover" layoutX="1008.0" layoutY="433.0" mnemonicParsing="false" onAction="#btnRemoverOnAction" prefHeight="66.0" prefWidth="132.0" text="Excluir&#10;Venda" textFill="WHITE">
+      <Button fx:id="btnRemover" layoutX="1008.0" layoutY="430.0" mnemonicParsing="false" onAction="#btnRemoverOnAction" prefHeight="66.0" prefWidth="132.0" text="Excluir&#10;Venda" textFill="WHITE">
          <font>
             <Font name="System Bold" size="17.0" />
          </font>
@@ -137,7 +135,7 @@
             <Cursor fx:constant="HAND" />
          </cursor>
       </Button>
-      <Button fx:id="btnCancelarAcao" layoutX="969.0" layoutY="395.0" mnemonicParsing="false" onAction="#btnCancelarAcaoOnAction" styleClass="button2" text="Cancelar" textFill="SIENNA">
+      <Button fx:id="btnCancelarAcao" layoutX="969.0" layoutY="392.0" mnemonicParsing="false" onAction="#btnCancelarAcaoOnAction" styleClass="button2" text="Cancelar" textFill="SIENNA">
          <font>
             <Font name="System Bold" size="17.0" />
          </font>
@@ -145,7 +143,7 @@
             <Cursor fx:constant="HAND" />
          </cursor>
       </Button>
-      <TextField fx:id="txtValorTotal" disable="true" editable="false" focusTraversable="false" layoutX="1013.0" layoutY="352.0" promptText="Valor" styleClass="textfield2">
+      <TextField fx:id="txtValorTotal" disable="true" editable="false" focusTraversable="false" layoutX="1013.0" layoutY="349.0" promptText="Valor" styleClass="textfield2">
          <font>
             <Font name="System Bold" size="17.0" />
          </font>

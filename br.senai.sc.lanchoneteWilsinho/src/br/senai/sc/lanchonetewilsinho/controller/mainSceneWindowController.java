@@ -62,7 +62,7 @@ public class mainSceneWindowController implements Initializable {
      * Initializes the controller class.
      */
     Funcionario funcionario;
-    static Boolean gerente;
+    static Funcionario funcLogado;
     boolean capsOn;
     DoWork task;
     Thread tredi;
@@ -82,7 +82,7 @@ public class mainSceneWindowController implements Initializable {
 
         try {
             if (loginVrified()) {
-                gerente = funcionario.getGerente();
+                funcLogado = funcionario;
             } else {
                 task.cancel();
 

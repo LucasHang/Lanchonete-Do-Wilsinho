@@ -14,44 +14,31 @@ import br.senai.sc.lanchonetewilsinho.model.Funcionario;
 import br.senai.sc.lanchonetewilsinho.model.Item_Venda;
 import br.senai.sc.lanchonetewilsinho.model.Produto;
 import br.senai.sc.lanchonetewilsinho.model.Venda;
-import java.awt.Color;
-import java.io.IOException;
 import static java.lang.Integer.parseInt;
 import java.net.URL;
-import java.security.Provider.Service;
 import java.sql.SQLException;
 import java.text.SimpleDateFormat;
-import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.Date;
 import java.util.List;
 import java.util.ResourceBundle;
 import java.util.logging.Level;
 import java.util.logging.Logger;
-import javafx.beans.value.ChangeListener;
-import javafx.beans.value.ObservableValue;
 import javafx.collections.FXCollections;
-import javafx.collections.ObservableList;
-import javafx.concurrent.Task;
-import javafx.concurrent.Worker;
 import javafx.event.ActionEvent;
-import javafx.event.EventHandler;
 import javafx.fxml.FXML;
 import javafx.fxml.Initializable;
 import javafx.scene.Cursor;
 import javafx.scene.control.Button;
 import javafx.scene.control.ComboBox;
-import javafx.scene.control.Label;
 import javafx.scene.control.ListCell;
 import javafx.scene.control.ListView;
-import javafx.scene.control.ProgressIndicator;
 import javafx.scene.control.TableCell;
 import javafx.scene.control.TableColumn;
 import javafx.scene.control.TableView;
 import javafx.scene.control.TextField;
 import javafx.scene.input.KeyCode;
 import javafx.scene.input.KeyEvent;
-import javafx.scene.input.MouseEvent;
 import javafx.scene.layout.AnchorPane;
 import javafx.util.Callback;
 import javafx.util.StringConverter;
@@ -64,8 +51,7 @@ import javafx.util.converter.NumberStringConverter;
  */
 public class VendaSceneWindowController implements Initializable {
 
-    @FXML
-    private ComboBox<Integer> comboFuncionario;
+    
     @FXML
     private ComboBox<Integer> comboCliente;
     @FXML
@@ -116,6 +102,7 @@ public class VendaSceneWindowController implements Initializable {
     Venda vendaSelecionada = null;
     Item_Venda novoItem = null;
     Item_Venda itemSelecionado = null;
+    
     Boolean estoqueInsuficiente;
 
     DoWork task;
@@ -176,6 +163,14 @@ public class VendaSceneWindowController implements Initializable {
 
     @FXML
     private void btnFinalizarCompraOnAction(ActionEvent event) {
+        if(validationForm()){
+            return;
+        }
+        
+        comboCliente.getStyleClass().remove("invalido");
+        tableItems.getStyleClass().remove("invalido");
+        
+        
         unbindFieldsVenda(novaVenda);
         unbindFieldsVenda(vendaSelecionada);
 
@@ -189,6 +184,7 @@ public class VendaSceneWindowController implements Initializable {
         try {
 
             if (novaVenda != null) {
+                novaVenda.setFuncionario(mainSceneWindowController.funcLogado.getCodigo());
                 novaVenda.setDataVenda(takeActualDate("date"));
                 novaVenda.setHoraVenda(takeActualDate("hour"));
                 novaVenda.calculaValorTotalCompra();
@@ -364,14 +360,6 @@ public class VendaSceneWindowController implements Initializable {
                     comboProduto.getItems().add(produto.getCodigo());
                 });
                 break;
-
-            case "funcionario":
-                comboFuncionario.getItems().clear();
-                FXCollections.observableArrayList(DAOFactory.getFuncionarioDAO().getAll()).forEach(funcionario -> {
-                    comboFuncionario.getItems().add(funcionario.getCodigo());
-                });
-                break;
-
             case "cliente":
                 comboCliente.getItems().clear();
                 FXCollections.observableArrayList(DAOFactory.getClienteDAO().getAll()).forEach(cliente -> {
@@ -381,17 +369,12 @@ public class VendaSceneWindowController implements Initializable {
 
             case "all":
                 comboProduto.getItems().clear();
-                comboFuncionario.getItems().clear();
                 comboCliente.getItems().clear();
                 FXCollections.observableArrayList(DAOFactory.getProdutoDAO().getAll()).forEach(produto -> {
                     comboProduto.getItems().add(produto.getCodigo());
                 });
                 FXCollections.observableArrayList(DAOFactory.getClienteDAO().getAll()).forEach(cliente -> {
                     comboCliente.getItems().add(cliente.getCodigo());
-                });
-
-                FXCollections.observableArrayList(DAOFactory.getFuncionarioDAO().getAll()).forEach(funcionario -> {
-                    comboFuncionario.getItems().add(funcionario.getCodigo());
                 });
                 break;
         }
@@ -701,7 +684,7 @@ public class VendaSceneWindowController implements Initializable {
             public Integer fromString(String string) {
                 if (string != null && !string.isEmpty()) {
                     Integer p;
-                    p = Integer.parseInt(string.substring(0, 0));
+                    p = Integer.parseInt(string.substring(0, 1));
 
                     return p;
                 }
@@ -709,55 +692,7 @@ public class VendaSceneWindowController implements Initializable {
             }
         });
 
-        comboFuncionario.setCellFactory(new Callback<ListView<Integer>, ListCell<Integer>>() {
-            @Override
-            public ListCell<Integer> call(ListView<Integer> l) {
-                return new ListCell<Integer>() {
-                    @Override
-                    protected void updateItem(Integer item, boolean empty) {
-                        super.updateItem(item, empty);
-                        if (item == null || empty) {
-                            setGraphic(null);
-                        } else {
-                            try {
-                                setText(item.toString() + "-" + DAOFactory.getFuncionarioDAO().getFuncionarioByCodigo(item).getLogin());
-                            } catch (SQLException ex) {
-                                Logger.getLogger(VendaSceneWindowController.class.getName()).log(Level.SEVERE, null, ex);
-                                MeuAlerta.alertaErro(ex.getMessage()).showAndWait();
-                            }
-                        }
-                    }
-                };
-            }
-        });
-
-        comboFuncionario.setConverter(new StringConverter<Integer>() {
-            @Override
-            public String toString(Integer object) {
-                if (object != null && object != 0) {
-                    try {
-                        return object.toString() + "-" + DAOFactory.getFuncionarioDAO().getFuncionarioByCodigo(object).getLogin();
-                    } catch (SQLException ex) {
-                        Logger.getLogger(VendaSceneWindowController.class.getName()).log(Level.SEVERE, null, ex);
-                        MeuAlerta.alertaErro(ex.getMessage()).showAndWait();
-                    }
-                }
-                return null;
-            }
-
-            @Override
-            public Integer fromString(String string) {
-                if (string != null && !string.isEmpty()) {
-
-                    Integer f;
-                    f = Integer.parseInt(string.substring(0, 0));
-
-                    return f;
-
-                }
-                return null;
-            }
-        });
+        
 
         comboCliente.setCellFactory(new Callback<ListView<Integer>, ListCell<Integer>>() {
             @Override
@@ -801,7 +736,7 @@ public class VendaSceneWindowController implements Initializable {
                 if (string != null && !string.isEmpty()) {
                     try {
                         Integer c;
-                        c = DAOFactory.getClienteDAO().getClienteByCpf(string.substring(0, 10)).getCodigo();
+                        c = DAOFactory.getClienteDAO().getClienteByCpf(string.substring(0, 11)).getCodigo();
 
                         return c;
                     } catch (SQLException ex) {
@@ -818,7 +753,6 @@ public class VendaSceneWindowController implements Initializable {
     private void bindFieldsVenda(Venda venda) {
         if (venda != null) {
             comboCliente.valueProperty().bindBidirectional(venda.clienteProperty());
-            comboFuncionario.valueProperty().bindBidirectional(venda.funcionarioProperty());
             txtValorTotal.textProperty().bindBidirectional(venda.valorTotalCompraProperty(), new NumberStringConverter());
         }
 
@@ -827,7 +761,6 @@ public class VendaSceneWindowController implements Initializable {
     private void unbindFieldsVenda(Venda venda) {
         if (venda != null) {
             comboCliente.valueProperty().unbindBidirectional(venda.clienteProperty());
-            comboFuncionario.valueProperty().unbindBidirectional(venda.funcionarioProperty());
             txtValorTotal.textProperty().unbindBidirectional(venda.valorTotalCompraProperty());
         }
     }
@@ -850,7 +783,6 @@ public class VendaSceneWindowController implements Initializable {
 
     private void disableFields(Boolean value) {
         comboCliente.setDisable(value);
-        comboFuncionario.setDisable(value);
         comboProduto.setDisable(value);
         txtQtdProduto.setDisable(value);
 
@@ -865,26 +797,11 @@ public class VendaSceneWindowController implements Initializable {
         } else {
             comboCliente.getStyleClass().remove("invalido");
         }
-
-        if (comboFuncionario.valueProperty().isNull().get()) {
-            comboFuncionario.getStyleClass().add("invalido");
+        if (novaVenda.getItens() == null || novaVenda.getItens().isEmpty()) {
+            tableItems.getStyleClass().add("invalido");
             invalido = true;
         } else {
-            comboFuncionario.getStyleClass().remove("invalido");
-        }
-
-        if (comboProduto.valueProperty().isNull().get()) {
-            comboProduto.getStyleClass().add("invalido");
-            invalido = true;
-        } else {
-            comboProduto.getStyleClass().remove("invalido");
-        }
-
-        if (txtQtdProduto.textProperty().isNull().get()) {
-            txtQtdProduto.getStyleClass().add("invalido");
-            invalido = true;
-        } else {
-            txtQtdProduto.getStyleClass().remove("invalido");
+            tableItems.getStyleClass().remove("invalido");
         }
 
         return invalido;
@@ -894,7 +811,6 @@ public class VendaSceneWindowController implements Initializable {
         switch (tipo) {
             case "venda":
                 comboCliente.setValue(null);
-                comboFuncionario.setValue(null);
                 comboProduto.setValue(null);
                 txtQtdProduto.clear();
                 txtValorTotal.clear();

@@ -15,7 +15,6 @@ public class DoWork extends Task<Integer>{
     @Override
     protected Integer call() throws Exception {
         for (int i = 0; i < 2; i++) {
-            System.out.println(i + 1);
             updateProgress(i + 1, 10);
             Thread.sleep(500);
             if (isCancelled()) {

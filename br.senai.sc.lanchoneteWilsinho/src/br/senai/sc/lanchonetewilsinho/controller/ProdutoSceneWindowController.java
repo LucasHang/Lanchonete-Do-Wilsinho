@@ -208,7 +208,7 @@ public class ProdutoSceneWindowController implements Initializable {
     }
 
     private Boolean permissaoFuncionario() {
-        if (!mainSceneWindowController.gerente) {
+        if (!mainSceneWindowController.funcLogado.getGerente()) {
             anchorProduto.setDisable(true);
             btnCadastrar.setDisable(true);
             btnCadastrarProduto.setDisable(true);
