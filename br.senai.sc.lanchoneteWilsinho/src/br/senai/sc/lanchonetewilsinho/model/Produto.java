@@ -42,7 +42,7 @@ public class Produto {
          this.quantidadeProd.set(this.quantidadeProd.get() - qtd);
     }
     
-    public int getQuantidadeProd() {
+    public Integer getQuantidadeProd() {
         return quantidadeProd.get();
     }
 
@@ -85,7 +85,7 @@ public class Produto {
         return codigo.get();
     }
 
-    public void setCodigo(int value) {
+    public void setCodigo(Integer value) {
         codigo.set(value);
     }
 

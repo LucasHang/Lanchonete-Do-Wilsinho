@@ -10,37 +10,36 @@ import br.senai.sc.lanchonetewilsinho.DoWork;
 import br.senai.sc.lanchonetewilsinho.MeuAlerta;
 import br.senai.sc.lanchonetewilsinho.dao.DAOFactory;
 import br.senai.sc.lanchonetewilsinho.model.Funcionario;
-import com.sun.javafx.cursor.CursorFrame;
+
 import java.awt.Toolkit;
 import java.io.IOException;
+
 import java.net.URL;
 import java.sql.SQLException;
+
 import java.util.ResourceBundle;
-import java.util.concurrent.ExecutorService;
-import java.util.concurrent.Executors;
+
 import java.util.logging.Level;
 import java.util.logging.Logger;
-import javafx.beans.value.ChangeListener;
-import javafx.beans.value.ObservableValue;
-import javafx.concurrent.Task;
+
+
 import javafx.event.ActionEvent;
-import javafx.event.Event;
-import javafx.event.EventHandler;
+
 import javafx.fxml.FXML;
 import javafx.fxml.Initializable;
 import javafx.scene.Cursor;
 import javafx.scene.control.Button;
+
 import javafx.scene.control.Label;
 import javafx.scene.control.PasswordField;
-import javafx.scene.control.ProgressIndicator;
+
 import javafx.scene.control.TextField;
-import javafx.scene.input.DragEvent;
+
 import javafx.scene.input.KeyCode;
 import javafx.scene.input.KeyEvent;
-import javafx.scene.input.MouseEvent;
+
 import javafx.scene.layout.AnchorPane;
-import javafx.scene.layout.VBox;
-import static javax.management.Query.lt;
+
 
 /**
  * FXML Controller class
@@ -80,7 +79,6 @@ public class mainSceneWindowController implements Initializable {
         lblCapsAlert.setVisible(capsOn);
         
         addEffectEvent();
-
     }
 
     @FXML

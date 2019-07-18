@@ -13,6 +13,8 @@ import br.senai.sc.lanchonetewilsinho.model.Produto;
 import java.io.IOException;
 import java.net.URL;
 import java.sql.SQLException;
+import java.util.ArrayList;
+import java.util.List;
 import java.util.ResourceBundle;
 import java.util.logging.Level;
 import java.util.logging.Logger;
@@ -22,6 +24,7 @@ import javafx.fxml.FXML;
 import javafx.fxml.Initializable;
 import javafx.scene.Cursor;
 import javafx.scene.control.Button;
+import javafx.scene.control.ButtonType;
 import javafx.scene.control.Label;
 import javafx.scene.control.TableCell;
 import javafx.scene.control.TableColumn;
@@ -72,11 +75,20 @@ public class ProdutoSceneWindowController implements Initializable {
     private Label lblQtd;
     @FXML
     private Label lblPreco;
+    @FXML
+    private Button btnAlterarEstoque;
+    @FXML
+    private TextField txtAlterarEstoque;
+    @FXML
+    private Button btnHabilitarFacilitador;
     /**
      * Initializes the controller class.
      */
     Produto novoProduto = null;
     Produto produtoSelecionado = null;
+
+    List<Produto> produtosCarregados = null;
+    List<Produto> auxiliar = new ArrayList<>();
 
     DoWork task;
     Thread tredi;
@@ -89,7 +101,7 @@ public class ProdutoSceneWindowController implements Initializable {
         btnCarregarOnAction(null);
         mascaraTabela();
         addListenner();
-        
+
         addEffectEvent();
     }
 
@@ -98,7 +110,7 @@ public class ProdutoSceneWindowController implements Initializable {
         disableFields(false);
         unbindFields(produtoSelecionado);
         produtoSelecionado = null;
-        if(novoProduto == null){
+        if (novoProduto == null) {
             novoProduto = new Produto();
         }
         bindFields(novoProduto);
@@ -106,15 +118,15 @@ public class ProdutoSceneWindowController implements Initializable {
 
     @FXML
     private void btnCadastrarOnAction(ActionEvent event) {
-        
-        if(validationForm()){
+
+        if (validationForm()) {
             return;
         }
-        
+
         txtFieldDescricao.getStyleClass().remove("invalido");
         txtFieldPrecoUnitario.getStyleClass().remove("invalido");
         txtFieldQuantidade.getStyleClass().remove("invalido");
-        
+
         unbindFields(novoProduto);
         unbindFields(produtoSelecionado);
 
@@ -128,7 +140,7 @@ public class ProdutoSceneWindowController implements Initializable {
             } else {
                 if (produtoSelecionado != null) {
                     DAOFactory.getProdutoDAO().update(produtoSelecionado);
-                }else{
+                } else {
                     task.cancel();
                 }
             }
@@ -144,6 +156,7 @@ public class ProdutoSceneWindowController implements Initializable {
         });
 
         task.setOnSucceeded(ev -> {
+            produtosCarregados.add(novoProduto);
             btnCarregarOnAction(null);
             btnCancelarAcaoOnAction(null);
 
@@ -154,19 +167,16 @@ public class ProdutoSceneWindowController implements Initializable {
 
     @FXML
     private void btnCarregarOnAction(ActionEvent event) {
-
-        try {
-            if (txtCarregar.getText().isEmpty()) {
-                tableProdutos.setItems(FXCollections.observableArrayList(DAOFactory.getProdutoDAO().getAll()));
-            } else {
-                tableProdutos.setItems(FXCollections.observableArrayList(DAOFactory.getProdutoDAO().getProdutoByDescricao(txtCarregar.getText())));
-
+        if (produtosCarregados == null) {
+            try {
+                produtosCarregados = DAOFactory.getProdutoDAO().getAll();
+            } catch (SQLException ex) {
+                Logger.getLogger(ProdutoSceneWindowController.class.getName()).log(Level.SEVERE, null, ex);
+                MeuAlerta.alertaErro(ex.getMessage()).showAndWait();
             }
-
-        } catch (SQLException ex) {
-            Logger.getLogger(ClienteSceneWindowController.class.getName()).log(Level.SEVERE, null, ex);
-            MeuAlerta.alertaErro(ex.getMessage());
         }
+        tableProdutos.setItems(FXCollections.observableArrayList(produtosCarregados));
+
     }
 
     @FXML
@@ -194,7 +204,10 @@ public class ProdutoSceneWindowController implements Initializable {
                         setText(null);
                         setGraphic(null);
                         getStyleClass().remove("sem-estoque");
-                        if (!empty && item != null) {
+                        if (!empty) {
+                            if(item == null){
+                                setText("Esperando");
+                            }
                             setText(item.toString());
                             if (item == 0) {
                                 getStyleClass().add("sem-estoque");
@@ -302,8 +315,26 @@ public class ProdutoSceneWindowController implements Initializable {
             produtoSelecionado = newValue;
         });
 
-    }
+        txtCarregar.textProperty().addListener((Observable, oldValue, newValue) -> {
 
+            if (newValue.isEmpty()) {
+                task = new DoWork();
+                tredi = new Thread(task);
+                tredi.start();
+
+                task.setOnRunning(ev -> {
+                    anchorProduto.setCursor(Cursor.WAIT);
+                });
+
+                task.setOnSucceeded(ev -> {
+                    tableProdutos.setItems(FXCollections.observableArrayList(produtosCarregados));
+                    anchorProduto.setCursor(Cursor.DEFAULT);
+                });
+
+            }
+        });
+
+    }
 
     @FXML
     private void ENTER(KeyEvent event) {
@@ -312,29 +343,98 @@ public class ProdutoSceneWindowController implements Initializable {
             tredi = new Thread(task);
             tredi.start();
 
+            produtosCarregados.forEach(produto -> {
+                if (produto.getDescricaoProd().equals(txtCarregar.getText()) || produto.getDescricaoProd().contains(txtCarregar.getText()) || produto.getQuantidadeProd().toString().equals(txtCarregar.getText())) {
+                    auxiliar.add(produto);
+                }
+            });
+
             task.setOnRunning(ev -> {
                 anchorProduto.setCursor(Cursor.WAIT);
             });
 
             task.setOnSucceeded(ev -> {
+                if (txtCarregar.getText().isEmpty()) {
+                    tableProdutos.setItems(FXCollections.observableArrayList(produtosCarregados));
+                } else {
+                    tableProdutos.setItems(FXCollections.observableArrayList(auxiliar));
+                    auxiliar = new ArrayList<>();
+                }
 
-                btnCarregarOnAction(null);
                 anchorProduto.setCursor(Cursor.DEFAULT);
             });
 
         }
     }
-    
-    private void addEffectEvent(){
+
+    private void addEffectEvent() {
         DoWork.createButtonEffectEvent(btnCadastrar, "buttonEffect");
         DoWork.createButtonEffectEvent(btnCadastrarProduto, "buttonEffect");
         DoWork.createButtonEffectEvent(btnCarregar, "buttonEffect");
         DoWork.createButtonEffectEvent(btnCancelarAcao, "button2Effect");
-        
+
         DoWork.createFieldEffectEvent(txtCarregar, "textfieldEffect");
         DoWork.createFieldEffectEvent(txtFieldDescricao, "textfieldEffect");
         DoWork.createFieldEffectEvent(txtFieldPrecoUnitario, "textfieldEffect");
         DoWork.createFieldEffectEvent(txtFieldQuantidade, "textfieldEffect");
+    }
+
+    @FXML
+    private void btnAlterarEstoqueOnAction(ActionEvent event) {
+        if (MeuAlerta.alertaDeConfirmacao("Esta ação modificará a quantidade em estoque"
+                + " de todos os produtos listados para " + txtAlterarEstoque.getText() + "\n Deseja continuar?").showAndWait().get() == ButtonType.YES) {
+            
+            
+            tableProdutos.getItems().forEach(produto -> {
+                 txtAlterarEstoque.textProperty().unbindBidirectional(produto.quantidadeProdProperty());
+                try {
+                    DAOFactory.getProdutoDAO().update(produto);
+                } catch (SQLException ex) {
+                    Logger.getLogger(ProdutoSceneWindowController.class.getName()).log(Level.SEVERE, null, ex);
+                    MeuAlerta.alertaErro(ex.getMessage()).showAndWait();
+                }
+            });
+            
+            txtAlterarEstoque.clear();
+            txtCarregar.clear();
+            
+            btnHabilitarFacilitadorOnAction(null);
+        }
+
+    }
+
+    @FXML
+    private void btnHabilitarFacilitadorOnAction(ActionEvent event) {
+        if (btnHabilitarFacilitador.getText().equals("Habilitar")) {
+            btnHabilitarFacilitador.setText("Desabilitar");
+            txtCarregar.setDisable(true);
+            btnCarregar.setDisable(true);
+            btnAlterarEstoque.setDisable(false);
+            txtAlterarEstoque.setDisable(false);
+            
+            tableProdutos.getItems().forEach(produto -> {
+
+                txtAlterarEstoque.textProperty().bindBidirectional(produto.quantidadeProdProperty(), new NumberStringConverter());
+
+            });
+            txtAlterarEstoque.setText("0");
+        } else {
+            btnHabilitarFacilitador.setText("Habilitar");
+            btnAlterarEstoque.setDisable(true);
+            txtAlterarEstoque.setDisable(true);
+            tableProdutos.getItems().forEach(produto -> {
+
+                txtAlterarEstoque.textProperty().unbindBidirectional(produto.quantidadeProdProperty());
+
+            });
+            btnCarregar.setDisable(false);
+            txtCarregar.setDisable(false);
+            txtAlterarEstoque.clear();
+            txtCarregar.clear();
+            produtosCarregados = null;
+            btnCarregarOnAction(null);
+        }
+
     }
 
 }

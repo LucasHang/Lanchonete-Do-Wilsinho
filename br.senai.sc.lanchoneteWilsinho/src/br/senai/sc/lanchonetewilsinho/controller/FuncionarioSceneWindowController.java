@@ -13,6 +13,8 @@ import br.senai.sc.lanchonetewilsinho.model.Funcionario;
 import java.io.IOException;
 import java.net.URL;
 import java.sql.SQLException;
+import java.util.ArrayList;
+import java.util.List;
 import java.util.ResourceBundle;
 import java.util.logging.Level;
 import java.util.logging.Logger;
@@ -90,6 +92,10 @@ public class FuncionarioSceneWindowController implements Initializable {
     Funcionario novoFuncionario = null;
     Funcionario funcionarioSelecionado = null;
 
+    List<Funcionario> funcionariosCarregados = null;
+
+    List<Funcionario> auxiliar = new ArrayList<>();
+
     DoWork task;
     Thread tredi;
 
@@ -102,7 +108,7 @@ public class FuncionarioSceneWindowController implements Initializable {
         mascaraTabela();
 
         addListenner();
-        
+
         addEffectEvent();
     }
 
@@ -111,7 +117,7 @@ public class FuncionarioSceneWindowController implements Initializable {
         disableFields(false);
         unbindFields(funcionarioSelecionado);
         funcionarioSelecionado = null;
-        if(novoFuncionario == null){
+        if (novoFuncionario == null) {
             novoFuncionario = new Funcionario();
         }
         bindFields(novoFuncionario);
@@ -120,64 +126,61 @@ public class FuncionarioSceneWindowController implements Initializable {
 
     @FXML
     private void btnCarregarOnAction(ActionEvent event) {
-        try {
-            if (txtCarregar.getText().isEmpty()) {
-                tableFuncionarios.setItems(FXCollections.observableArrayList(DAOFactory.getFuncionarioDAO().getAll()));
-            } else {
-                tableFuncionarios.setItems(FXCollections.observableArrayList(DAOFactory.getFuncionarioDAO().procurarFuncionario(txtCarregar.getText())));
-
+        if (funcionariosCarregados == null) {
+            try {
+                funcionariosCarregados = DAOFactory.getFuncionarioDAO().getAll();
+            } catch (SQLException ex) {
+                Logger.getLogger(FuncionarioSceneWindowController.class.getName()).log(Level.SEVERE, null, ex);
+                MeuAlerta.alertaErro(ex.getMessage()).showAndWait();
             }
-
-        } catch (SQLException ex) {
-            Logger.getLogger(FuncionarioSceneWindowController.class.getName()).log(Level.SEVERE, null, ex);
-            MeuAlerta.alertaErro(ex.getMessage());
         }
+        tableFuncionarios.setItems(FXCollections.observableArrayList(funcionariosCarregados));
+
     }
 
     @FXML
     private void btnCadastrarOnAction(ActionEvent event) {
 
-        if(validationForm()){
+        if (validationForm()) {
             return;
         }
-        
+
         txtFieldCpf.getStyleClass().remove("invalido");
         txtFieldNome.getStyleClass().remove("invalido");
         txtFieldTelefoneContato.getStyleClass().remove("invalido");
         txtFieldUsuario.getStyleClass().remove("invalido");
         passFieldSenha.getStyleClass().remove("invalido");
-        
-        
+
         unbindFields(novoFuncionario);
         unbindFields(funcionarioSelecionado);
 
         task = new DoWork();
         tredi = new Thread(task);
         tredi.start();
-        
-        try {
-                if (novoFuncionario != null) {
-                    DAOFactory.getFuncionarioDAO().save(novoFuncionario);
-                } else {
-                    if (funcionarioSelecionado != null) {
-                        DAOFactory.getFuncionarioDAO().update(funcionarioSelecionado);
-                    }else{
-                        task.cancel();
-                    }
-                }
 
-            } catch (SQLException ex) {
-                Logger.getLogger(FuncionarioSceneWindowController.class.getName()).log(Level.SEVERE, null, ex);
-                MeuAlerta.alertaErro(ex.getMessage()).showAndWait();
+        try {
+            if (novoFuncionario != null) {
+                DAOFactory.getFuncionarioDAO().save(novoFuncionario);
+            } else {
+                if (funcionarioSelecionado != null) {
+                    DAOFactory.getFuncionarioDAO().update(funcionarioSelecionado);
+                } else {
+                    task.cancel();
+                }
             }
+
+        } catch (SQLException ex) {
+            Logger.getLogger(FuncionarioSceneWindowController.class.getName()).log(Level.SEVERE, null, ex);
+            MeuAlerta.alertaErro(ex.getMessage()).showAndWait();
+        }
 
         task.setOnRunning(ev -> {
             anchorFuncionario.setCursor(Cursor.WAIT);
-            
+
         });
 
         task.setOnSucceeded(ev -> {
-
+            funcionariosCarregados.add(novoFuncionario);
             btnCarregarOnAction(null);
             btnCancelarAcaoOnAction(null);
             anchorFuncionario.setCursor(Cursor.DEFAULT);
@@ -341,6 +344,25 @@ public class FuncionarioSceneWindowController implements Initializable {
             bindFields(newValue);
             funcionarioSelecionado = newValue;
         });
+
+        txtCarregar.textProperty().addListener((Observable, oldValue, newValue) -> {
+
+            if (newValue.isEmpty()) {
+                task = new DoWork();
+                tredi = new Thread(task);
+                tredi.start();
+
+                task.setOnRunning(ev -> {
+                    anchorFuncionario.setCursor(Cursor.WAIT);
+                });
+
+                task.setOnSucceeded(ev -> {
+                    tableFuncionarios.setItems(FXCollections.observableArrayList(funcionariosCarregados));
+                    anchorFuncionario.setCursor(Cursor.DEFAULT);
+                });
+
+            }
+        });
     }
 
     @FXML
@@ -365,20 +387,32 @@ public class FuncionarioSceneWindowController implements Initializable {
             tredi = new Thread(task);
             tredi.start();
 
+            funcionariosCarregados.forEach(funcionario -> {
+                if (funcionario.getNome().equals(txtCarregar.getText()) || funcionario.getCpf().equals(txtCarregar.getText()) || funcionario.getLogin().equals(txtCarregar.getText())) {
+                    auxiliar.add(funcionario);
+                }
+            });
+
             task.setOnRunning(ev -> {
                 anchorFuncionario.setCursor(Cursor.WAIT);
             });
 
             task.setOnSucceeded(ev -> {
+                if (txtCarregar.getText().isEmpty()) {
+                    tableFuncionarios.setItems(FXCollections.observableArrayList(funcionariosCarregados));
+                } else {
+                    tableFuncionarios.setItems(FXCollections.observableArrayList(auxiliar));
 
-                btnCarregarOnAction(null);
+                    auxiliar = new ArrayList<>();
+                }
+
                 anchorFuncionario.setCursor(Cursor.DEFAULT);
             });
 
         }
     }
-    
-    private void addEffectEvent(){
+
+    private void addEffectEvent() {
         DoWork.createButtonEffectEvent(btnCadastrar, "buttonEffect");
         DoWork.createButtonEffectEvent(btnCadastrarFuncionario, "buttonEffect");
         DoWork.createButtonEffectEvent(btnCarregar, "buttonEffect");

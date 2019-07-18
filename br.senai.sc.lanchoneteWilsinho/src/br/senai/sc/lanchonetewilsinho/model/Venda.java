@@ -32,11 +32,26 @@ public class Venda {
     private final DoubleProperty valorTotalCompra = new SimpleDoubleProperty();
     
     private final ObjectProperty<Integer> cliente = new SimpleObjectProperty();
+    private final StringProperty nomeCli = new SimpleStringProperty();
+    
     private final ObjectProperty<Integer> funcionario = new SimpleObjectProperty();
- 
+    private final StringProperty nomeFun = new SimpleStringProperty();  
+
           
     public Venda(){
         
+    }
+    
+    public Venda(Integer codigo, Integer codCliente, Integer codFuncionario,Double valor, List<Item_Venda> itens,Integer data,Integer hora,String nome1,String nome2){
+        this.codigo.set(codigo);
+        this.cliente.set(codCliente);
+        this.funcionario.set(codFuncionario);
+        this.valorTotalCompra.set(valor);
+        this.dataVenda.set(data);
+        this.itens = itens;
+        this.horaVenda.set(hora);
+        this.nomeCli.set(nome1);
+        this.nomeFun.set(nome2);
     }
     
     public Venda(Integer codigo, Integer codCliente, Integer codFuncionario,Double valor, List<Item_Venda> itens,Integer data,Integer hora){
@@ -47,6 +62,31 @@ public class Venda {
         this.dataVenda.set(data);
         this.itens = itens;
         this.horaVenda.set(hora);
+        
+    }
+    
+    public String getNomeCli() {
+        return nomeCli.get();
+    }
+
+    public void setNomeCli(String value) {
+        nomeCli.set(value);
+    }
+
+    public StringProperty nomeCliProperty() {
+        return nomeCli;
+    }
+    
+    public String getNomeFun() {
+        return nomeFun.get();
+    }
+
+    public void setNomeFun(String value) {
+        nomeFun.set(value);
+    }
+
+    public StringProperty nomeFunProperty() {
+        return nomeFun;
     }
     
     public Integer getHoraVenda() {

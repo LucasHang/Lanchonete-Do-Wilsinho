@@ -23,8 +23,8 @@
             <Image url="@imagens/slogan%20lanchonete%20pronto.jpg" />
          </image>
       </ImageView>
-      <ComboBox fx:id="comboCliente" disable="true" editable="true" layoutX="866.0" layoutY="61.0" prefHeight="34.0" prefWidth="241.0" promptText="Cliente" styleClass="comboBox" />
-      <ComboBox fx:id="comboProduto" disable="true" editable="true" layoutX="742.0" layoutY="158.0" prefHeight="35.0" prefWidth="248.0" promptText="Produto" styleClass="comboBox" />
+      <ComboBox fx:id="comboCliente" disable="true" editable="true" layoutX="866.0" layoutY="61.0" onKeyReleased="#enterCliente" prefHeight="34.0" prefWidth="241.0" promptText="Cliente" styleClass="comboBox" />
+      <ComboBox fx:id="comboProduto" disable="true" editable="true" layoutX="742.0" layoutY="158.0" onKeyReleased="#enterProduto" prefHeight="35.0" prefWidth="248.0" promptText="Produto" styleClass="comboBox" />
       <Button fx:id="btnSalvarItem" layoutX="1076.0" layoutY="155.0" mnemonicParsing="false" onAction="#btnSalvarItemOnAction" prefHeight="42.0" prefWidth="78.0" text="Salvar" textFill="WHITE">
          <font>
             <Font name="System Bold" size="17.0" />
@@ -45,35 +45,35 @@
          </cursor>
       </Button>
       <Label layoutX="867.0" layoutY="28.0" text="Cliente:" />
-      <Separator layoutX="829.0" layoutY="114.0" prefHeight="2.0" prefWidth="315.0" styleClass="tablecolumnbase" />
+      <Separator layoutX="829.0" layoutY="114.0" prefHeight="2.0" prefWidth="315.0" styleClass="comboBox" />
       <TableView fx:id="tableVendas" layoutX="43.0" layoutY="71.0" prefHeight="362.0" prefWidth="662.0" styleClass="tableview">
         <columns>
-          <TableColumn fx:id="tblColumnFuncionario" prefWidth="127.0" text="Funcionário">
+          <TableColumn fx:id="tblColumnFuncionario" prefWidth="159.0" text="Funcionário">
               <cellValueFactory>
                   <PropertyValueFactory property="funcionario" />
                </cellValueFactory>
           </TableColumn>
-          <TableColumn fx:id="tblColumnCliente" prefWidth="166.0" text="Cliente">
+          <TableColumn fx:id="tblColumnCliente" prefWidth="160.0" text="Cliente">
               <cellValueFactory>
-                  <PropertyValueFactory property="cliente" />
+                  <PropertyValueFactory property="nomeCli" />
                </cellValueFactory>
           </TableColumn>
-            <TableColumn fx:id="tblColumnCpf" prefWidth="131.0" text="   Cpf&#10;Cliente">
+            <TableColumn fx:id="tblColumnCpf" prefWidth="122.0" text="   Cpf&#10;Cliente">
                 <cellValueFactory>
                   <PropertyValueFactory property="cliente" />
                </cellValueFactory>
             </TableColumn>
-            <TableColumn fx:id="tblColumnValor" prefWidth="74.0" text="Valor&#10;">
+            <TableColumn fx:id="tblColumnValor" prefWidth="106.0" text="Valor&#10;">
             <cellValueFactory>
                   <PropertyValueFactory property="valorTotalCompra" />
                </cellValueFactory>
             </TableColumn>
-            <TableColumn fx:id="tblColumnData" prefWidth="94.0" text="Data&#10;">
+            <TableColumn fx:id="tblColumnData" prefWidth="126.0" text="Data&#10;">
             <cellValueFactory>
                   <PropertyValueFactory property="dataVenda" />
                </cellValueFactory>
             </TableColumn>
-            <TableColumn fx:id="tblColumnHora" prefWidth="67.0" text="Hora&#10;">
+            <TableColumn fx:id="tblColumnHora" prefWidth="84.0" text="Hora&#10;">
             <cellValueFactory>
                   <PropertyValueFactory property="horaVenda" />
                </cellValueFactory>
@@ -88,7 +88,7 @@
             <Cursor fx:constant="HAND" />
          </cursor>
       </Button>
-      <TextField fx:id="txtCarregar" layoutX="170.0" layoutY="28.0" onKeyReleased="#ENTER" prefHeight="29.0" prefWidth="241.0" promptText="Pesquisar na tabela" styleClass="textfield" />
+      <TextField fx:id="txtCarregar" layoutX="170.0" layoutY="28.0" onKeyReleased="#enterCarregar" prefHeight="29.0" prefWidth="241.0" promptText="Pesquisar na tabela" styleClass="textfield" />
       <Button fx:id="btnCadastrarVenda" alignment="CENTER" layoutX="307.0" layoutY="443.0" minHeight="65.0" minWidth="134.0" mnemonicParsing="false" onAction="#btnCadastrarVendaOnAction" prefHeight="65.0" prefWidth="134.0" text="Cadastrar&#10;Venda" textAlignment="CENTER" textFill="WHITE">
          <font>
             <Font name="System Bold" size="17.0" />
@@ -116,7 +116,7 @@
             </TableColumn>
         </columns>
       </TableView>
-      <Button fx:id="btnAdicionarItem" alignment="TOP_CENTER" layoutX="1170.0" layoutY="178.0" mnemonicParsing="false" onAction="#btnAdicionarItemOnAction" prefHeight="42.0" prefWidth="52.0" style="-fx-background-radius: 40; -fx-border-radius: 40;" text="+" textFill="WHITE">
+      <Button fx:id="btnAdicionarItem" alignment="TOP_CENTER" layoutX="1170.0" layoutY="178.0" mnemonicParsing="false" onAction="#btnAdicionarItemOnAction" prefHeight="46.0" prefWidth="47.5" styleClass="button3" textFill="WHITE">
          <font>
             <Font name="System Bold" size="19.0" />
          </font>

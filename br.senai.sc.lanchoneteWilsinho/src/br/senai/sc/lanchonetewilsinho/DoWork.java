@@ -9,6 +9,7 @@ import javafx.beans.value.ChangeListener;
 import javafx.beans.value.ObservableValue;
 import javafx.concurrent.Task;
 import javafx.scene.control.Button;
+import javafx.scene.control.ComboBox;
 import javafx.scene.control.TextField;
 
 /**
@@ -52,6 +53,26 @@ public class DoWork extends Task<Integer>{
             }
             if(newValue){
                 field.getStyleClass().add(classe);
+            }
+        });
+        
+        
+    }
+    
+    public static void createComboEffectEvent(ComboBox combo, String classe){
+        combo.setOnMouseEntered(ev ->{
+            combo.getStyleClass().add(classe);
+        });
+        combo.setOnMouseExited(ev ->{
+            combo.getStyleClass().remove(classe);
+        });
+        
+        combo.focusedProperty().addListener((Obervable, oldValue, newValue) ->{
+           if(oldValue){
+                combo.getStyleClass().remove(classe);
+            }
+            if(newValue){
+                combo.getStyleClass().add(classe);
             }
         });
         

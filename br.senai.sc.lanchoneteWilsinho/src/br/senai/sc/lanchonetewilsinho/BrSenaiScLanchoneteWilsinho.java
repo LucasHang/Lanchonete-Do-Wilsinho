@@ -27,40 +27,37 @@ import javafx.stage.StageStyle;
  * @author Senai
  */
 public class BrSenaiScLanchoneteWilsinho extends Application {
-    
+
     private static Stage stage;
-    
+
     private static Scene login;
     private static Scene menu;
 
-       
-     
     @Override
     public void start(Stage primaryStage) throws Exception {
-        
+
         stage = primaryStage;
-        
+
         Parent fxmlLogin = FXMLLoader.load(getClass().getResource("view/mainSceneWindow.fxml"));
         login = new Scene(fxmlLogin, 450, 550);
-        
+
         login.getStylesheets().add("/view/stylesClass.css");
-        
+
         stage.setResizable(false);
         stage.setX(710);
         stage.setY(265);
         stage.setScene(login);
         stage.show();
-        
+
     }
-    
-    
+
     public static void main(String[] args) {
         launch(args);
     }
-    
-    public static void mudarTela(String tela) throws IOException{
-        switch(tela){
-            case "menu" :
+
+    public static void mudarTela(String tela) throws IOException {
+        switch (tela) {
+            case "menu":
                 Parent fxmlMenu = FXMLLoader.load(BrSenaiScLanchoneteWilsinho.class.getResource("view/menuSceneWindow.fxml"));
                 menu = new Scene(fxmlMenu, 1280, 720);
                 stage.setX(320);
@@ -70,33 +67,34 @@ public class BrSenaiScLanchoneteWilsinho extends Application {
 
         }
     }
-    
-    public static boolean stringContainsNumber( String s ){
-        return Pattern.compile( "[0-9]" ).matcher( s ).find();
+
+    public static boolean stringContainsNumber(String s) {
+        return Pattern.compile("[0-9]").matcher(s).find();
     }
- 
-    
-    public static Integer dateToIntegerConverter(String data){
-        
-        SimpleDateFormat dataFormatAux = new SimpleDateFormat("dd/MM/yyyy");
-        Date dataaux = new Date();
-        try {
-            dataaux = dataFormatAux.parse(data);
-            
-        } catch (ParseException ex) {
-            Logger.getLogger(BrSenaiScLanchoneteWilsinho.class.getName()).log(Level.SEVERE, null, ex);
-            MeuAlerta.alertaErro(ex.getMessage()).showAndWait();
+
+    public static Integer dateToIntegerConverter(String data) {
+        if (stringContainsNumber(data)) {
+            SimpleDateFormat dataFormatAux = new SimpleDateFormat("dd/MM/yyyy");
+            Date dataaux = new Date();
+            try {
+                dataaux = dataFormatAux.parse(data);
+
+            } catch (ParseException ex) {
+                Logger.getLogger(BrSenaiScLanchoneteWilsinho.class.getName()).log(Level.SEVERE, null, ex);
+                MeuAlerta.alertaErro(ex.getMessage()).showAndWait();
+            }
+            SimpleDateFormat dataFormat = new SimpleDateFormat("yyyy/MM/dd");
+            List<String> anoMesDia = Arrays.asList(dataFormat.format(dataaux).split("/"));
+            String dataNumeric = new String();
+            for (String value : anoMesDia) {
+                dataNumeric = dataNumeric + value;
+            }
+            Integer x;
+            x = parseInt(dataNumeric);
+            return x;
         }
-        SimpleDateFormat dataFormat = new SimpleDateFormat("yyyy/MM/dd");
-        List<String> anoMesDia = Arrays.asList(dataFormat.format(dataaux).split("/"));
-        String dataNumeric = new String();
-        for (String value : anoMesDia) {
-            dataNumeric = dataNumeric + value;
-        }
-        Integer x;
-        x = parseInt(dataNumeric);
-        
-        return x;
+        return 0;
+
     }
-    
+
 }

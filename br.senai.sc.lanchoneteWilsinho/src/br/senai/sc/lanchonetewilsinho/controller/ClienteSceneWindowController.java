@@ -14,6 +14,8 @@ import br.senai.sc.lanchonetewilsinho.model.Cliente;
 import java.io.IOException;
 import java.net.URL;
 import java.sql.SQLException;
+import java.util.ArrayList;
+import java.util.List;
 import java.util.ResourceBundle;
 import java.util.logging.Level;
 import java.util.logging.Logger;
@@ -31,11 +33,8 @@ import javafx.scene.control.TableView;
 import javafx.scene.control.TextField;
 import javafx.scene.input.KeyCode;
 import javafx.scene.input.KeyEvent;
-import javafx.scene.input.MouseDragEvent;
-import javafx.scene.input.MouseEvent;
+
 import javafx.scene.layout.AnchorPane;
-import javafx.scene.layout.Pane;
-import javafx.util.converter.NumberStringConverter;
 
 /**
  * FXML Controller class
@@ -66,6 +65,8 @@ public class ClienteSceneWindowController implements Initializable {
     private Button btnCancelarAcao;
     @FXML
     private AnchorPane paneCliente;
+    @FXML
+    private Button btnCarregar;
 
     /**
      * Initializes the controller class.
@@ -73,11 +74,11 @@ public class ClienteSceneWindowController implements Initializable {
     Cliente novoCliente = null;
     Cliente clienteSelecionado = null;
 
+    List<Cliente> clientesCarregados = null;
+    List<Cliente> auxiliar = new ArrayList<>();
+
     DoWork task;
     Thread tredi;
-    @FXML
-    private Button btnCarregar;
-    
 
     @Override
     public void initialize(URL url, ResourceBundle rb) {
@@ -95,41 +96,41 @@ public class ClienteSceneWindowController implements Initializable {
         disableFields(false);
         unbindFields(clienteSelecionado);
         clienteSelecionado = null;
-        if(novoCliente == null){
+        if (novoCliente == null) {
             novoCliente = new Cliente();
         }
-        
+
         bindFields(novoCliente);
 
     }
 
     @FXML
     private void btnCarregarOnAction(ActionEvent event) {
-        try {
-            if (txtCarregar.getText().isEmpty()) {
-                tableClientes.setItems(FXCollections.observableArrayList(DAOFactory.getClienteDAO().getAll()));
-            } else {
-                tableClientes.setItems(FXCollections.observableArrayList(DAOFactory.getClienteDAO().procurarCliente(txtCarregar.getText())));
-            }
+        if (clientesCarregados == null) {
+            try {
 
-        } catch (SQLException ex) {
-            Logger.getLogger(ClienteSceneWindowController.class.getName()).log(Level.SEVERE, null, ex);
-            MeuAlerta.alertaErro(ex.getMessage());
+                clientesCarregados = DAOFactory.getClienteDAO().getAll();
+
+            } catch (SQLException ex) {
+                Logger.getLogger(ClienteSceneWindowController.class.getName()).log(Level.SEVERE, null, ex);
+                MeuAlerta.alertaErro(ex.getMessage()).showAndWait();
+            }
+            tableClientes.setItems(FXCollections.observableArrayList(clientesCarregados));
         }
+
     }
 
     @FXML
     private void btnCadastrarOnAction(ActionEvent event) {
-        
-        if(validationForm()){
+
+        if (validationForm()) {
             return;
         }
-        
+
         txtFieldCpf.getStyleClass().remove("invalido");
         txtFieldTelefoneContato.getStyleClass().remove("invalido");
         txtFieldNome.getStyleClass().remove("invalido");
 
-        
         unbindFields(novoCliente);
         unbindFields(clienteSelecionado);
 
@@ -159,6 +160,7 @@ public class ClienteSceneWindowController implements Initializable {
         });
 
         task.setOnSucceeded(ev -> {
+            clientesCarregados.add(novoCliente);
             btnCarregarOnAction(null);
             btnCancelarAcaoOnAction(null);
 
@@ -273,6 +275,25 @@ public class ClienteSceneWindowController implements Initializable {
             clienteSelecionado = newValue;
         });
 
+        txtCarregar.textProperty().addListener((Observable, oldValue, newValue) -> {
+
+            if (newValue.isEmpty()) {
+                task = new DoWork();
+                tredi = new Thread(task);
+                tredi.start();
+
+                task.setOnRunning(ev -> {
+                    paneCliente.setCursor(Cursor.WAIT);
+                });
+
+                task.setOnSucceeded(ev -> {
+                    tableClientes.setItems(FXCollections.observableArrayList(clientesCarregados));
+                    paneCliente.setCursor(Cursor.DEFAULT);
+                });
+
+            }
+        });
+
     }
 
     @FXML
@@ -295,20 +316,32 @@ public class ClienteSceneWindowController implements Initializable {
             tredi = new Thread(task);
             tredi.start();
 
+            clientesCarregados.forEach(cliente -> {
+                if (cliente.getNome().equals(txtCarregar.getText()) || cliente.getCpf().equals(txtCarregar.getText())) {
+                    auxiliar.add(cliente);
+                }
+            });
+
             task.setOnRunning(ev -> {
                 paneCliente.setCursor(Cursor.WAIT);
             });
 
             task.setOnSucceeded(ev -> {
-                btnCarregarOnAction(null);
+                if (txtCarregar.getText().isEmpty()) {
+                    tableClientes.setItems(FXCollections.observableArrayList(clientesCarregados));
+                } else {
+                    tableClientes.setItems(FXCollections.observableArrayList(auxiliar));
+
+                    auxiliar = new ArrayList<>();
+                }
+
                 paneCliente.setCursor(Cursor.DEFAULT);
             });
 
         }
     }
 
-    
-    private void addEffectEvent(){
+    private void addEffectEvent() {
         DoWork.createButtonEffectEvent(btnCadastrar, "buttonEffect");
         DoWork.createButtonEffectEvent(btnCadastrarCliente, "buttonEffect");
         DoWork.createButtonEffectEvent(btnCarregar, "buttonEffect");
@@ -317,9 +350,7 @@ public class ClienteSceneWindowController implements Initializable {
         DoWork.createFieldEffectEvent(txtFieldCpf, "textfieldEffect");
         DoWork.createFieldEffectEvent(txtFieldNome, "textfieldEffect");
         DoWork.createFieldEffectEvent(txtFieldTelefoneContato, "textfieldEffect");
-        
-        
+
     }
-    
-   
+
 }

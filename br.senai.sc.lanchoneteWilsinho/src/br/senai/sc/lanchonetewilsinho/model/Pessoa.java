@@ -18,9 +18,9 @@ import javafx.beans.property.StringProperty;
  */
 public class Pessoa {
     
-    public final StringProperty nome = new SimpleStringProperty();
-    public final StringProperty cpf = new SimpleStringProperty();
-    public final StringProperty telefoneContato = new SimpleStringProperty();
+    protected final StringProperty nome = new SimpleStringProperty();
+    protected final StringProperty cpf = new SimpleStringProperty();
+    protected final StringProperty telefoneContato = new SimpleStringProperty();
 
     public String getTelefoneContato() {
         return this.telefoneContato.get();
