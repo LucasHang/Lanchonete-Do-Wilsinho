@@ -44,8 +44,8 @@ public class BrSenaiScLanchoneteWilsinho extends Application {
         login.getStylesheets().add("/view/stylesClass.css");
 
         stage.setResizable(false);
-        stage.setX(710);
-        stage.setY(265);
+        stage.setX(458);
+        stage.setY(90);
         stage.setScene(login);
         stage.show();
 
@@ -60,8 +60,8 @@ public class BrSenaiScLanchoneteWilsinho extends Application {
             case "menu":
                 Parent fxmlMenu = FXMLLoader.load(BrSenaiScLanchoneteWilsinho.class.getResource("view/menuSceneWindow.fxml"));
                 menu = new Scene(fxmlMenu, 1280, 720);
-                stage.setX(320);
-                stage.setY(180);
+                stage.setX(45);
+                stage.setY(0);
                 stage.setScene(menu);
                 break;
 

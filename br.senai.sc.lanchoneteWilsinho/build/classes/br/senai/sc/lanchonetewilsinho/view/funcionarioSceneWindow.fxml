@@ -16,7 +16,7 @@
 <?import javafx.scene.layout.AnchorPane?>
 <?import javafx.scene.text.Font?>
 
-<AnchorPane id="AnchorPane" fx:id="anchorFuncionario" prefHeight="520.0" prefWidth="1253.0" styleClass="pane" stylesheets="@stylesClass.css" xmlns="http://javafx.com/javafx/8.0.171" xmlns:fx="http://javafx.com/fxml/1" fx:controller="br.senai.sc.lanchonetewilsinho.controller.FuncionarioSceneWindowController">
+<AnchorPane id="AnchorPane" fx:id="anchorFuncionario" prefHeight="520.0" prefWidth="1253.0" styleClass="pane" stylesheets="@stylesClass.css" xmlns="http://javafx.com/javafx/10.0.1" xmlns:fx="http://javafx.com/fxml/1" fx:controller="br.senai.sc.lanchonetewilsinho.controller.FuncionarioSceneWindowController">
    <children>
       <TableView fx:id="tableFuncionarios" layoutX="43.0" layoutY="71.0" prefHeight="362.0" prefWidth="662.0" styleClass="tableview" stylesheets="@stylesClass.css">
          <columns>
@@ -72,9 +72,6 @@
             <Cursor fx:constant="HAND" />
          </cursor>
       </Button>
-      <TextField fx:id="txtFieldNome" disable="true" layoutX="975.0" layoutY="57.0" prefHeight="25.0" prefWidth="169.0" styleClass="textfield" />
-      <TextField fx:id="txtFieldCpf" disable="true" layoutX="974.0" layoutY="103.0" prefHeight="25.0" prefWidth="169.0" styleClass="textfield" />
-      <TextField fx:id="txtFieldTelefoneContato" disable="true" layoutX="975.0" layoutY="157.0" prefHeight="25.0" prefWidth="169.0" styleClass="textfield" />
       <Label fx:id="lblNome" layoutX="818.0" layoutY="57.0" text="Nome completo:" textFill="SIENNA">
          <font>
             <Font name="Arial Bold" size="16.0" />
@@ -90,16 +87,9 @@
             <Font name="Arial Bold" size="16.0" />
          </font>
       </Label>
-      <CheckBox fx:id="checkBoxGerente" disable="true" layoutX="931.0" layoutY="350.0" mnemonicParsing="false" prefHeight="29.0" prefWidth="113.0" styleClass="label" text="Gerente" textFill="SIENNA">
-         <font>
-            <Font name="System Bold" size="16.0" />
-         </font>
-      </CheckBox>
       <Separator layoutX="839.0" layoutY="204.0" prefHeight="3.0" prefWidth="270.0" styleClass="tablecolumnbase" />
       <Label fx:id="lblUser" layoutX="849.0" layoutY="261.0" text="Usuário:" textFill="SIENNA" />
       <Label fx:id="lblSenha" layoutX="862.0" layoutY="314.0" text="Senha:" textFill="SIENNA" />
-      <TextField fx:id="txtFieldUsuario" disable="true" layoutX="931.0" layoutY="261.0" prefHeight="29.0" prefWidth="169.0" styleClass="textfield" />
-      <PasswordField fx:id="passFieldSenha" disable="true" layoutX="931.0" layoutY="314.0" prefHeight="29.0" prefWidth="169.0" styleClass="textfield" />
       <Label fx:id="lblCadastro" layoutX="890.0" layoutY="224.0" styleClass="label2" text="Cadastro do Login" textFill="SIENNA" />
       <Button fx:id="btnCancelarAcao" layoutX="957.0" layoutY="452.0" mnemonicParsing="false" onAction="#btnCancelarAcaoOnAction" styleClass="button2" text="Cancelar" textFill="SIENNA">
          <font>
@@ -114,5 +104,15 @@
             <Glow level="0.55" />
          </effect>
       </Label>
+      <TextField fx:id="txtFieldNome" disable="true" layoutX="975.0" layoutY="57.0" prefHeight="25.0" prefWidth="169.0" styleClass="textfield" />
+      <TextField fx:id="txtFieldCpf" disable="true" layoutX="974.0" layoutY="103.0" prefHeight="25.0" prefWidth="169.0" styleClass="textfield" />
+      <TextField fx:id="txtFieldTelefoneContato" disable="true" layoutX="975.0" layoutY="157.0" prefHeight="25.0" prefWidth="169.0" styleClass="textfield" />
+      <TextField fx:id="txtFieldUsuario" disable="true" layoutX="931.0" layoutY="261.0" prefHeight="29.0" prefWidth="169.0" styleClass="textfield" />
+      <PasswordField fx:id="passFieldSenha" disable="true" layoutX="931.0" layoutY="314.0" prefHeight="29.0" prefWidth="169.0" styleClass="textfield" />
+      <CheckBox fx:id="checkBoxGerente" disable="true" layoutX="931.0" layoutY="350.0" mnemonicParsing="false" prefHeight="29.0" prefWidth="113.0" styleClass="label" text="Gerente" textFill="SIENNA">
+         <font>
+            <Font name="System Bold" size="16.0" />
+         </font>
+      </CheckBox>
    </children>
 </AnchorPane>

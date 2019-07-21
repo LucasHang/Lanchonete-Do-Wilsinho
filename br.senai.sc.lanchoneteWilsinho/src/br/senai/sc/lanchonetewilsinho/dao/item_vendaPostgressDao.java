@@ -107,5 +107,25 @@ public class item_vendaPostgressDao extends connectionFactory implements item_ve
 
         return rows;
     }
+
+    @Override
+    public Item_Venda getItemVendaByCodVendaAndProduto(Item_Venda item) throws SQLException {
+        Item_Venda novoItem = new Item_Venda();
+        super.preparedStatementInitialize("select * from ItemVenda where codigoVend = ? and codigoProd = ?");
+        super.prepared.setInt(1,item.getVenda());
+        super.prepared.setInt(2,item.getProduto());
+        super.prepared.execute();
+        ResultSet resultSetRows = super.prepared.getResultSet();
+        while (resultSetRows.next()) {
+            novoItem = (new Item_Venda(resultSetRows.getInt("codigoVend"),
+                    resultSetRows.getInt("codigoProd"),
+                    resultSetRows.getInt("qtdComprada"),
+                    resultSetRows.getDouble("valorTotal")));
+        }
+        resultSetRows.close();
+        super.closeAll();
+
+        return novoItem;
+    }
     
 }

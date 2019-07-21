@@ -7,6 +7,7 @@ package br.senai.sc.lanchonetewilsinho.dao;
 
 import br.senai.sc.lanchonetewilsinho.BrSenaiScLanchoneteWilsinho;
 import br.senai.sc.lanchonetewilsinho.MeuAlerta;
+import br.senai.sc.lanchonetewilsinho.controller.VendaSceneWindowController;
 import br.senai.sc.lanchonetewilsinho.model.Item_Venda;
 import br.senai.sc.lanchonetewilsinho.model.Venda;
 import java.sql.ResultSet;
@@ -72,6 +73,23 @@ public class vendaPostgressDao extends connectionFactory implements vendaDao {
             throw new SQLException("Não foi possível aletrar as informações da venda");
         }
         super.closeAll();
+        
+        venda.getItens().forEach(item -> {
+            
+            try {
+                DAOFactory.getProdutoDAO().updateQtdEstoque(item.getProduto(), item.getQtdComprada());
+                if(DAOFactory.getItem_vendaDAO().getItemVendaByCodVendaAndProduto(item) != null){
+                    DAOFactory.getItem_vendaDAO().update(item);
+                }else{
+                    item.setVenda(venda.getCodigo());
+                    DAOFactory.getItem_vendaDAO().save(item);
+                }
+                
+            } catch (SQLException ex) {
+                Logger.getLogger(vendaPostgressDao.class.getName()).log(Level.SEVERE, null, ex);
+                MeuAlerta.alertaErro(ex.getMessage()).showAndWait();
+            }
+        });
     }
 
     @Override

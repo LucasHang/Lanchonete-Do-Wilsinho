@@ -115,6 +115,8 @@ public class VendaSceneWindowController implements Initializable {
     List<Produto> auxiliarProduto = new ArrayList<>();
 
     Boolean estoqueInsuficiente;
+    
+    static Integer qntAntigaProduto;
 
     DoWork task;
     Thread tredi;
@@ -138,7 +140,6 @@ public class VendaSceneWindowController implements Initializable {
 
         addEffectEvent();
 
-
     }
 
     @FXML
@@ -153,27 +154,67 @@ public class VendaSceneWindowController implements Initializable {
 
     @FXML
     private void btnSalvarItemOnAction(ActionEvent event) {
-        try {
-            qtdProdutoEmEstoque(novoItem);
-        } catch (RuntimeException ex) {
-            Logger.getLogger(VendaSceneWindowController.class.getName()).log(Level.SEVERE, null, ex);
-            MeuAlerta.alertaErro(ex.getMessage()).showAndWait();
+
+        if (validationForm("itemvenda")) {
+            return;
         }
+
+        comboProduto.getStyleClass().remove("invalido");
+        txtQtdProduto.getStyleClass().remove("invalido");
+
+        if (novoItem != null) {
+            try {
+                qtdProdutoEmEstoque(novoItem);
+            } catch (RuntimeException ex) {
+                Logger.getLogger(VendaSceneWindowController.class.getName()).log(Level.SEVERE, null, ex);
+                MeuAlerta.alertaErro(ex.getMessage()).showAndWait();
+            }
+        }
+        if (itemSelecionado != null) {
+            try {
+                qtdProdutoEmEstoque(itemSelecionado);
+            } catch (RuntimeException ex) {
+                Logger.getLogger(VendaSceneWindowController.class.getName()).log(Level.SEVERE, null, ex);
+                MeuAlerta.alertaErro(ex.getMessage()).showAndWait();
+            }
+        }
+
         if (estoqueInsuficiente) {
             return;
         }
 
+        unbindFieldsItem_Venda(itemSelecionado);
         unbindFieldsItem_Venda(novoItem);
+
         try {
-            novoItem.calculaValorItem();
+            if (novoItem != null) {
+                novoItem.calculaValorItem();
+                tableItems.getItems().add(novoItem);
+                if (vendaSelecionada != null) {
+                    vendaSelecionada.getItens().add(novoItem);
+                    vendaSelecionada.calculaValorTotalCompra();
+                }
+                if (novaVenda != null) {
+                    novaVenda.getItens().add(novoItem);
+                    novaVenda.calculaValorTotalCompra();
+                }
+
+            } else {
+                if (itemSelecionado != null) {
+                    DAOFactory.getProdutoDAO().updateQtdEstoque(itemSelecionado.getProduto(), (qntAntigaProduto*(-1)));
+                    
+                    itemSelecionado.calculaValorItem();
+                    vendaSelecionada.calculaValorTotalCompra();
+                }
+            }
+
         } catch (SQLException ex) {
             Logger.getLogger(VendaSceneWindowController.class.getName()).log(Level.SEVERE, null, ex);
             MeuAlerta.alertaErro(ex.getMessage()).showAndWait();
         }
-        tableItems.getItems().add(novoItem);
-        novaVenda.getItens().add(novoItem);
-        novaVenda.calculaValorTotalCompra();
+
         novoItem = null;
+        itemSelecionado = null;
         clearFields("itemvenda");
         txtQtdProduto.setDisable(true);
         comboProduto.setDisable(true);
@@ -181,7 +222,7 @@ public class VendaSceneWindowController implements Initializable {
 
     @FXML
     private void btnFinalizarCompraOnAction(ActionEvent event) {
-        if (validationForm()) {
+        if (validationForm("all")) {
             return;
         }
 
@@ -206,9 +247,12 @@ public class VendaSceneWindowController implements Initializable {
                 novaVenda.setHoraVenda(takeActualDate("hour"));
                 novaVenda.calculaValorTotalCompra();
                 DAOFactory.getVendaDAO().save(novaVenda);
+                vendasCarregadas.add(novaVenda);
             } else {
                 if (vendaSelecionada != null) {
+                    
                     DAOFactory.getVendaDAO().update(vendaSelecionada);
+                    vendasCarregadas = null;
                 } else {
                     task.cancel();
                 }
@@ -225,7 +269,7 @@ public class VendaSceneWindowController implements Initializable {
 
         task.setOnSucceeded(ev -> {
             try {
-                vendasCarregadas.add(novaVenda);
+
                 btnCarregarOnAction(null);
                 btnCancelarAcaoOnAction(null);
                 fillComboBoxes("produto");
@@ -250,8 +294,9 @@ public class VendaSceneWindowController implements Initializable {
                 Logger.getLogger(ClienteSceneWindowController.class.getName()).log(Level.SEVERE, null, ex);
                 MeuAlerta.alertaErro(ex.getMessage()).showAndWait();
             }
-            tableVendas.setItems(FXCollections.observableArrayList(vendasCarregadas));
         }
+        tableVendas.setItems(FXCollections.observableArrayList(vendasCarregadas));
+
     }
 
     @FXML
@@ -308,6 +353,10 @@ public class VendaSceneWindowController implements Initializable {
 
     @FXML
     private void btnCancelarAcaoOnAction(ActionEvent event) {
+        unbindFieldsItem_Venda(itemSelecionado);
+        unbindFieldsItem_Venda(novoItem);
+        unbindFieldsVenda(novaVenda);
+        unbindFieldsVenda(vendaSelecionada);
         clearFields("venda");
         clearFields("itemvenda");
         disableFields(true);
@@ -483,40 +532,40 @@ public class VendaSceneWindowController implements Initializable {
             };
             return cell;
         });
-        /*
-         tblColumnCliente.setCellFactory((TableColumn<Cliente, Integer> param) -> {
-         TableCell cell = new TableCell<Cliente, Integer>() {
-         @Override
-         public void updateItem(Integer item, boolean empty) {
-         super.updateItem(item, empty);
-         setText(null);
-         setGraphic(null);
-         if (!empty) {
-         if (item == null || item == 0) {
-         setText("Esperando");
-         } else {
-         try {
-         setText(DAOFactory.getClienteDAO().getClienteByCodigo(item).getNome());
-         } catch (SQLException ex) {
-         Logger.getLogger(VendaSceneWindowController.class.getName()).log(Level.SEVERE, null, ex);
-         MeuAlerta.alertaErro(ex.getMessage()).showAndWait();
-         }
 
-         }
-         }
-         }
+        tblColumnCliente.setCellFactory((TableColumn<Cliente, Integer> param) -> {
+            TableCell cell = new TableCell<Cliente, Integer>() {
+                @Override
+                public void updateItem(Integer item, boolean empty) {
+                    super.updateItem(item, empty);
+                    setText(null);
+                    setGraphic(null);
+                    if (!empty) {
+                        if (item == null || item == 0) {
+                            setText("Esperando");
+                        } else {
+                            try {
+                                setText(DAOFactory.getClienteDAO().getClienteByCodigo(item).getNome());
+                            } catch (SQLException ex) {
+                                Logger.getLogger(VendaSceneWindowController.class.getName()).log(Level.SEVERE, null, ex);
+                                MeuAlerta.alertaErro(ex.getMessage()).showAndWait();
+                            }
 
-         @Override
-         public void updateSelected(boolean upd) {
-         super.updateSelected(upd);
-         }
+                        }
+                    }
+                }
 
-         private String getString() {
-         return getItem() == null ? "" : getItem().toString();
-         }
-         };
-         return cell;
-         });*/
+                @Override
+                public void updateSelected(boolean upd) {
+                    super.updateSelected(upd);
+                }
+
+                private String getString() {
+                    return getItem() == null ? "" : getItem().toString();
+                }
+            };
+            return cell;
+        });
 
         tblColumnCpf.setCellFactory((TableColumn<Cliente, Integer> param) -> {
             TableCell cell = new TableCell<Cliente, Integer>() {
@@ -815,23 +864,45 @@ public class VendaSceneWindowController implements Initializable {
 
     }
 
-    public Boolean validationForm() {
+    public Boolean validationForm(String tipo) {
         Boolean invalido = false;
+        switch (tipo) {
+            case "all":
+                if (comboCliente.valueProperty().isNull().get()) {
+                    comboCliente.getStyleClass().add("invalido");
+                    invalido = true;
+                } else {
+                    comboCliente.getStyleClass().remove("invalido");
+                }
+                if (tableItems.getItems() == null || tableItems.getItems().isEmpty()) {
+                    tableItems.getStyleClass().add("invalido");
+                    invalido = true;
+                } else {
+                    tableItems.getStyleClass().remove("invalido");
+                }
 
-        if (comboCliente.valueProperty().isNull().get()) {
-            comboCliente.getStyleClass().add("invalido");
-            invalido = true;
-        } else {
-            comboCliente.getStyleClass().remove("invalido");
-        }
-        if (novaVenda.getItens() == null || novaVenda.getItens().isEmpty()) {
-            tableItems.getStyleClass().add("invalido");
-            invalido = true;
-        } else {
-            tableItems.getStyleClass().remove("invalido");
-        }
+                return invalido;
 
-        return invalido;
+            case "itemvenda":
+
+                if (comboProduto.valueProperty().isNull().get()) {
+                    comboProduto.getStyleClass().add("invalido");
+                    invalido = true;
+                } else {
+                    comboProduto.getStyleClass().remove("invalido");
+                }
+
+                if (txtQtdProduto.textProperty().isNull().get()) {
+                    txtQtdProduto.getStyleClass().add("invalido");
+                    invalido = true;
+                } else {
+                    txtQtdProduto.getStyleClass().remove("invalido");
+                }
+
+                return invalido;
+
+        }
+        return null;
     }
 
     private void clearFields(String tipo) {
@@ -862,12 +933,25 @@ public class VendaSceneWindowController implements Initializable {
         tableVendas.getSelectionModel().selectedItemProperty().addListener((observable, oldValue, newValue) -> {
             clearFields("itemvenda");
             disableFields(false);
+            unbindFieldsVenda(novaVenda);
+            unbindFieldsItem_Venda(novoItem);
             novaVenda = null;
             novoItem = null;
             unbindFieldsVenda(oldValue);
             bindFieldsVenda(newValue);
             vendaSelecionada = newValue;
-            tableItems.setItems(FXCollections.observableArrayList(vendaSelecionada.getItens()));
+            if (vendaSelecionada != null) {
+                tableItems.setItems(FXCollections.observableArrayList(vendaSelecionada.getItens()));
+            }
+
+            tableItems.getSelectionModel().selectedItemProperty().addListener((observable2, oldValue2, newValue2) -> {
+                unbindFieldsItem_Venda(oldValue2);
+                bindFieldsItem_Venda(newValue2);
+                qntAntigaProduto = newValue2.getQtdComprada();
+                itemSelecionado = newValue2;
+
+            });
+
         });
 
         txtCarregar.textProperty().addListener((Observable, oldValue, newValue) -> {
@@ -888,8 +972,6 @@ public class VendaSceneWindowController implements Initializable {
             }
         });
 
-        
-
     }
 
     private void addEffectEvent() {
@@ -907,16 +989,6 @@ public class VendaSceneWindowController implements Initializable {
         DoWork.createComboEffectEvent(comboCliente, "comboBoxEffect");
         DoWork.createComboEffectEvent(comboProduto, "comboBoxEffect");
 
-    }
-
-    @FXML
-    private void enterCliente(KeyEvent event) {
-        
-
-    }
-
-    @FXML
-    private void enterProduto(KeyEvent event) {
     }
 
     @FXML

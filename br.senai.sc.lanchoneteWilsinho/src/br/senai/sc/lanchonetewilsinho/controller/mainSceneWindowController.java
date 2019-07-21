@@ -75,6 +75,7 @@ public class mainSceneWindowController implements Initializable {
 
     @Override
     public void initialize(URL url, ResourceBundle rb) {
+        
         capsOn = Toolkit.getDefaultToolkit().getLockingKeyState(20);
         lblCapsAlert.setVisible(capsOn);
         

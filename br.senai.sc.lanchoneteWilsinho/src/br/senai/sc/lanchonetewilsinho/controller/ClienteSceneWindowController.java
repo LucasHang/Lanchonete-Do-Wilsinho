@@ -115,8 +115,9 @@ public class ClienteSceneWindowController implements Initializable {
                 Logger.getLogger(ClienteSceneWindowController.class.getName()).log(Level.SEVERE, null, ex);
                 MeuAlerta.alertaErro(ex.getMessage()).showAndWait();
             }
-            tableClientes.setItems(FXCollections.observableArrayList(clientesCarregados));
         }
+            tableClientes.setItems(FXCollections.observableArrayList(clientesCarregados));
+       
 
     }
 

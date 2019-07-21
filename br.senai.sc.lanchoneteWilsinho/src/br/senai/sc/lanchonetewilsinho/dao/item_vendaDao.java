@@ -24,4 +24,8 @@ public interface item_vendaDao {
     public List<Item_Venda> getAll() throws SQLException;
     
     public List<Item_Venda> getItemVendaByCodigoVenda(Integer codigoVend)throws SQLException;
+    
+    public Item_Venda getItemVendaByCodVendaAndProduto(Item_Venda item)throws SQLException;
+    
+    
 }
